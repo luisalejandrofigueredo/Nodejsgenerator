@@ -1,0 +1,26 @@
+<div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+    <button mat-icon-button (click)="openadd()"><mat-icon>add</mat-icon></button>
+    <button mat-icon-button><mat-icon>delete</mat-icon></button>
+    <button mat-icon-button><mat-icon>edit</mat-icon></button>
+</div>
+<button mat-raised-button (click)="generateschema()">Generar schema</button>
+<mat-expansion-panel [expanded]="open">
+    <mat-expansion-panel-header>
+        Add row
+    </mat-expansion-panel-header>
+    <mat-form-field>
+        <input autocomplete="off" matInput placeholder="name" value="">
+    </mat-form-field>
+    <mat-form-field>
+    <mat-label>Type data</mat-label>
+      <mat-select [(value)]="selected">
+        <mat-option *ngFor="let type of types" [value]="type.value">
+           {{type.viewValue}}
+         </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field *ngIf="selected==='string'">
+         <input autocomplete="off" matInput type="number" placeholder="lenght string" value="">
+       </mat-form-field>
+      <button mat-raised-button>Save</button>
+</mat-expansion-panel>
