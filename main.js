@@ -1,15 +1,29 @@
-const {app, BrowserWindow,ipcMain} = require('electron')
+const { app, BrowserWindow, ipcMain, Menu,screen } = require('electron')
 const url = require("url");
 const path = require("path");
 var fs = require('fs');
 
 let mainWindow
+var menu = Menu.buildFromTemplate([
+  {
+    label: 'Menu',
+    submenu: [
+      {
+        label: 'Exit', click() {
+          app.quit()
+        }
+      }
+    ]
+  }
+])
 
-function createWindow () {
-  console.log('comienzo');
+function createWindow() {
+  Menu.setApplicationMenu(menu);
+  const display = screen.getPrimaryDisplay();
+  const maxiSize = display.workAreaSize;
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: maxiSize.width,
+    height: maxiSize.height,
     webPreferences: {
       nodeIntegration: true
     }
@@ -36,6 +50,14 @@ ipcMain.on('genschema', (event, arg) => {
     console.log('Saved!');
   });
 })
+
+ipcMain.on('saveconfig', (event, arg) => {
+  fs.writeFile('config.json', arg, function (err) {
+    if (err) throw err;
+    console.log('Saved!');
+  });
+})
+
 
 app.on('ready', createWindow)
 
