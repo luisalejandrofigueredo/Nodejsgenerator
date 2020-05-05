@@ -58,7 +58,7 @@ ipcMain.on('saveconfig', (event, arg) => {
   });
 })
 
-
+app.allowRendererProcessReuse=true;
 app.on('ready', createWindow)
 
 app.on('window-all-closed', function () {

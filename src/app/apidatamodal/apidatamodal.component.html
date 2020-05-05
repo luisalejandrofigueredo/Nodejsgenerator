@@ -1,0 +1,11 @@
+<h4 mat-dialog-title></h4>
+<mat-select placeholder="Operation" [(ngModel)]="selectedValue" name="item">
+    <mat-option *ngFor="let item of types"[value]="item.value">
+        {{item.viewValue}}
+    </mat-option>
+</mat-select>
+<div mat-dialog-content></div>
+<div mat-dialog-actions style = "justify-content: flex-end;">
+    <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>
+    <button mat-raised-button color="primary" mat-button (click)="onYesClick()" >Yes</button>
+</div>

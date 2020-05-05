@@ -1,4 +1,9 @@
-<p>Configuration </p>
-<button mat-raised-button (click)="browse()" >select folder NestJS</button>
-<p>File Path:{{filePath}}</p>
-<button mat-raised-button (click)="save()">save</button>
+<div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
+    <p>Configuration </p>
+    <div style="border-style: solid;">
+        <button mat-raised-button color="primary" (click)="browse()"><mat-icon>folder</mat-icon> select folder NestJS</button>
+        <p>File Path:{{filePath}}</p>
+    </div>
+    <mat-checkbox [(ngModel)]="enableCors" (change)="change()">Enable CORS</mat-checkbox>
+    <button mat-raised-button (click)="save()">save</button>
+</div>

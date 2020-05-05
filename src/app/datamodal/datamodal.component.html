@@ -15,7 +15,7 @@
       </mat-select>
     </mat-form-field>
     <mat-checkbox [(ngModel)]="autonumber" [disabled]="(selected==='number') ? false: true">Autonumber</mat-checkbox>
-    <mat-checkbox [(ngModel)]="index">Index</mat-checkbox>
+    <mat-checkbox [(ngModel)]="index" [disabled]="autonumber">Index</mat-checkbox>
   </div>
   <div mat-dialog-actions style = "justify-content: flex-end;">
       <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>

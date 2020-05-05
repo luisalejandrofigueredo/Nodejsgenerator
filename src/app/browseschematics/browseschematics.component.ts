@@ -30,6 +30,7 @@ export class BrowseschematicsComponent implements OnInit {
   add() {
     const dialogRef = this.dialog.open(FormschemamodalComponent, {
       width: '300px',
+      disableClose: true,
       data: { id: 0, name: '', description: '' }
     });
     dialogRef.afterClosed().subscribe(data => {
@@ -38,7 +39,6 @@ export class BrowseschematicsComponent implements OnInit {
           data.id = 1;
         } else {
         data.id = this.schema.length + 1; }
-        console.log('data', data);
         this.schema.push(data);
         this.dataSource.data = this.schema;
         this.table.renderRows();
@@ -50,9 +50,15 @@ export class BrowseschematicsComponent implements OnInit {
 
   delete(id: number) {
     const dialogRef = this.dialog.open(YesnoComponent, { width: '300px',
+    disableClose: true,
   data: 'delete all schema'});
     dialogRef.afterClosed().subscribe( data => { if (data !== undefined){
       this.schema.splice(id - 1, 1);
+      // renum schema
+      for (let index = 0; index < this.schema.length; index++) {
+        this.schema[index].id = index + 1;
+      }
+      this.configservice.renumanddelete(id);
       this.dataSource.data = this.schema;
       this.table.renderRows();
   }});
@@ -62,6 +68,7 @@ export class BrowseschematicsComponent implements OnInit {
     const _data = { ...this.schema[id - 1]};
     const dialogRef = this.dialog.open(FormschemamodalComponent, {
       width: '300px',
+      disableClose: true,
       data: _data
     });
     dialogRef.afterClosed().subscribe(data => { if (data !== undefined){
@@ -78,5 +85,9 @@ export class BrowseschematicsComponent implements OnInit {
 
   edit_data(_id: number){
     this.route.navigate(['/schematics', _id]);
+  }
+
+  edit_api(_id: number){
+    this.route.navigate(['/api', _id]);
   }
 }

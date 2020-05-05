@@ -10,6 +10,7 @@ export class ConfigComponent implements OnInit {
 
   constructor(private configservice: ConfigService, private electron: ElectronService) { }
   filePath: string;
+  enableCors = false;
   ngOnInit(): void {
   }
   browse() {
@@ -20,6 +21,10 @@ export class ConfigComponent implements OnInit {
           this.filePath = result.filePaths[0];
         }
       });
+  }
+  change(){
+    this.configservice.enableCors(this.enableCors);
+
   }
   save() {
     this.configservice.save();

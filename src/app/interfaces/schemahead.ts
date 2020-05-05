@@ -5,6 +5,6 @@ export interface Schemahead {
     description: string;
 }
 
-export interface Schemaheadvector extends Schemahead {
+export interface Schemaheaditems extends Schemahead {
     schemastable: Schemaitem[];
 }

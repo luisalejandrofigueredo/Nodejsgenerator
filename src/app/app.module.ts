@@ -20,6 +20,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { SchematicsComponent } from './schematics/schematics.component';
 import { NgxElectronModule } from 'ngx-electron';
 import { DatamodalComponent } from './datamodal/datamodal.component';
@@ -27,6 +28,9 @@ import { YesnoComponent } from './yesno/yesno.component';
 import { ConfigComponent } from './config/config.component';
 import { BrowseschematicsComponent } from './browseschematics/browseschematics.component';
 import { FormschemamodalComponent } from './formschemamodal/formschemamodal.component';
+import { ApiComponent } from './api/api.component';
+import { ApidatamodalComponent } from './apidatamodal/apidatamodal.component';
+import { GeneratorComponent } from './generator/generator.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,6 +41,9 @@ import { FormschemamodalComponent } from './formschemamodal/formschemamodal.comp
     ConfigComponent,
     BrowseschematicsComponent,
     FormschemamodalComponent,
+    ApiComponent,
+    ApidatamodalComponent,
+    GeneratorComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,11 +64,12 @@ import { FormschemamodalComponent } from './formschemamodal/formschemamodal.comp
     MatPaginatorModule,
     MatSnackBarModule,
     MatDialogModule,
+    MatTooltipModule,
     FormsModule,
     NgxElectronModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [DatamodalComponent, FormschemamodalComponent]
+  entryComponents: [DatamodalComponent, FormschemamodalComponent, ApidatamodalComponent]
 })
 export class AppModule { }

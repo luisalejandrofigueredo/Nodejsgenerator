@@ -6,7 +6,8 @@
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item [routerLink]="['/config']" href="#">Config</a>
-      <a mat-list-item [routerLink]="['/browse']">List Schematics</a>
+      <a mat-list-item [routerLink]="['/browse']">Browse Schematics</a>
+      <a mat-list-item [routerLink]="['/generator']">Generator</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -19,7 +20,7 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>generador</span>
+      <span>NestJS generator</span>
     </mat-toolbar>
     <!-- Add Content Here -->
     <router-outlet></router-outlet>

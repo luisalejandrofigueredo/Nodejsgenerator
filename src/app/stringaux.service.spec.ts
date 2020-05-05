@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SerschemaService } from './serschema.service';
+import { StringauxService } from './stringaux.service';
 
-describe('SerschemaService', () => {
-  let service: SerschemaService;
+describe('StringauxService', () => {
+  let service: StringauxService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(SerschemaService);
+    service = TestBed.inject(StringauxService);
   });
 
   it('should be created', () => {
