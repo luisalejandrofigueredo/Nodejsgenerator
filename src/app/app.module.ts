@@ -21,6 +21,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SchematicsComponent } from './schematics/schematics.component';
 import { NgxElectronModule } from 'ngx-electron';
 import { DatamodalComponent } from './datamodal/datamodal.component';
@@ -65,6 +66,7 @@ import { GeneratorComponent } from './generator/generator.component';
     MatSnackBarModule,
     MatDialogModule,
     MatTooltipModule,
+    MatProgressBarModule,
     FormsModule,
     NgxElectronModule,
   ],

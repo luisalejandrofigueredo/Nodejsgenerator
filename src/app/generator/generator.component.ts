@@ -8,6 +8,7 @@ import {Schemaitem} from '../interfaces/schema';
 })
 export class GeneratorComponent implements OnInit {
   generatingline = 'Ready for begin\n';
+  progressbar = false;
   constructor(private electronservice: ElectronService) { }
   config: any;
   filePath: string;
@@ -76,8 +77,10 @@ export class GeneratorComponent implements OnInit {
   }
 
   generate(event: Event) {
-    this.generatingline += 'reading json file generator ...\n';
+    this.progressbar = true;
+    this.generatingline = 'reading json file generator ...\n';
     this.config = this.electronservice.ipcRenderer.sendSync('loadconfig', 'config.json');
     this.addingPath();
+    this.progressbar = false;
   }
 }

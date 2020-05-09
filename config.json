@@ -1,5 +1,5 @@
 {
-	"filePath": "C:\\Users\\luisa\\Downloads",
+	"filePath": "C:\\Users\\luisa\\cmder\\nestcazaor",
 	"enableCors": false,
 	"schemas": [
 		{
@@ -20,11 +20,11 @@
 				},
 				{
 					"id": 2,
-					"type": "string",
 					"name": "nombre",
+					"type": "string",
 					"length": 10,
 					"keyautonumber": false,
-					"extraparameter": "default 0",
+					"extraparameter": "",
 					"index": false
 				}
 			]

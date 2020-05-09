@@ -53,13 +53,29 @@ ipcMain.on('loadconfig',(event, arg) => {
 })
 
 ipcMain.on('saveentity', (event, arg) => {
-  const file = arg.path+'\\'+ arg.name+'.ts';
-  fs.writeFile(file, arg.file, function (err) {
+  console.log('writing files os:',process.platform);
+  let dir='';
+  let filepath='';
+  if (process.platform==="win32") {
+    console.log('writing in windows...');
+    filepath = arg.path+'\\src\\entitys\\'+ arg.name+'.ts';
+    dir = arg.path+'\\src\\entitys'
+  } else {
+    console.log('writing in unix...');
+    filepath = arg.path+'/src/entitys/'+ arg.name+'.ts';
+    dir = arg.path+'/src/entitys'
+  }
+  if (!fs.existsSync(dir)) { fs.mkdirSync(dir)} 
+  writeFile(filepath,arg.file);
+  event.returnValue= 'file saved';
+ });
+
+function writeFile(filepath,file){
+  fs.writeFile(filepath,file, function (err) {
     if (err) throw err;
-    console.log('Saved entity!',file);
-    event.returnValue= 'file saved';
+    console.log('Saved entity!');
   });
-})
+}
 
 ipcMain.on('saveconfig', (event, arg) => {
   fs.writeFile('config.json', arg, function (err) {
