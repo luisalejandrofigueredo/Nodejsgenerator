@@ -44,10 +44,20 @@ function createWindow() {
   })
 }
 
-ipcMain.on('genschema', (event, arg) => {
-  fs.writeFile('schema.ts', 'Hello content!', function (err) {
+ipcMain.on('loadconfig',(event, arg) => {
+   fs.readFile(arg, function (err,data) {
     if (err) throw err;
-    console.log('Saved!');
+    const json =  JSON.parse(data);
+    event.returnValue= json;
+  });
+})
+
+ipcMain.on('saveentity', (event, arg) => {
+  const file = arg.path+'\\'+ arg.name+'.ts';
+  fs.writeFile(file, arg.file, function (err) {
+    if (err) throw err;
+    console.log('Saved entity!',file);
+    event.returnValue= 'file saved';
   });
 })
 

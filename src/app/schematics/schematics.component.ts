@@ -50,7 +50,14 @@ export class SchematicsComponent implements OnInit {
 
   updatingdata(data: Schemaitem) {
     // tslint:disable-next-line: max-line-length
-    this.schemaitems[data.id - 1] = { id: data.id, name: data.name, type: data.type, length: data.length, keyautonumber: data.keyautonumber, index: data.index };
+    this.schemaitems[data.id - 1] = { id: data.id,
+       name: data.name,
+        type: data.type,
+        length: data.length,
+        keyautonumber: data.keyautonumber,
+        extraparameter: data.extraparameter,
+        index: data.index };
+    this.configservice.editschemaitem(this.id, data.id - 1, data);
     this.dataSource.data = this.schemaitems;
     this.table.renderRows();
   }
@@ -60,15 +67,33 @@ export class SchematicsComponent implements OnInit {
     if (this.schemaitems === undefined) {
       position = 1;
       // tslint:disable-next-line: max-line-length
-      this.schemaitems = [{ id: position, type: data.type, name: data.name, length: data.length, keyautonumber: data.keyautonumber, index: data.index }];
+      this.schemaitems = [{ id: position,
+         type: data.type,
+          name: data.name,
+          length: data.length,
+          keyautonumber: data.keyautonumber,
+          extraparameter: data.extraparameter,
+          index: data.index }];
     }
     else {
       position = this.schemaitems.length + 1;
       // tslint:disable-next-line: max-line-length
-      this.schemaitems.push({ id: position, type: data.type, name: data.name, length: data.length, keyautonumber: data.keyautonumber, index: data.index });
+      this.schemaitems.push({ id: position,
+         type: data.type,
+          name: data.name,
+          length: data.length,
+          keyautonumber: data.keyautonumber,
+          extraparameter: data.extraparameter,
+          index: data.index });
     }
     // tslint:disable-next-line: max-line-length
-    this.configservice.addschemaitem(this.id, { id: position, type: data.type, name: data.name, length: data.length, keyautonumber: data.keyautonumber, index: data.index });
+    this.configservice.addschemaitem(this.id, { id: position,
+       type: data.type,
+       name: data.name,
+       length: data.length,
+       keyautonumber: data.keyautonumber,
+       extraparameter: data.extraparameter,
+       index: data.index });
     this.dataSource.data = this.schemaitems;
     this.table.renderRows();
   }
@@ -84,7 +109,13 @@ export class SchematicsComponent implements OnInit {
         for (let index = 0; index < this.schemaitems.length; index++) {
           const element = this.schemaitems[index];
           // tslint:disable-next-line: max-line-length
-          this.schemaitems[index] = { id: index + 1, type: element.type, name: element.name, length: element.length, keyautonumber: element.keyautonumber, index: element.index };
+          this.schemaitems[index] = { id: index + 1,
+             type: element.type,
+              name: element.name,
+               length: element.length,
+                keyautonumber: element.keyautonumber,
+                extraparameter: element.extraparameter,
+                index: element.index };
         }
         this.configservice.deleteschmeaitem(this.id, id);
         this.dataSource.data = this.schemaitems;
@@ -111,7 +142,11 @@ export class SchematicsComponent implements OnInit {
     const dialogRef = this.dialog.open(DatamodalComponent, {
       width: '300px',
       disableClose: true,
-      data: { id: 0, type: '', name: '', length: 0, keyautonumber: false, index: false } as Schemaitem
+      data: { id: 0, type: '',
+       name: '',
+        length: 0,
+       keyautonumber: false,
+        index: false, extraparameter: '' } as Schemaitem
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {

@@ -1,6 +1,61 @@
 {
-	"filePath": "",
-	"enableCors": true,
-	"schemas": [],
+	"filePath": "C:\\Users\\luisa\\Downloads",
+	"enableCors": false,
+	"schemas": [
+		{
+			"id": 1,
+			"name": "clientes",
+			"description": "Clientes",
+			"imports": "import {} ;",
+			"fields": "data source",
+			"schemastable": [
+				{
+					"id": 1,
+					"type": "number",
+					"name": "id",
+					"length": 10,
+					"keyautonumber": true,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 2,
+					"type": "string",
+					"name": "nombre",
+					"length": 10,
+					"keyautonumber": false,
+					"extraparameter": "default 0",
+					"index": false
+				}
+			]
+		},
+		{
+			"id": 2,
+			"name": "recetas",
+			"description": "recetas",
+			"imports": "",
+			"fields": "",
+			"schemastable": [
+				{
+					"id": 1,
+					"type": "number",
+					"name": "id",
+					"length": 0,
+					"keyautonumber": true,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 2,
+					"type": "string",
+					"name": "nombre",
+					"length": 25,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				}
+			]
+		}
+	],
 	"api": []
 }

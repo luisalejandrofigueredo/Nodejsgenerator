@@ -41,6 +41,4 @@ export class DatamodalComponent implements OnInit {
     this.data.type = this.selected;
     this.dialogRef.close(this.data);
   }
-
-
 }

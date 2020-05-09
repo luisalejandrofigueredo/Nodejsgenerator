@@ -7,11 +7,12 @@ import { ConfigService } from '../service/config.service';
   styleUrls: ['./config.component.scss']
 })
 export class ConfigComponent implements OnInit {
-
   constructor(private configservice: ConfigService, private electron: ElectronService) { }
   filePath: string;
   enableCors = false;
   ngOnInit(): void {
+    this.enableCors = this.configservice.config.enableCors;
+    this.filePath = this.configservice.config.filePath;
   }
   browse() {
       // tslint:disable-next-line: max-line-length
@@ -24,7 +25,6 @@ export class ConfigComponent implements OnInit {
   }
   change(){
     this.configservice.enableCors(this.enableCors);
-
   }
   save() {
     this.configservice.save();

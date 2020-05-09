@@ -31,7 +31,7 @@ export class BrowseschematicsComponent implements OnInit {
     const dialogRef = this.dialog.open(FormschemamodalComponent, {
       width: '300px',
       disableClose: true,
-      data: { id: 0, name: '', description: '' }
+      data: { id: 0, name: '', description: '', imports: '', fields: '' } as Schemahead
     });
     dialogRef.afterClosed().subscribe(data => {
       if (data !== undefined) {
@@ -65,6 +65,7 @@ export class BrowseschematicsComponent implements OnInit {
   }
 
   edit(id: number) {
+    // tslint:disable-next-line: variable-name
     const _data = { ...this.schema[id - 1]};
     const dialogRef = this.dialog.open(FormschemamodalComponent, {
       width: '300px',
@@ -83,10 +84,19 @@ export class BrowseschematicsComponent implements OnInit {
    this.configservice.save();
   }
 
+  load(){
+    this.configservice.load();
+    this.schema = [ ...this.configservice.getschema()];
+    this.dataSource.data = this.schema;
+    this.table.renderRows();
+  }
+
+  // tslint:disable-next-line: variable-name
   edit_data(_id: number){
     this.route.navigate(['/schematics', _id]);
   }
 
+  // tslint:disable-next-line: variable-name
   edit_api(_id: number){
     this.route.navigate(['/api', _id]);
   }

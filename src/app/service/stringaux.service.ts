@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
-
+import { ElectronService } from 'ngx-electron';
 @Injectable({
   providedIn: 'root'
 })
 export class StringauxService {
 
-  constructor() { }
+  constructor(private electronservice: ElectronService) { }
 
   addtexttofile(file: string, stringtoadd: string, stringtofind: string): string {
     const pos = file.lastIndexOf(stringtofind);
-    return file.substr(0, pos) + stringtoadd + '\r\n' + file.substr(pos, file.length);
+    if (this.electronservice.isWindows === true){
+      return file.substr(0, pos) + stringtoadd + '\r\n' + file.substr(pos, file.length);
+    } else {
+      return file.substr(0, pos) + stringtoadd + '\n' + file.substr(pos, file.length);
+    }
   }
-
 }
