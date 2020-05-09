@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import {Schemaitem} from '../interfaces/schema';
 @Component({
@@ -9,6 +9,7 @@ import {Schemaitem} from '../interfaces/schema';
 export class GeneratorComponent implements OnInit {
   generatingline = 'Ready for begin\n';
   progressbar = false;
+  @ViewChild('textgenerating') container: ElementRef;
   constructor(private electronservice: ElectronService) { }
   config: any;
   filePath: string;
@@ -16,13 +17,13 @@ export class GeneratorComponent implements OnInit {
   ngOnInit(): void {
   }
   addingPath() {
-    this.generatingline += 'reading file path ...\n';
+    this.addgenrartinline('reading file path ...');
     this.filePath = this.config.filePath;
     this.generateschemas();
-    this.generatingline += 'End generate';
+    this.addgenrartinline('End generate');
   }
   generateschemas() {
-    this.generatingline += 'begin generating schemas ...\n';
+    this.addgenrartinline('begin generating schemas ...');
     const schemas = this.config.schemas;
     // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < schemas.length; index++) {
@@ -30,15 +31,15 @@ export class GeneratorComponent implements OnInit {
       this.generatingline += 'schema:' + element + '\n';
       this.entitygenerator(index);
     }
-    this.generatingline += 'end generating schemas ...\n';
+    this.addgenrartinline('end generating schemas ...');
   }
 
   entitygenerator(ind: number) {
-    this.generatingline += 'Entity generator ... \n';
+    this.addgenrartinline('Entity generator ... ');
     const fields = this.config.schemas[ind].schemastable;
     // tslint:disable-next-line: quotemark
     this.filegenerating  = "import { Entity, Column, PrimaryGeneratedColumn,ManyToOne } from 'typeorm';\n";
-    this.generatingline += '\t adding imports ...\n';
+    this.generatingline += '\t adding imports ...';
     this.filegenerating += this.config.schemas[ind].imports + '\n';
     this.filegenerating += '@Entity()\n';
     this.filegenerating += 'export class ' + this.config.schemas[ind].name + ' {\n';
@@ -47,16 +48,16 @@ export class GeneratorComponent implements OnInit {
       const element = fields[index];
       this.generatecolumn(element);
     }
-    this.generatingline += '\t adding extra fields ...\n';
+    this.addgenrartinline('\t adding extra fields ...');
     this.filegenerating += this.config.schemas[ind].fields + '\n';
     this.filegenerating += '}\n';
-    this.generatingline += '\t saving entity\n';
+    this.addgenrartinline('\t saving entity');
     const args = { path: this.config.filePath , name: this.config.schemas[ind].name, file: this.filegenerating};
     const end = this.electronservice.ipcRenderer.sendSync('saveentity', args);
   }
 
   generatecolumn(fieldcolumn: Schemaitem){
-    this.generatingline += `\t generating column: ${fieldcolumn.name} ...\n`;
+    this.addgenrartinline( `\t generating column: ${fieldcolumn.name} ...`);
     if (fieldcolumn.keyautonumber === true){
         this.filegenerating += '@PrimaryGeneratedColumn()\n';
         this.filegenerating += fieldcolumn.name + ':' + fieldcolumn.type + ';\n\n';
@@ -74,6 +75,12 @@ export class GeneratorComponent implements OnInit {
           break;
       }
     }
+    this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
+  }
+
+  addgenrartinline(message: string){
+    this.generatingline += message + '\n';
+    this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
   }
 
   generate(event: Event) {
@@ -82,5 +89,6 @@ export class GeneratorComponent implements OnInit {
     this.config = this.electronservice.ipcRenderer.sendSync('loadconfig', 'config.json');
     this.addingPath();
     this.progressbar = false;
+    this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
   }
 }

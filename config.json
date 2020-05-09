@@ -55,6 +55,42 @@
 					"index": false
 				}
 			]
+		},
+		{
+			"id": 3,
+			"name": "consultas",
+			"description": "",
+			"imports": "",
+			"fields": "",
+			"schemastable": [
+				{
+					"id": 1,
+					"type": "number",
+					"name": "id",
+					"length": 10,
+					"keyautonumber": true,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 2,
+					"type": "date",
+					"name": "fecha",
+					"length": 10,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 3,
+					"type": "string",
+					"name": "descripcion",
+					"length": 30,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				}
+			]
 		}
 	],
 	"api": []

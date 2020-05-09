@@ -70,11 +70,9 @@ ipcMain.on('saveentity', (event, arg) => {
   event.returnValue= 'file saved';
  });
 
-function writeFile(filepath,file){
-  fs.writeFile(filepath,file, function (err) {
-    if (err) throw err;
-    console.log('Saved entity!');
-  });
+function writeFile(filepath,file) {
+  fs.writeFileSync(filepath,file);
+  console.log('entity writed',filepath);
 }
 
 ipcMain.on('saveconfig', (event, arg) => {
