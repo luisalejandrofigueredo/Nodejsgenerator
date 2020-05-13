@@ -6,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSort } from '@angular/material/sort';
 import { DatamodalComponent } from '../datamodal/datamodal.component';
 import { YesnoComponent } from '../yesno/yesno.component';
 import { Schemaitem } from '../interfaces/schema';
@@ -29,6 +30,7 @@ export class SchematicsComponent implements OnInit {
   ];
   dataSource = new MatTableDataSource<Schemaitem>([]);
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   buffer: Schemaitem;
   // tslint:disable-next-line: max-line-length
@@ -39,12 +41,13 @@ export class SchematicsComponent implements OnInit {
   schemaitems: Schemaitem[] = [];
   id: number;
   ngOnInit(): void {
-    this.dataSource.paginator = this.paginator;
     this.activerouter.params.subscribe(params => {
       this.id = params.id;
       this.schemaitems = [ ...this.configservice.getschematable(this.id)];
       this.schemaname = this.configservice.getschemaname(this.id);
-      this.dataSource.data = this.schemaitems;
+      this.dataSource =  new MatTableDataSource(this.schemaitems);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     });
   }
 

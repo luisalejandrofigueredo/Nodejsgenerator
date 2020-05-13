@@ -1,20 +1,26 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, NgZone, AfterContentInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
-import {Schemaitem} from '../interfaces/schema';
+import { Schemaitem } from '../interfaces/schema';
 @Component({
   selector: 'app-generator',
   templateUrl: './generator.component.html',
-  styleUrls: ['./generator.component.scss']
+  styleUrls: ['./generator.component.scss'],
 })
-export class GeneratorComponent implements OnInit {
-  generatingline = 'Ready for begin\n';
+export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
+  generatingline = 'Ready for begin\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n';
   progressbar = false;
-  @ViewChild('textgenerating') container: ElementRef;
-  constructor(private electronservice: ElectronService) { }
+  @ViewChild('textgenerating', { static: true }) container: ElementRef;
+  constructor(private ngzone: NgZone, private electronservice: ElectronService) { }
   config: any;
   filePath: string;
   filegenerating = '';
   ngOnInit(): void {
+  }
+  ngAfterContentInit(): void {
+    this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
   }
   addingPath() {
     this.addgenrartinline('reading file path ...');
@@ -38,7 +44,7 @@ export class GeneratorComponent implements OnInit {
     this.addgenrartinline('Entity generator ... ');
     const fields = this.config.schemas[ind].schemastable;
     // tslint:disable-next-line: quotemark
-    this.filegenerating  = "import { Entity, Column, PrimaryGeneratedColumn,ManyToOne } from 'typeorm';\n";
+    this.filegenerating = "import { Entity, Column, PrimaryGeneratedColumn,ManyToOne } from 'typeorm';\n";
     this.generatingline += '\t adding imports ...';
     this.filegenerating += this.config.schemas[ind].imports + '\n';
     this.filegenerating += '@Entity()\n';
@@ -52,24 +58,51 @@ export class GeneratorComponent implements OnInit {
     this.filegenerating += this.config.schemas[ind].fields + '\n';
     this.filegenerating += '}\n';
     this.addgenrartinline('\t saving entity');
-    const args = { path: this.config.filePath , name: this.config.schemas[ind].name, file: this.filegenerating};
+    const args = { path: this.config.filePath, name: this.config.schemas[ind].name, file: this.filegenerating };
     const end = this.electronservice.ipcRenderer.sendSync('saveentity', args);
   }
 
-  generatecolumn(fieldcolumn: Schemaitem){
-    this.addgenrartinline( `\t generating column: ${fieldcolumn.name} ...`);
-    if (fieldcolumn.keyautonumber === true){
-        this.filegenerating += '@PrimaryGeneratedColumn()\n';
-        this.filegenerating += fieldcolumn.name + ':' + fieldcolumn.type + ';\n\n';
+  generatecolumn(fieldcolumn: Schemaitem) {
+    this.addgenrartinline(`\t generating column: ${fieldcolumn.name} ...`);
+    if (fieldcolumn.keyautonumber === true) {
+      this.filegenerating += '@PrimaryGeneratedColumn()\n';
+      this.filegenerating += fieldcolumn.name + ':' + fieldcolumn.type + ';\n\n';
     } else {
       switch (fieldcolumn.type) {
         case 'string':
-          this.filegenerating += '@Column({type:"varchar",length:' + fieldcolumn.length + ' ' + fieldcolumn.extraparameter + ' default:""})\n';
+          if (fieldcolumn.extraparameter === '') {
+            this.filegenerating += '@Column()\n';
+          }
+          else {
+            this.filegenerating += '@Column({' + fieldcolumn.extraparameter ;
+            if (fieldcolumn.length !== 0) {
+              this.filegenerating += ' length:' + fieldcolumn.length.toString();
+            }
+            this.filegenerating += '})\n';
+          }
           this.filegenerating += fieldcolumn.name + ':string;\n\n';
           break;
         case 'number':
-          this.filegenerating += '@Column({type:"number",length:' + fieldcolumn.length + + ' ' + fieldcolumn.extraparameter + ' ' + ' default:0})\n';
+          if (fieldcolumn.extraparameter === '') {
+            this.filegenerating += '@Column()\n';
+          }
+          else {
+            this.filegenerating += '@Column({' + fieldcolumn.extraparameter;
+            if (fieldcolumn.length !== 0) {
+              this.filegenerating += ' length:' + fieldcolumn.length.toString();
+            }
+            this.filegenerating += '})\n';
+          }
           this.filegenerating += fieldcolumn.name + ':number;\n\n';
+          break;
+        case 'date':
+          if (fieldcolumn.extraparameter === '') {
+            this.filegenerating += '@Column()\n';
+          }
+          else {
+            this.filegenerating += '@Column({' + fieldcolumn.extraparameter + '})\n';
+          }
+          this.filegenerating += fieldcolumn.name + ':date;\n\n';
           break;
         default:
           break;
@@ -78,9 +111,11 @@ export class GeneratorComponent implements OnInit {
     this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
   }
 
-  addgenrartinline(message: string){
-    this.generatingline += message + '\n';
-    this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
+  addgenrartinline(message: string) {
+    this.ngzone.runOutsideAngular(x => {
+      this.generatingline += message + '\n';
+      this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
+    });
   }
 
   generate(event: Event) {

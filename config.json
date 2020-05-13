@@ -74,11 +74,11 @@
 				},
 				{
 					"id": 2,
-					"type": "date",
 					"name": "fecha",
+					"type": "date",
 					"length": 10,
 					"keyautonumber": false,
-					"extraparameter": "",
+					"extraparameter": "{ fecha }",
 					"index": false
 				},
 				{
@@ -87,7 +87,7 @@
 					"name": "descripcion",
 					"length": 30,
 					"keyautonumber": false,
-					"extraparameter": "",
+					"extraparameter": "type:'varchar'",
 					"index": false
 				}
 			]

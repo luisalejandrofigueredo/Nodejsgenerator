@@ -10,6 +10,7 @@ import { Typeoperation } from '../interfaces/typeoperation';
 })
 export class ConfigService {
   config = {
+    version: 0.1,
     filePath: '',
     enableCors: false,
     schemas: [],
@@ -112,7 +113,7 @@ export class ConfigService {
         description: SchemaHead.description,
         imports: SchemaHead.imports,
         fields: SchemaHead.fields,
-         schemastable: [] });
+         schemastable: [] , schemarelations: []});
   }
   // delete schema
   renumanddelete(id: number) {

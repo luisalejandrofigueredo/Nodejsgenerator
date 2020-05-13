@@ -2,12 +2,12 @@
 <div class="">
     <mat-form-field style="width: 100%;">
         <textarea  matInput #textgenerating rows="20" 
-        readonly="true"  [(ngModel)]="generatingline"></textarea>
+        readonly="true" placeholder="" [(ngModel)]="generatingline"></textarea>
     </mat-form-field>
 </div>
 <p>Destination Path: {{filePath}}</p>
 <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
-    <button id="button" color="primary" mat-raised-button (click)="generate($event)">Start Generating</button>
+    <button id="button" color="primary" mat-raised-button (click)="generate($event)"><mat-icon >build</mat-icon>Start Generating</button>
 </div>
 <mat-form-field style="width: 100%;">
     <textarea matInput cdkTextareaAutosize cols="" style="width: 100%;"

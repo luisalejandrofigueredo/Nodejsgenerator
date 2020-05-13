@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Add relation</h2>
+<div mat-dialog-content>
+    <mat-select placeholder="Type" [(ngModel)]="type" name="type">
+        <mat-option *ngFor="let item of items" [value]="item.value">
+            {{item.viewValue}}
+        </mat-option>
+    </mat-select>
+    <mat-select (selectionChange)="selection($event)" placeholder="entity" [(ngModel)]="entity" name="entity">
+        <mat-option *ngFor="let item of entitys" [value]="item.id">
+            {{item.name}}
+        </mat-option>
+    </mat-select>
+    <mat-select  placeholder="field" [(ngModel)]="field" name="field">
+        <mat-option *ngFor="let item of fields" [value]="item.name">
+            {{item.name}}
+        </mat-option>
+    </mat-select>
+</div>
+<div mat-dialog-actions style = "justify-content: flex-end;">
+    <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>
+    <button mat-raised-button color="primary" mat-button (click)="onYesClick()" >Yes</button>
+</div>
+

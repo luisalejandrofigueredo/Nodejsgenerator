@@ -3,17 +3,17 @@
     <button mat-icon-button (click)="navigate()"><mat-icon>home</mat-icon></button>
 </div>
 <p>Schema:{{schemaname}}</p>
-<table #mytable mat-table #table [dataSource]="dataSource">
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef> # </th>
+<table mat-table matSort [dataSource]="dataSource">
+  <ng-container   matColumnDef="id">
+    <th mat-header-cell mat-sort-header *matHeaderCellDef> # </th>
     <td mat-cell *matCellDef="let row"> {{row.id}} </td>
   </ng-container>
-  <ng-container matColumnDef="type">
-    <th mat-header-cell *matHeaderCellDef> type </th>
+  <ng-container  matColumnDef="type">
+    <th mat-header-cell mat-sort-header *matHeaderCellDef> type </th>
     <td mat-cell *matCellDef="let row"> {{row.type}} </td>
   </ng-container>
   <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef> name </th>
+    <th mat-header-cell mat-sort-header *matHeaderCellDef> name </th>
     <td mat-cell *matCellDef="let row"><span style="padding-left: 20px;"></span>{{row.name}} </td>
   </ng-container>
   <ng-container matColumnDef="length">

@@ -22,6 +22,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import {MatSortModule} from '@angular/material/sort';
 import { SchematicsComponent } from './schematics/schematics.component';
 import { NgxElectronModule } from 'ngx-electron';
 import { DatamodalComponent } from './datamodal/datamodal.component';
@@ -32,6 +33,8 @@ import { FormschemamodalComponent } from './formschemamodal/formschemamodal.comp
 import { ApiComponent } from './api/api.component';
 import { ApidatamodalComponent } from './apidatamodal/apidatamodal.component';
 import { GeneratorComponent } from './generator/generator.component';
+import { BrowserelationsComponent } from './browserelations/browserelations.component';
+import { RelationdatamodalComponent } from './relationdatamodal/relationdatamodal.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,6 +48,8 @@ import { GeneratorComponent } from './generator/generator.component';
     ApiComponent,
     ApidatamodalComponent,
     GeneratorComponent,
+    BrowserelationsComponent,
+    RelationdatamodalComponent,
   ],
   imports: [
     BrowserModule,
@@ -67,11 +72,12 @@ import { GeneratorComponent } from './generator/generator.component';
     MatDialogModule,
     MatTooltipModule,
     MatProgressBarModule,
+    MatSortModule,
     FormsModule,
     NgxElectronModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [DatamodalComponent, FormschemamodalComponent, ApidatamodalComponent]
+  entryComponents: [DatamodalComponent, FormschemamodalComponent, ApidatamodalComponent, RelationdatamodalComponent]
 })
 export class AppModule { }

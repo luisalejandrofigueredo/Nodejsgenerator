@@ -25,11 +25,15 @@
         <td mat-cell *matCellDef="let row"><button (click)="edit_data(row.id)" mat-icon-button><mat-icon>dynamic_feed</mat-icon></button></td>
       </ng-container>
       <ng-container matColumnDef="api">
-        <th mat-header-cell *matHeaderCellDef> api </th>
+        <th mat-header-cell *matHeaderCellDef> API </th>
         <td mat-cell *matCellDef="let row"><button (click)="edit_api(row.id)" mat-icon-button><mat-icon>dehaze</mat-icon></button></td>
       </ng-container>
-    <tr mat-header-row *matHeaderRowDef="['id','name','description','delete','edit','data','api']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['id','name','description','delete','edit','data','api'];"></tr>
+      <ng-container matColumnDef="relations">
+        <th mat-header-cell *matHeaderCellDef> Relations </th>
+        <td mat-cell *matCellDef="let row"><button (click)="relations(row.id)" mat-icon-button><mat-icon>call_split</mat-icon></button></td>
+      </ng-container>
+    <tr mat-header-row *matHeaderRowDef="['id','name','description','delete','edit','data','api','relations']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['id','name','description','delete','edit','data','api','relations'];"></tr>
 </table>
 <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 <button matTooltip="Save Schema" (click)="save()" mat-icon-button><mat-icon>save</mat-icon>Save</button>

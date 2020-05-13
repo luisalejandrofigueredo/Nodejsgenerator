@@ -5,6 +5,8 @@ import {ConfigComponent} from './config/config.component';
 import {BrowseschematicsComponent} from './browseschematics/browseschematics.component';
 import { ApiComponent } from './api/api.component';
 import {GeneratorComponent} from './generator/generator.component';
+import { BrowserelationsComponent } from './browserelations/browserelations.component';
+
 const routes: Routes = [{
   path: 'schematics/:id',
   component: SchematicsComponent}, {
@@ -15,7 +17,11 @@ const routes: Routes = [{
   }, { path: 'api/:id',
       component: ApiComponent},
     { path: 'generator',
-    component: GeneratorComponent}
+    component: GeneratorComponent
+  }, {
+    path: 'browserelations/:id',
+    component: BrowserelationsComponent
+  }
  ];
 
 @NgModule({

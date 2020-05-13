@@ -100,4 +100,9 @@ export class BrowseschematicsComponent implements OnInit {
   edit_api(_id: number){
     this.route.navigate(['/api', _id]);
   }
+
+  // tslint:disable-next-line: variable-name
+  relations(_id: number){
+    this.route.navigate(['browserelations', _id]);
+  }
 }

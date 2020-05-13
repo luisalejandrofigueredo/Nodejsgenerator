@@ -14,8 +14,9 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field appearance="outline">
       <input matInput [(ngModel)]="data.extraparameter" placeholder="extra parameters">
+      <mat-icon matSuffix>code</mat-icon>
     </mat-form-field>
     <mat-checkbox [(ngModel)]="autonumber" [disabled]="(selected==='number') ? false: true">Autonumber</mat-checkbox>
     <mat-checkbox [(ngModel)]="index" [disabled]="autonumber">Index</mat-checkbox>
