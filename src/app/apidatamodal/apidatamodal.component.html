@@ -1,9 +1,17 @@
 <h4 mat-dialog-title></h4>
-<mat-select placeholder="Operation" [(ngModel)]="selectedValue" name="item">
+<mat-select placeholder="verb" [(ngModel)]="selectedValue" name="verb">
     <mat-option *ngFor="let item of types"[value]="item.value">
         {{item.viewValue}}
     </mat-option>
 </mat-select>
+<mat-select *ngIf="selectedValue==='get'"   placeholder="get operation" [(ngModel)]="selectedOperation" name="operation">
+    <mat-option *ngFor="let item of operation" [value]="item.value">
+        {{item.viewValue}}
+    </mat-option>
+</mat-select>
+<mat-form-field *ngIf="selectedValue==='get'">
+    <input matInput  placeholder="path" [(ngModel)]="path">
+</mat-form-field>
 <div mat-dialog-content></div>
 <div mat-dialog-actions style = "justify-content: flex-end;">
     <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>

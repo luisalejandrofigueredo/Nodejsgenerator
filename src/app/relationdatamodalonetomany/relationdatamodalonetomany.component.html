@@ -1,0 +1,19 @@
+<p>Relation many to one</p>
+<mat-select (selectionChange)="changeschema()" placeholder="Schema" [(ngModel)]="selectedSchema" name="item2">
+    <mat-option *ngFor="let item of vector" [value]="item.id">
+        {{item.name}}
+    </mat-option>
+</mat-select>
+<p>Relation one to many</p>
+<mat-select  (selectionChange)="changerelation()" placeholder="Relations one to many" [(ngModel)]="selectedRelation" name="item">
+    <mat-option *ngFor="let item of relations" [value]="item.id">
+        {{item.fieldr}}
+    </mat-option>
+</mat-select>
+<mat-form-field>
+    <input matInput placeholder="class" [(ngModel)]="data.fieldc" >
+</mat-form-field>
+<div mat-dialog-actions style = "justify-content: flex-end;">
+    <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>
+    <button mat-raised-button color="primary" mat-button (click)="onYesClick()" >Yes</button>
+</div>

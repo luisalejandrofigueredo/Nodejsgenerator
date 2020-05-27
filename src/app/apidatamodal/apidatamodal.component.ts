@@ -17,10 +17,22 @@ export class ApidatamodalComponent implements OnInit {
     { value: 'post', viewValue: 'Post' },
     { value: 'delete', viewValue: 'Delete'}
   ];
+
+  operation: Type[] = [
+    { value: 'getall', viewValue: 'Get All' },
+    { value: 'getone', viewValue: 'Get One' },
+    { value: 'skiplimit', viewValue: 'Get skiplimit' },
+    { value: 'count', viewValue: 'Count'}
+  ];
+  path: string;
   selectedValue: string;
+  selectedOperation: string;
   constructor(public dialogRef: MatDialogRef<ApidatamodalComponent>, @Inject(MAT_DIALOG_DATA) public data: Typeoperation) { }
 
   ngOnInit(): void {
+    this.selectedValue = this.data.type;
+    this.selectedOperation = this.data.operation;
+    this.path = this.data.path;
   }
 
   onNoClick(){
@@ -28,7 +40,9 @@ export class ApidatamodalComponent implements OnInit {
   }
 
   onYesClick(){
+    this.data.path = this.path;
     this.data.type = this.selectedValue;
+    this.data.operation = this.selectedOperation;
     this.dialogRef.close(this.data);
   }
 }

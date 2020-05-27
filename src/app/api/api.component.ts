@@ -30,8 +30,8 @@ export class ApiComponent implements OnInit {
     this.activerouter.params.subscribe(params => {
       this.id = params.id;
       this.schemaname = this.configservice.getschemaname(this.id);
-      this.apis = this.configservice.getapis(this.schemaname);
-      this.dataSource.data = this.apis;
+      this.apis = [...this.configservice.getapis(this.id)];
+      this.dataSource.data = [...this.apis];
     });
   }
 
@@ -41,15 +41,16 @@ export class ApiComponent implements OnInit {
 
 
   openadd(){
-    const matRef = this.dialog.open(ApidatamodalComponent, { width: '300px' , data: {type: '' } as Typeoperation });
+    const matRef = this.dialog.open(ApidatamodalComponent, { width: '300px' ,
+     data: {type: '', operation: '' , path: ''} as Typeoperation });
     matRef.afterClosed().subscribe(data => { if (data !== undefined){
-      this.configservice.addoperation({id: this.id, name: this.schemaname}, data);
-      const _id = this.dataSource.data.length + 1;
-      this.apis.push({ id: _id , type: data.type});
-      this.dataSource.data = this.apis;
+      // tslint:disable-next-line: variable-name
+      const _id = this.apis.length + 1;
+      this.apis.push({ id: _id , type: data.type, operation: data.operation, path: data.path});
+      this.configservice.addapi(this.id, { id: _id , type: data.type, operation: data.operation, path: data.path});
+      this.dataSource.data = [...this.apis];
       this.table.renderRows();
     }});
-
   }
 
   delete(id: number ){
@@ -67,6 +68,7 @@ export class ApiComponent implements OnInit {
       this.table.renderRows();
   }});
   }
+
   edit(id: number){}
 
 }

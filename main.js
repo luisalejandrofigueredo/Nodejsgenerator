@@ -58,11 +58,11 @@ ipcMain.on('saveentity', (event, arg) => {
   let filepath='';
   if (process.platform==="win32") {
     console.log('writing in windows...');
-    filepath = arg.path+'\\src\\entitys\\'+ arg.name+'.ts';
+    filepath = arg.path+'\\src\\entitys\\'+ arg.name+'.entity.ts';
     dir = arg.path+'\\src\\entitys'
   } else {
     console.log('writing in unix...');
-    filepath = arg.path+'/src/entitys/'+ arg.name+'.ts';
+    filepath = arg.path+'/src/entitys/'+ arg.name+'.entity.ts';
     dir = arg.path+'/src/entitys'
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir)} 

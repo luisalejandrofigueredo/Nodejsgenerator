@@ -4,7 +4,8 @@ import { Schemahead, Schemaheaditems } from '../interfaces/schemahead';
 import { Schemaitem } from '../interfaces/schema';
 import { Schemaapi } from '../interfaces/schemaapi';
 import { Typeoperation } from '../interfaces/typeoperation';
-
+import { Relations } from '../interfaces/relations';
+import { Api } from '../interfaces/api';
 @Injectable({
   providedIn: 'root'
 })
@@ -27,27 +28,41 @@ export class ConfigService {
     this.config.enableCors = cors;
   }
 
-  getapis(schemaname: string) {
+  // tslint:disable-next-line: variable-name
+  getrelations(_id: number): Relations[] {
+    return this.config.schemas[_id].schemarelations;
+  }
+
+  getrelation(idschema: number, idrelation: number): Relations {
+    return this.config.schemas[idschema].schemarelations[idrelation];
+  }
+  // tslint:disable-next-line: variable-name
+  getrelationfilter(_id: number, filter: string): Relations[] {
+    const filtera = [...this.getrelations(_id)];
     // tslint:disable-next-line: prefer-const
-    let apis = [];
-    let find = false;
-    let pos = 0;
-    for (let index = 0; index < this.config.api.length; index++) {
-      if (this.config.api[index].name === schemaname) {
-        find = true;
-        pos = index;
-        break;
+    let filterb = [];
+    for (const iterator  of filtera ) {
+      if (iterator.type === filter) {
+         filterb.push(iterator);
       }
     }
-    if (find === true) {
-      for (let index = 0; index < this.config.api[pos].operations.length; index++) {
-        apis.push({ id: index + 1, type: this.config.api[pos].operations[index].type });
-      }
-      return apis;
-    }
-    else {
-      return [];
-    }
+    return filterb;
+  }
+  // tslint:disable-next-line: variable-name
+  addapi(_id: number, api: Api) {
+    this.config.schemas[_id - 1].schemasapi.push(api);
+   }
+  // tslint:disable-next-line: variable-name
+  addrelation(_id: number, relation: Relations) {
+    this.config.schemas[_id - 1].schemarelations.push(relation);
+   }
+   // tslint:disable-next-line: variable-name
+   editrelation(_id: number, idr: number, relation: Relations){
+    this.config.schemas[_id - 1].schemarelations[idr - 1] = {...relation};
+   }
+  getapis(id: number): Api[] {
+    // tslint:disable-next-line: prefer-const
+    return this.config.schemas[id - 1].schemasapi;
   }
 
   // tslint:disable-next-line: variable-name
@@ -66,22 +81,7 @@ export class ConfigService {
     }
   }
 
-  addoperation(schemaapi: Schemaapi, data: Typeoperation) {
-    let find = false;
-    let pos = 0;
-    // tslint:disable-next-line: prefer-for-of
-    for (let index = 0; index < this.config.api.length; index++) {
-      if (this.config.api[index].name === schemaapi.name) {
-        find = true;
-        pos = index;
-      }
-    }
-    if (find === false) {
-      this.config.api.push({ id: schemaapi.id, name: schemaapi.name, operations: [data] });
-    } else {
-      this.config.api[pos].operations.push(data);
-    }
-  }
+ 
 
   save() {
     this.electron.ipcRenderer.send('saveconfig', JSON.stringify(this.config, null, '\t'));
@@ -108,12 +108,14 @@ export class ConfigService {
   }
 
   addschema(SchemaHead: Schemahead) {
-    this.config.schemas.push({ id: SchemaHead.id,
-       name: SchemaHead.name,
-        description: SchemaHead.description,
-        imports: SchemaHead.imports,
-        fields: SchemaHead.fields,
-         schemastable: [] , schemarelations: []});
+    this.config.schemas.push({
+      id: SchemaHead.id,
+      name: SchemaHead.name,
+      description: SchemaHead.description,
+      imports: SchemaHead.imports,
+      fields: SchemaHead.fields,
+      schemastable: [], schemarelations: [], schemasapi: []
+    });
   }
   // delete schema
   renumanddelete(id: number) {
@@ -132,8 +134,8 @@ export class ConfigService {
     this.config.schemas[id - 1].schemastable.push(schemaitem);
   }
 
-  editschemaitem(id: number, iditem: number, schemaitem: Schemaitem ) {
-   this.config.schemas[id - 1].schemastable[iditem] = {...schemaitem};
+  editschemaitem(id: number, iditem: number, schemaitem: Schemaitem) {
+    this.config.schemas[id - 1].schemastable[iditem] = { ...schemaitem };
   }
 
   deleteschmeaitem(id: number, iditem: number) {

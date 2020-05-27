@@ -1,38 +1,12 @@
 {
+	"version": 0.1,
 	"filePath": "C:\\Users\\luisa\\cmder\\nestcazaor",
 	"enableCors": false,
 	"schemas": [
 		{
 			"id": 1,
-			"name": "clientes",
-			"description": "Clientes",
-			"imports": "import {} ;",
-			"fields": "data source",
-			"schemastable": [
-				{
-					"id": 1,
-					"type": "number",
-					"name": "id",
-					"length": 10,
-					"keyautonumber": true,
-					"extraparameter": "",
-					"index": false
-				},
-				{
-					"id": 2,
-					"name": "nombre",
-					"type": "string",
-					"length": 10,
-					"keyautonumber": false,
-					"extraparameter": "",
-					"index": false
-				}
-			]
-		},
-		{
-			"id": 2,
-			"name": "recetas",
-			"description": "recetas",
+			"name": "luis",
+			"description": "",
 			"imports": "",
 			"fields": "",
 			"schemastable": [
@@ -49,49 +23,59 @@
 					"id": 2,
 					"type": "string",
 					"name": "nombre",
-					"length": 25,
+					"length": 0,
 					"keyautonumber": false,
 					"extraparameter": "",
-					"index": false
-				}
-			]
-		},
-		{
-			"id": 3,
-			"name": "consultas",
-			"description": "",
-			"imports": "",
-			"fields": "",
-			"schemastable": [
-				{
-					"id": 1,
-					"type": "number",
-					"name": "id",
-					"length": 10,
-					"keyautonumber": true,
-					"extraparameter": "",
-					"index": false
-				},
-				{
-					"id": 2,
-					"name": "fecha",
-					"type": "date",
-					"length": 10,
-					"keyautonumber": false,
-					"extraparameter": "{ fecha }",
 					"index": false
 				},
 				{
 					"id": 3,
 					"type": "string",
-					"name": "descripcion",
-					"length": 30,
+					"name": "apellido",
+					"length": 0,
 					"keyautonumber": false,
-					"extraparameter": "type:'varchar'",
+					"extraparameter": "",
 					"index": false
+				}
+			],
+			"schemarelations": [],
+			"schemasapi": [
+				{
+					"id": 1,
+					"type": "get"
+				},
+				{
+					"id": 2,
+					"type": "put"
+				},
+				{
+					"id": 3,
+					"type": "get",
+					"operation": "getall"
+				},
+				{
+					"id": 4,
+					"type": "get",
+					"operation": "getone"
+				},
+				{
+					"id": 5,
+					"type": "get",
+					"operation": "skiplimit",
+					"path": "skiplimit"
 				}
 			]
 		}
 	],
-	"api": []
+	"api": [
+		{
+			"id": "1",
+			"name": "luis",
+			"operations": [
+				{
+					"type": "get"
+				}
+			]
+		}
+	]
 }

@@ -35,6 +35,8 @@ import { ApidatamodalComponent } from './apidatamodal/apidatamodal.component';
 import { GeneratorComponent } from './generator/generator.component';
 import { BrowserelationsComponent } from './browserelations/browserelations.component';
 import { RelationdatamodalComponent } from './relationdatamodal/relationdatamodal.component';
+import { RelationdatamodalonetomanyComponent } from './relationdatamodalonetomany/relationdatamodalonetomany.component';
+import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,6 +52,7 @@ import { RelationdatamodalComponent } from './relationdatamodal/relationdatamoda
     GeneratorComponent,
     BrowserelationsComponent,
     RelationdatamodalComponent,
+    RelationdatamodalonetomanyComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,9 +78,14 @@ import { RelationdatamodalComponent } from './relationdatamodal/relationdatamoda
     MatSortModule,
     FormsModule,
     NgxElectronModule,
+    MonacoEditorModule
   ],
-  providers: [],
+  providers: [{
+    provide: 'MONACO_PATH',
+    useValue: 'https://unpkg.com/monaco-editor@0.18.1/min/vs'
+  }],
   bootstrap: [AppComponent],
-  entryComponents: [DatamodalComponent, FormschemamodalComponent, ApidatamodalComponent, RelationdatamodalComponent]
+  // tslint:disable-next-line: max-line-length
+  entryComponents: [DatamodalComponent, FormschemamodalComponent, ApidatamodalComponent, RelationdatamodalComponent, RelationdatamodalonetomanyComponent]
 })
 export class AppModule { }
