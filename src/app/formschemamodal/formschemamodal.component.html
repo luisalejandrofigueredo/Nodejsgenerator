@@ -1,21 +1,24 @@
+<form [formGroup]="Userdata" (ngSubmit)="onYesClick()">
 <h4 mat-dialog-title></h4>
-  <div mat-dialog-content>
+<div mat-dialog-content>
     <mat-form-field>
-        <input matInput [(ngModel)]="data.name" placeholder="name">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput [(ngModel)]="data.description" placeholder="description">
-      </mat-form-field>
-      <mat-form-field>
-        <textarea matInput  [(ngModel)]="data.imports" placeholder="imports includes"></textarea>
-        <mat-icon matSuffix>code</mat-icon>
-      </mat-form-field>
-      <mat-form-field>
-        <textarea matInput  [(ngModel)]="data.fields" placeholder="extra fields"></textarea>
-        <mat-icon matSuffix>code</mat-icon>
-      </mat-form-field>
-  </div>
-<div mat-dialog-actions style = "justify-content: flex-end;">
-    <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>
-    <button mat-raised-button color="primary" mat-button (click)="onYesClick()" >Yes</button>
+      <input formControlName="name" matInput placeholder="name">
+      <mat-error *ngIf="Userdata.get('name').invalid">Error invalid name use string like Costumers</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput formControlName="description" placeholder="description">
+    </mat-form-field>
+    <mat-form-field>
+      <textarea matInput formControlName="imports" placeholder="imports includes"></textarea>
+      <mat-icon matSuffix>code</mat-icon>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea matInput formControlName="fields" placeholder="extra fields"></textarea>
+      <mat-icon matSuffix>code</mat-icon>
+    </mat-form-field>
 </div>
+<div mat-dialog-actions style="justify-content: flex-end;">
+  <button mat-raised-button type="button" (click)="onNoClick()" cdkFocusInitial>No</button>
+  <button mat-raised-button type="submit" color="primary" mat-button [disabled]="!Userdata.valid">Yes</button>
+</div>
+</form>

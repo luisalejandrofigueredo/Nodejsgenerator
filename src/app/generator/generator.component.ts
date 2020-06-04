@@ -3,6 +3,7 @@ import { ElectronService } from 'ngx-electron';
 import { Schemaitem } from '../interfaces/schema';
 import { Relations } from '../interfaces/relations';
 
+
 @Component({
   selector: 'app-generator',
   templateUrl: './generator.component.html',
@@ -11,6 +12,7 @@ import { Relations } from '../interfaces/relations';
 export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
   generatingline = 'Ready for begin\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n';
   progressbar = false;
+  keyfield = '';
   @ViewChild('textgenerating', { static: true }) container: ElementRef;
   constructor(private ngzone: NgZone, private electronservice: ElectronService) { }
   config: any;
@@ -18,7 +20,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
   filegenerating = '';
   fileapigenerating = '';
   reltables: string[] = [];
-  editorOptions = { theme: 'vs-dark', language: 'javascript' };
+  editorOptions = { theme: 'vs-dark', language: 'typescript', uri: 'file://' + this.filePath  };
   ormj = { PrimaryGeneratedColumn: false, OneToMany: false, ManyToOne: false };
   ngOnInit(): void {
   }
@@ -31,6 +33,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
   addingPath() {
     this.addgenrartinline('reading file path ...');
     this.filePath = this.config.filePath;
+    // const end = this.electronservice.ipcRenderer.sendSync('dir', { path: this.config.filePath});
     this.generateschemas();
     this.addgenrartinline('End generate');
   }
@@ -44,19 +47,22 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
       this.ormj = { PrimaryGeneratedColumn: false, OneToMany: false, ManyToOne: false };
       this.reltables = [];
       this.entitygenerator(index);
-      this.apigenerator(index);
+      this.apigenerator(index, schemas[index].name);
     }
     this.addgenrartinline('end generating schemas ...');
   }
 
-  apigenerator(index: number) {
+  apigenerator(index: number, schema: string) {
+    const schemalower = schema.toLowerCase();
     this.addgenrartinline('Begin generate Api... ');
     this.addgenrartinline('Begin generate controller... ');
     this.filegenerating = 'import { Controller, Inject,Post, Body, Get, Put, Delete,Param,UseGuards,Headers, SetMetadata,Query} from "@nestjs/common";\n';
-    this.filegenerating += `import ${this.config.schemas[index].name}service from '../services/${this.config.schemas[index].name}.service'\n`;
+    this.filegenerating += `import { ${this.config.schemas[index].name} } from '../entitys/${this.config.schemas[index].name}.entity';\n`;
+    // tslint:disable-next-line: max-line-length
+    this.filegenerating += `import { ${this.config.schemas[index].name}Service } from '../service/${this.config.schemas[index].name}.service';\n`;
     this.filegenerating += `@Controller('${this.config.schemas[index].name}')\n`;
-    this.filegenerating += `export class ${this.config.schemas[index].name} {\n`;
-    this.filegenerating += `constructor(private service:${this.config.schemas[index].name}service)\n`;
+    this.filegenerating += `export class ${this.config.schemas[index].name}class {\n`;
+    this.filegenerating += `constructor(private service: ${this.config.schemas[index].name}Service){}\n`;
     // tslint:disable-next-line: prefer-for-of
     for (let ind = 0; ind < this.config.schemas[index].schemasapi.length; ind++) {
       const element = this.config.schemas[index].schemasapi[ind];
@@ -64,50 +70,139 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
         case 'get':
           switch (element.operation) {
             case 'getall':
-              this.addgenrartinline('adding verb get getall');
+              this.addgenrartinline('\tadding verb get getall');
               this.filegenerating += '@Get()\n';
-              this.filegenerating += 'get {}\n';
-              this.filegenerating += '{}\n';
+              this.filegenerating += 'get()\n';
+              this.filegenerating += `{ \n\t return this.service.getall();\n}\n`;
               break;
-              case 'getone':
-              this.addgenrartinline('adding verb get getone');
-              this.filegenerating += `@Get(${element.path}/:id)\n`;
-              this.filegenerating += `get${element.path} {}\n`;
-              this.filegenerating += '{}\n';
+            case 'getone':
+              this.addgenrartinline('\tadding verb get getone');
+              this.filegenerating += `@Get('${element.path}/:id')\n`;
+              this.filegenerating += `getone(@Param() params) {\n`;
+              this.filegenerating += `\t return this.service.getOne(+params.id);\n }\n`;
               break;
-              case 'skiplimit':
-              this.addgenrartinline('adding verb get skiplimit'); 
-              this.filegenerating += `@Get(${element.path}/:id)\n`;
-              this.filegenerating += `get${element.path} (@param {}\n`;
-              this.filegenerating += '{}\n';
+            case 'skiplimit':
+              this.addgenrartinline('\tadding verb get skiplimit');
+              this.filegenerating += `@Get('skiplimit/:skip/:limit/:order')\n`;
+              this.filegenerating += `getskiplimitorder (@Param('skip') skip:number,@Param('limit') limit:number,@Param('order') order:string)`;
+              this.filegenerating += '{\n';
+              this.filegenerating += '\t return this.service.skiplimit(skip,limit,order);\n';
+              this.filegenerating += '}\n';
               break;
             default:
               break;
           }
           break;
         case 'put':
-          this.addgenrartinline('adding put');
-          this.filegenerating += '@Put()\n';
-          this.filegenerating += 'put {}\n';
+          this.addgenrartinline('\tadding put');
+          this.filegenerating += `@Put()\n`;
+          this.filegenerating += `update(@Body() ${schemalower}: ${schema}) {\n`;
+          this.filegenerating += `\t return this.service.update(${schemalower});\n`;
+          this.filegenerating += `}\n`;
           break;
         case 'post':
-          this.addgenrartinline('adding post');
-          this.filegenerating += '@Post()\n';
-          this.filegenerating += 'post {}\n';
+          this.addgenrartinline('\tadding post');
+          this.filegenerating += `@Post()\n`;
+          this.filegenerating += `create(@Body() ${schemalower}: ${schema}) {\n`;
+          this.filegenerating += `\t return this.service.create(${schemalower});\n`;
+          this.filegenerating += `}\n`;
           break;
         case 'delete':
-          this.addgenrartinline('adding post');
-          this.filegenerating += '@Delete(/:id)\n';
-          this.filegenerating += 'delete {}\n';
+          this.addgenrartinline('\tadding delete');
+          this.filegenerating += `@Delete('/:id')\n`;
+          this.filegenerating += `delete(@Param() params) {\n\t return this.service.delete(+params.id);\n}\n`;
           break;
         default:
           break;
       }
     }
+    this.filegenerating += '}';
+    this.addgenrartinline('Saving controller... ');
+    const args = { path: this.config.filePath, name: schema, file: this.filegenerating };
+    const end = this.electronservice.ipcRenderer.sendSync('savecontroler', args);
     this.addgenrartinline('End generate controller... ');
     this.addgenrartinline('Begin generate service... ');
+    this.servicegenerator(index, schema);
     this.addgenrartinline('End generate service... ');
     this.addgenrartinline('End generate Api ... ');
+  }
+
+  servicegenerator(index: number, schema: string) {
+    const schemalower = schema.toLowerCase();
+    this.filegenerating = '';
+    this.filegenerating += `import { Injectable, Inject, UseGuards } from '@nestjs/common';\n`;
+    this.filegenerating += `import { InjectRepository } from '@nestjs/typeorm';\n`;
+    this.filegenerating += `import { Repository } from 'typeorm';\n`;
+    this.filegenerating += `import * as bcrypt from 'bcrypt';\n`;
+    this.filegenerating += `import { ${this.config.schemas[index].name} } from '../entitys/${this.config.schemas[index].name}.entity';\n`;
+    this.filegenerating += `@Injectable()\n`;
+    this.filegenerating += `export class ${schema}Service {\n`;
+    this.filegenerating += `constructor(@InjectRepository(${schema}) private ${schema}Repository: Repository<${schema}>) { }\n`;
+    // tslint:disable-next-line: prefer-for-of
+    for (let ind = 0; ind < this.config.schemas[index].schemasapi.length; ind++) {
+      const element = this.config.schemas[index].schemasapi[ind];
+      switch (element.type) {
+        case 'get':
+          switch (element.operation) {
+            case 'getall':
+              this.addgenrartinline('\tadding service get getall');
+              this.filegenerating += `async getall(): Promise<${schema}[]> {\n`;
+              this.filegenerating += `\treturn await this.${schema}Repository.find();\n`;
+              this.filegenerating += `}\n`;
+              break;
+              case 'getone':
+              this.addgenrartinline('\tadding service get getone');
+              this.filegenerating += `async getOne(_id: number): Promise<${schema}> {\n`;
+              this.filegenerating += `\t return await this.${schema}Repository.findOne({`;
+              this.filegenerating += `where: [{ "id": _id }]`;
+              this.filegenerating += `});\n`;
+              this.filegenerating += `}\n`;
+              break;
+              case 'skiplimit':
+              this.addgenrartinline('\tadding service get skiplimit');
+              this.filegenerating += `async skiplimit(skip: number, limit: number, order: string): Promise<${schema}[]> {\n`;
+              this.filegenerating += `if (order === 'ASC') {\n`;
+              this.filegenerating += `\treturn await this.${schema}Repository.createQueryBuilder("${schema}").orderBy('${this.keyfield}', 'ASC').offset(skip).limit(limit).getMany();\n`;
+              this.filegenerating += `} else {\n`;
+              this.filegenerating += `\treturn await this.${schema}Repository.createQueryBuilder("${schema}").orderBy('${this.keyfield}', 'DESC').offset(skip).limit(limit).getMany();\n`;
+              this.filegenerating += `}\n}\n`;
+              break;
+              case 'count':
+              this.addgenrartinline('\tadding service get count');
+              this.filegenerating += `async get${schema}Count(): Promise<number> {\n`;
+              this.filegenerating += `\t return await this.${schema}Repository.count();\n`;
+              this.filegenerating += '}\n';
+              break;
+            default:
+              break;
+          }
+          break;
+        case 'put':
+          this.addgenrartinline('\tadding put service');
+          this.filegenerating += `async update(${schemalower}: ${schema}): Promise<${schema}> {\n`;
+          this.filegenerating += `\t return await this.${schema}Repository.save(${schemalower});\n`;
+          this.filegenerating += `}\n`;
+          break;
+        case 'post':
+          this.addgenrartinline('\tadding post service');
+          this.filegenerating += `async create(${schemalower}: ${schema} ): Promise<${schema}> {\n`;
+          this.filegenerating += `\t return await this.${schema}Repository.save(${schemalower});\n`;
+          this.filegenerating += `}\n`;
+          break;
+          case 'delete':
+            this.addgenrartinline('\tadding delete service');
+            this.filegenerating += `async delete(_id: Number) {\n`;
+            this.filegenerating += `\t let ${schemalower}: ${schema} = await this.${schema}Repository.findOne({where: [{ "id": _id }]});\n`;
+            this.filegenerating += `\t return await this.${schema}Repository.delete(${schemalower});\n`;
+            this.filegenerating += `}\n`;
+            break;
+        default:
+          break;
+      }
+    }
+    this.filegenerating += `}\n`;
+    const args = { path: this.config.filePath, name: schema, file: this.filegenerating };
+    const end = this.electronservice.ipcRenderer.sendSync('saveservice', args);
   }
 
   entitygenerator(ind: number) {
@@ -134,7 +229,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
     this.filegenerating += this.config.schemas[ind].fields + '\n';
     this.filegenerating += '}\n';
     this.filegenerating = this.generateimports(this.reltables) + this.filegenerating;
-    this.addgenrartinline('\t saving entity');
+    this.addgenrartinline('saving entity');
     const args = { path: this.config.filePath, name: this.config.schemas[ind].name, file: this.filegenerating };
     const end = this.electronservice.ipcRenderer.sendSync('saveentity', args);
   }
@@ -143,7 +238,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
     this.addgenrartinline('Relations generator ... /n');
     switch (element.type) {
       case 'onetomany':
-        this.addgenrartinline(`adding relation @OneToMany table ${element.tablename}... /n`);
+        this.addgenrartinline(`\tadding relation @OneToMany table ${element.tablename}... /n`);
         this.ormj.OneToMany = true;
         this.filegenerating += '@OneToMany(type =>' + element.tablename + ',' + element.fieldc;
         this.filegenerating += ' =>' + element.fieldc + '.' + element.field + ' )\n';
@@ -152,7 +247,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
         break;
       case 'manytoone':
         this.ormj.ManyToOne = true; // ss
-        this.addgenrartinline(`adding relation @ManytoOne table ${element.tablename}... /n`);
+        this.addgenrartinline(`\tadding relation @ManytoOne table ${element.tablename}... /n`);
         this.filegenerating += '@ManyToOne (type =>' + element.tablename + ',' + element.fieldc + '=>' + element.fieldc +
           '.' + element.fieldr + ' )\n';
         this.filegenerating += element.fieldc + ':' + element.tablename + ';';
@@ -192,6 +287,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
       this.ormj.PrimaryGeneratedColumn = true;
       this.filegenerating += '@PrimaryGeneratedColumn()\n';
       this.filegenerating += fieldcolumn.name + ':' + fieldcolumn.type + ';\n\n';
+      this.keyfield = fieldcolumn.name;
     } else {
       switch (fieldcolumn.type) {
         case 'string':

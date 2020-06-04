@@ -29,11 +29,12 @@ export class BrowseschematicsComponent implements OnInit {
 
   add() {
     const dialogRef = this.dialog.open(FormschemamodalComponent, {
-      width: '300px',
-      disableClose: true,
+      width: '350px',
+      disableClose: false,
       data: { id: 0, name: '', description: '', imports: '', fields: '' } as Schemahead
     });
     dialogRef.afterClosed().subscribe(data => {
+      console.log('data', data);
       if (data !== undefined) {
         if ( this.schema.length === undefined){
           data.id = 1;

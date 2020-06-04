@@ -81,8 +81,6 @@ export class ConfigService {
     }
   }
 
- 
-
   save() {
     this.electron.ipcRenderer.send('saveconfig', JSON.stringify(this.config, null, '\t'));
   }

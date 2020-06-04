@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Menu,screen } = require('electron')
+const { app, BrowserWindow, ipcMain, Menu, screen } = require('electron')
 const url = require("url");
 const path = require("path");
 var fs = require('fs');
@@ -44,35 +44,81 @@ function createWindow() {
   })
 }
 
-ipcMain.on('loadconfig',(event, arg) => {
-   fs.readFile(arg, function (err,data) {
+ipcMain.on('loadconfig', (event, arg) => {
+  fs.readFile(arg, function (err, data) {
     if (err) throw err;
-    const json =  JSON.parse(data);
-    event.returnValue= json;
+    const json = JSON.parse(data);
+    event.returnValue = json;
   });
-})
+});
+
+ipcMain.on('dir', (event, arg) => {
+  console.log('arg', arg);
+  try {
+    process.chdir(arg.path+'\\src\\service');
+    console.log('listo',process.cwd());
+  }
+  catch(err){console.log('operative system error');}
+  event.returnValue = 'cd ready';
+});
 
 ipcMain.on('saveentity', (event, arg) => {
-  console.log('writing files os:',process.platform);
-  let dir='';
-  let filepath='';
-  if (process.platform==="win32") {
+  console.log('writing files os:', process.platform);
+  let dir = '';
+  let filepath = '';
+  if (process.platform === "win32") {
     console.log('writing in windows...');
-    filepath = arg.path+'\\src\\entitys\\'+ arg.name+'.entity.ts';
-    dir = arg.path+'\\src\\entitys'
+    filepath = arg.path + '\\src\\entitys\\' + arg.name + '.entity.ts';
+    dir = arg.path + '\\src\\entitys'
   } else {
     console.log('writing in unix...');
-    filepath = arg.path+'/src/entitys/'+ arg.name+'.entity.ts';
-    dir = arg.path+'/src/entitys'
+    filepath = arg.path + '/src/entitys/' + arg.name + '.entity.ts';
+    dir = arg.path + '/src/entitys'
   }
-  if (!fs.existsSync(dir)) { fs.mkdirSync(dir)} 
-  writeFile(filepath,arg.file);
-  event.returnValue= 'file saved';
- });
+  if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
+  writeFile(filepath, arg.file);
+  event.returnValue = 'file saved';
+});
 
-function writeFile(filepath,file) {
-  fs.writeFileSync(filepath,file);
-  console.log('entity writed',filepath);
+ipcMain.on('saveservice', (event, arg) => {
+  console.log('writing files os:', process.platform);
+  let dir = '';
+  let filepath = '';
+  if (process.platform === "win32") {
+    console.log('writing in windows...');
+    filepath = arg.path + '\\src\\service\\' + arg.name + '.service.ts';
+    dir = arg.path + '\\src\\service';
+  } else {
+    console.log('writing in unix...');
+    filepath = arg.path + '/src/service/' + arg.name + '.service.ts';
+    dir = arg.path + '/src/service';
+  }
+  if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
+  writeFile(filepath, arg.file);
+  event.returnValue = 'file saved';
+});
+
+ipcMain.on('savecontroler', (event, arg) => {
+  console.log('writing files os:', process.platform);
+  let dir = '';
+  let filepath = '';
+  if (process.platform === "win32") {
+    console.log('writing in windows...');
+    filepath = arg.path + '\\src\\controler\\' + arg.name + '.controler.ts';
+    dir = arg.path + '\\src\\controler'
+  } else {
+    console.log('writing in unix...');
+    filepath = arg.path + '/src/controler/' + arg.name + '.controler.ts';
+    dir = arg.path + '/src/controler'
+  }
+  if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
+  writeFile(filepath, arg.file);
+  event.returnValue = 'file controler saved';
+});
+
+function writeFile(filepath, file) {
+  fs.writeFileSync(filepath, file);
+  console.log('writed', filepath);
 }
 
 ipcMain.on('saveconfig', (event, arg) => {
@@ -82,7 +128,7 @@ ipcMain.on('saveconfig', (event, arg) => {
   });
 })
 
-app.allowRendererProcessReuse=true;
+app.allowRendererProcessReuse = true;
 app.on('ready', createWindow)
 
 app.on('window-all-closed', function () {

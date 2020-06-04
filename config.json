@@ -5,7 +5,7 @@
 	"schemas": [
 		{
 			"id": 1,
-			"name": "luis",
+			"name": "Clientes",
 			"description": "",
 			"imports": "",
 			"fields": "",
@@ -23,7 +23,7 @@
 					"id": 2,
 					"type": "string",
 					"name": "nombre",
-					"length": 0,
+					"length": 20,
 					"keyautonumber": false,
 					"extraparameter": "",
 					"index": false
@@ -42,24 +42,42 @@
 			"schemasapi": [
 				{
 					"id": 1,
-					"type": "get"
+					"type": "get",
+					"operation": "getall",
+					"path": "getall"
 				},
 				{
 					"id": 2,
-					"type": "put"
+					"type": "get",
+					"operation": "getone",
+					"path": "getone"
 				},
 				{
 					"id": 3,
-					"type": "get",
-					"operation": "getall"
+					"type": "put",
+					"operation": "",
+					"path": ""
 				},
 				{
 					"id": 4,
-					"type": "get",
-					"operation": "getone"
+					"type": "post",
+					"operation": "",
+					"path": ""
 				},
 				{
 					"id": 5,
+					"type": "delete",
+					"operation": "",
+					"path": ""
+				},
+				{
+					"id": 6,
+					"type": "get",
+					"operation": "count",
+					"path": "count"
+				},
+				{
+					"id": 7,
 					"type": "get",
 					"operation": "skiplimit",
 					"path": "skiplimit"
@@ -67,15 +85,5 @@
 			]
 		}
 	],
-	"api": [
-		{
-			"id": "1",
-			"name": "luis",
-			"operations": [
-				{
-					"type": "get"
-				}
-			]
-		}
-	]
+	"api": []
 }
