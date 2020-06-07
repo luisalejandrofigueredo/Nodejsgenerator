@@ -9,33 +9,33 @@
 <h3>Schema:{{ schemaname}}</h3>
 <table mat-table matSort [dataSource]="dataSource">
   <ng-container matColumnDef="id">
-    <th mat-header-cell mat-sort-header *matHeaderCellDef> # </th>
+    <th mat-header-cell class="head" mat-sort-header *matHeaderCellDef> # </th>
     <td mat-cell *matCellDef="let row"> {{row.id}} </td>
   </ng-container>
   <ng-container matColumnDef="type">
-    <th mat-header-cell mat-sort-header *matHeaderCellDef> Type </th>
+    <th mat-header-cell class="head" mat-sort-header *matHeaderCellDef> Type </th>
     <td mat-cell *matCellDef="let row"> {{row.type}} </td>
   </ng-container>
   <ng-container matColumnDef="tablename">
-    <th mat-header-cell mat-sort-header *matHeaderCellDef>( Table </th>
+    <th mat-header-cell class="head" mat-sort-header *matHeaderCellDef>( Table </th>
     <td mat-cell *matCellDef="let row"><span style="padding-left: 20px;"></span>{{row.tablename}}</td>
   </ng-container>
   <ng-container matColumnDef="field">
-    <th mat-header-cell mat-sort-header *matHeaderCellDef> Field  )</th>
+    <th mat-header-cell class="head" mat-sort-header *matHeaderCellDef> Field  )</th>
     <td mat-cell *matCellDef="let row"><span style="padding-left: 20px;"></span>{{row.field}} </td>
   </ng-container>
   <ng-container matColumnDef="fieldr">
-    <th mat-header-cell mat-sort-header *matHeaderCellDef> Field Relation </th>
+    <th mat-header-cell class="head" mat-sort-header *matHeaderCellDef> Field Relation </th>
     <td mat-cell *matCellDef="let row"><span style="padding-left: 20px;"></span>{{row.fieldr}} </td>
   </ng-container>
   <ng-container matColumnDef="delete">
-    <th mat-header-cell *matHeaderCellDef> delete </th>
+    <th mat-header-cell class="head" *matHeaderCellDef> Delete </th>
     <td mat-cell *matCellDef="let row"><button (click)="delete(row.id)" mat-icon-button>
         <mat-icon>delete</mat-icon>
       </button></td>
   </ng-container>
   <ng-container matColumnDef="edit">
-    <th mat-header-cell *matHeaderCellDef> edit </th>
+    <th mat-header-cell class="head" *matHeaderCellDef> Edit </th>
     <td mat-cell *matCellDef="let row"><button (click)="edit(row.id)" mat-icon-button>
         <mat-icon>edit</mat-icon>
       </button></td>

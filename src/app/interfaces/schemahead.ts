@@ -5,6 +5,9 @@ export interface Schemahead {
     description: string;
     imports?: string;
     fields?: string;
+    security?: boolean;
+    classsecurity?: string;
+    filesecurity: string;
 }
 
 export interface Schemaheaditems extends Schemahead {

@@ -1,12 +1,139 @@
 {
 	"version": 0.1,
 	"filePath": "C:\\Users\\luisa\\cmder\\nestcazaor",
-	"enableCors": false,
+	"enableCors": true,
 	"schemas": [
 		{
 			"id": 1,
 			"name": "Clientes",
-			"description": "",
+			"description": "Archivo principal ",
+			"imports": "",
+			"fields": "",
+			"schemastable": [
+				{
+					"id": 1,
+					"type": "number",
+					"name": "id",
+					"length": 0,
+					"keyautonumber": true,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 2,
+					"name": "nombre",
+					"type": "string",
+					"length": 20,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": true,
+					"security": true,
+					"roles": "Usuario"
+				},
+				{
+					"id": 3,
+					"name": "apellido",
+					"type": "string",
+					"length": 0,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": true
+				}
+			],
+			"schemarelations": [
+				{
+					"id": 1,
+					"idtable": "1",
+					"tablename": "Facturas",
+					"type": "onetomany",
+					"field": "id",
+					"table": 2,
+					"fieldc": "factura",
+					"fieldr": "facturas"
+				}
+			],
+			"schemasapi": [
+				{
+					"id": 1,
+					"type": "put",
+					"operation": "",
+					"path": ""
+				},
+				{
+					"id": 2,
+					"type": "post",
+					"operation": "",
+					"path": ""
+				},
+				{
+					"id": 3,
+					"type": "delete",
+					"operation": "",
+					"path": ""
+				},
+				{
+					"id": 4,
+					"type": "get",
+					"operation": "skiplimit",
+					"path": "skiplimit",
+					"fields": [
+						"id",
+						"nombre",
+						"apellido"
+					],
+					"security": true,
+					"roles": "Admin"
+				},
+				{
+					"id": 5,
+					"type": "get",
+					"operation": "skiplimitbyfield",
+					"path": "nombres",
+					"fields": [
+						"id",
+						"nombre",
+						"apellido"
+					]
+				},
+				{
+					"id": 6,
+					"type": "get",
+					"operation": "getall",
+					"path": ""
+				},
+				{
+					"id": 7,
+					"type": "get",
+					"operation": "getone",
+					"path": "getone"
+				},
+				{
+					"id": 8,
+					"type": "get",
+					"operation": "skiplimitbyfield",
+					"path": "",
+					"field": "apellido",
+					"security": false,
+					"roles": ""
+				},
+				{
+					"id": 9,
+					"type": "get",
+					"operation": "skiplimitfilter",
+					"path": "filterapellido",
+					"field": "apellido",
+					"security": false,
+					"roles": ""
+				}
+			],
+			"security": true,
+			"classsecurity": "RolesGuard",
+			"filesecurity": "C:/Users/luisa/cmder/nestcazaor/src/roles/roles.guard"
+		},
+		{
+			"id": 2,
+			"name": "Facturas",
+			"description": "Archivo de Facturas",
 			"imports": "",
 			"fields": "",
 			"schemastable": [
@@ -22,7 +149,7 @@
 				{
 					"id": 2,
 					"type": "string",
-					"name": "nombre",
+					"name": "Descripcion",
 					"length": 20,
 					"keyautonumber": false,
 					"extraparameter": "",
@@ -30,8 +157,8 @@
 				},
 				{
 					"id": 3,
-					"type": "string",
-					"name": "apellido",
+					"type": "number",
+					"name": "Total",
 					"length": 0,
 					"keyautonumber": false,
 					"extraparameter": "",
@@ -43,46 +170,43 @@
 				{
 					"id": 1,
 					"type": "get",
-					"operation": "getall",
-					"path": "getall"
+					"operation": "getone",
+					"path": "getone",
+					"field": "",
+					"security": false,
+					"roles": ""
 				},
 				{
 					"id": 2,
-					"type": "get",
-					"operation": "getone",
-					"path": "getone"
+					"type": "post",
+					"operation": "",
+					"path": "",
+					"field": "",
+					"security": false,
+					"roles": ""
 				},
 				{
 					"id": 3,
 					"type": "put",
 					"operation": "",
-					"path": ""
+					"path": "",
+					"field": "",
+					"security": false,
+					"roles": ""
 				},
 				{
 					"id": 4,
-					"type": "post",
-					"operation": "",
-					"path": ""
-				},
-				{
-					"id": 5,
 					"type": "delete",
 					"operation": "",
-					"path": ""
-				},
-				{
-					"id": 6,
-					"type": "get",
-					"operation": "count",
-					"path": "count"
-				},
-				{
-					"id": 7,
-					"type": "get",
-					"operation": "skiplimit",
-					"path": "skiplimit"
+					"path": "",
+					"field": "",
+					"security": false,
+					"roles": ""
 				}
-			]
+			],
+			"security": null,
+			"classsecurity": null,
+			"filesecurity": null
 		}
 	],
 	"api": []

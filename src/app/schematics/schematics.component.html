@@ -4,28 +4,28 @@
 </div>
 <p>Schema:{{schemaname}}</p>
 <table mat-table matSort [dataSource]="dataSource">
-  <ng-container   matColumnDef="id">
-    <th mat-header-cell mat-sort-header *matHeaderCellDef> # </th>
+  <ng-container matColumnDef="id">
+    <th mat-header-cell class="head" mat-sort-header *matHeaderCellDef> # </th>
     <td mat-cell *matCellDef="let row"> {{row.id}} </td>
   </ng-container>
-  <ng-container  matColumnDef="type">
-    <th mat-header-cell mat-sort-header *matHeaderCellDef> type </th>
+  <ng-container matColumnDef="type">
+    <th mat-header-cell class="head" mat-sort-header *matHeaderCellDef> Type </th>
     <td mat-cell *matCellDef="let row"> {{row.type}} </td>
   </ng-container>
   <ng-container matColumnDef="name">
-    <th mat-header-cell mat-sort-header *matHeaderCellDef> name </th>
+    <th mat-header-cell class="head" mat-sort-header *matHeaderCellDef> Name </th>
     <td mat-cell *matCellDef="let row"><span style="padding-left: 20px;"></span>{{row.name}} </td>
   </ng-container>
   <ng-container matColumnDef="length">
-    <th mat-header-cell *matHeaderCellDef> length </th>
+    <th mat-header-cell class="head" *matHeaderCellDef> Length </th>
     <td mat-cell *matCellDef="let row"><span style="padding-left: 20px;"></span>{{row.length}} </td>
   </ng-container>
   <ng-container matColumnDef="delete">
-    <th mat-header-cell *matHeaderCellDef> delete </th>
+    <th mat-header-cell class="head" *matHeaderCellDef> Delete </th>
     <td mat-cell *matCellDef="let row"><button (click)="delete(row.id)" mat-icon-button><mat-icon>delete</mat-icon></button></td>
   </ng-container>
   <ng-container matColumnDef="edit">
-    <th mat-header-cell *matHeaderCellDef> edit </th>
+    <th mat-header-cell class="head" *matHeaderCellDef> Edit </th>
     <td mat-cell *matCellDef="let row"><button (click)="edit(row.id)" mat-icon-button><mat-icon>edit</mat-icon></button></td>
   </ng-container>
   <tr mat-header-row *matHeaderRowDef="['id','name','type','length','delete','edit']"></tr>

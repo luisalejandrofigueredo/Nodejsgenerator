@@ -59,7 +59,8 @@ export class SchematicsComponent implements OnInit {
         length: data.length,
         keyautonumber: data.keyautonumber,
         extraparameter: data.extraparameter,
-        index: data.index };
+        index: data.index,
+         };
     this.configservice.editschemaitem(this.id, data.id - 1, data);
     this.dataSource.data = this.schemaitems;
     this.table.renderRows();
@@ -76,7 +77,8 @@ export class SchematicsComponent implements OnInit {
           length: data.length,
           keyautonumber: data.keyautonumber,
           extraparameter: data.extraparameter,
-          index: data.index }];
+          index: data.index,
+          }];
     }
     else {
       position = this.schemaitems.length + 1;
@@ -87,7 +89,7 @@ export class SchematicsComponent implements OnInit {
           length: data.length,
           keyautonumber: data.keyautonumber,
           extraparameter: data.extraparameter,
-          index: data.index });
+          index: data.index, });
     }
     // tslint:disable-next-line: max-line-length
     this.configservice.addschemaitem(this.id, { id: position,
@@ -96,7 +98,8 @@ export class SchematicsComponent implements OnInit {
        length: data.length,
        keyautonumber: data.keyautonumber,
        extraparameter: data.extraparameter,
-       index: data.index });
+       index: data.index,
+       });
     this.dataSource.data = this.schemaitems;
     this.table.renderRows();
   }
@@ -118,7 +121,8 @@ export class SchematicsComponent implements OnInit {
                length: element.length,
                 keyautonumber: element.keyautonumber,
                 extraparameter: element.extraparameter,
-                index: element.index };
+                index: element.index,
+                };
         }
         this.configservice.deleteschmeaitem(this.id, id);
         this.dataSource.data = this.schemaitems;
@@ -147,9 +151,12 @@ export class SchematicsComponent implements OnInit {
       disableClose: true,
       data: { id: 0, type: '',
        name: '',
-        length: 0,
+       length: 0,
        keyautonumber: false,
-        index: false, extraparameter: '' } as Schemaitem
+       index: false,
+       extraparameter: '',
+       security: false,
+       roles: '' } as Schemaitem
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {

@@ -3,4 +3,7 @@ export interface Api {
     type: string;
     operation: string;
     path: string;
+    field: string;
+    security: boolean;
+    roles: string;
 }

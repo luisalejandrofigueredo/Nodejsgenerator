@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { Schemahead, Schemaheaditems } from '../interfaces/schemahead';
 import { Schemaitem } from '../interfaces/schema';
-import { Schemaapi } from '../interfaces/schemaapi';
-import { Typeoperation } from '../interfaces/typeoperation';
 import { Relations } from '../interfaces/relations';
 import { Api } from '../interfaces/api';
 @Injectable({
@@ -15,10 +13,9 @@ export class ConfigService {
     filePath: '',
     enableCors: false,
     schemas: [],
-    api: []
   };
-  /* schemas[id:number,name:string,description:string,schemastable[schemas]] */
-  /* api schema operations:[operations] */
+  /* schemas[id:number,name:string,description:string,schemastable[schemas],
+  schemasrelations[],schemasapi[]] */
   constructor(private electron: ElectronService) { }
   setfilepath(filePath: string) {
     this.config.filePath = filePath;
@@ -28,6 +25,16 @@ export class ConfigService {
     this.config.enableCors = cors;
   }
 
+  // tslint:disable-next-line: variable-name
+  getfields(_id: number): string[] {
+   // tslint:disable-next-line: prefer-const
+   let fields = [];
+   const columns = this.getschematable(_id);
+   for (const iterator of columns) {
+     fields.push(iterator.name);
+   }
+   return fields;
+  }
   // tslint:disable-next-line: variable-name
   getrelations(_id: number): Relations[] {
     return this.config.schemas[_id].schemarelations;
@@ -60,24 +67,30 @@ export class ConfigService {
    editrelation(_id: number, idr: number, relation: Relations){
     this.config.schemas[_id - 1].schemarelations[idr - 1] = {...relation};
    }
+
+  getapi(schemaid: number, apiid: number): Api {
+   const apis = this.getapis(schemaid);
+   return apis[apiid - 1];
+  }
+
+  editapi(schemaid: number, apiid: number, reg: Api) {
+    // tslint:disable-next-line: prefer-const
+    let apis = this.getapis(schemaid);
+    apis[apiid - 1] = reg;
+  }
   getapis(id: number): Api[] {
     // tslint:disable-next-line: prefer-const
     return this.config.schemas[id - 1].schemasapi;
   }
 
-  // tslint:disable-next-line: variable-name
-  deleteoperation(schemaname: string, _id: number) {
-    let find = false;
-    let pos = 0;
-    for (let index = 0; index < this.config.api.length; index++) {
-      if (this.config.api[index].name === schemaname) {
-        find = true;
-        pos = index;
-        break;
-      }
-    }
-    if (find === true) {
-      this.config.api[pos].operations.splice(_id, 1);
+
+  deleteapi(idschema: number, idapi: number) {
+    const api = this.config.schemas[idschema - 1].schemasapi;
+    api.splice(idapi - 1, 1);
+    let i = 1;
+    for (const iterator of api) {
+      iterator.id = i;
+      i++;
     }
   }
 

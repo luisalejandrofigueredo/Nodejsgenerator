@@ -1,24 +1,50 @@
 <form [formGroup]="Userdata" (ngSubmit)="onYesClick()">
-<h4 mat-dialog-title></h4>
-<div mat-dialog-content>
-    <mat-form-field>
-      <input formControlName="name" matInput placeholder="name">
-      <mat-error *ngIf="Userdata.get('name').invalid">Error invalid name use string like Costumers</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput formControlName="description" placeholder="description">
-    </mat-form-field>
-    <mat-form-field>
-      <textarea matInput formControlName="imports" placeholder="imports includes"></textarea>
-      <mat-icon matSuffix>code</mat-icon>
-    </mat-form-field>
-    <mat-form-field>
-      <textarea matInput formControlName="fields" placeholder="extra fields"></textarea>
-      <mat-icon matSuffix>code</mat-icon>
-    </mat-form-field>
-</div>
-<div mat-dialog-actions style="justify-content: flex-end;">
-  <button mat-raised-button type="button" (click)="onNoClick()" cdkFocusInitial>No</button>
-  <button mat-raised-button type="submit" color="primary" mat-button [disabled]="!Userdata.valid">Yes</button>
-</div>
+  <h4 mat-dialog-title></h4>
+  <div mat-dialog-content>
+    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+      <mat-form-field>
+        <input formControlName="name" matInput placeholder="name">
+        <mat-error *ngIf="Userdata.get('name').invalid">Error invalid name use string like Costumers</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="description" placeholder="description">
+      </mat-form-field>
+    </div>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        extra options
+      </mat-expansion-panel-header>
+      <mat-form-field>
+        <textarea matInput formControlName="imports" placeholder="imports includes"></textarea>
+        <mat-icon matSuffix>code</mat-icon>
+      </mat-form-field>
+      <mat-form-field>
+        <textarea matInput formControlName="fields" placeholder="extra fields"></textarea>
+        <mat-icon matSuffix>code</mat-icon>
+      </mat-form-field>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        Security
+      </mat-expansion-panel-header>
+      <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
+        <mat-checkbox formControlName="security">Enable security</mat-checkbox>
+        <mat-form-field *ngIf="Userdata.get('security').value===true">
+          <input matInput formControlName="classsecurity" placeholder="security class">
+          <mat-icon matSuffix>code</mat-icon>
+        </mat-form-field>
+        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+          <mat-form-field *ngIf="Userdata.get('security').value===true">
+            <input matInput formControlName="filesecurity" placeholder="security file">
+            <mat-icon matSuffix>attachment</mat-icon>
+          </mat-form-field>
+          <button *ngIf="Userdata.get('security').value===true"  mat-raised-button type="button" (click)="getfile()">select file</button>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </div>
+  <div mat-dialog-actions style="justify-content: flex-end;">
+    <button mat-raised-button type="button" (click)="onNoClick()" cdkFocusInitial>No</button>
+    <button mat-raised-button type="submit" color="primary" mat-button [disabled]="!Userdata.valid">Yes</button>
+  </div>
 </form>

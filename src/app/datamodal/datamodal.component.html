@@ -18,8 +18,10 @@
       <input matInput [(ngModel)]="data.extraparameter" placeholder="extra parameters">
       <mat-icon matSuffix>code</mat-icon>
     </mat-form-field>
-    <mat-checkbox [(ngModel)]="autonumber" [disabled]="(selected==='number') ? false: true">Autonumber</mat-checkbox>
-    <mat-checkbox [(ngModel)]="index" [disabled]="autonumber">Index</mat-checkbox>
+    <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
+      <mat-checkbox [(ngModel)]="autonumber" [disabled]="(selected==='number') ? false: true">Autonumber</mat-checkbox>
+      <mat-checkbox [(ngModel)]="index" [disabled]="autonumber">Index</mat-checkbox>
+     </div> 
   </div>
   <div mat-dialog-actions style = "justify-content: flex-end;">
       <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>

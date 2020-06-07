@@ -5,27 +5,27 @@
 <p>Api for:{{schemaname}}</p>
 <table #mytable mat-table #table [dataSource]="dataSource">
   <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef> # </th>
+    <th class="head" mat-header-cell *matHeaderCellDef> # </th>
     <td mat-cell *matCellDef="let row"> {{row.id}} </td>
   </ng-container>
-  <ng-container matColumnDef="type">
-    <th mat-header-cell *matHeaderCellDef> type </th>
+  <ng-container  matColumnDef="type">
+    <th mat-header-cell class="head" *matHeaderCellDef> Type </th>
     <td mat-cell *matCellDef="let row"> {{row.type}} </td>
   </ng-container>
-  <ng-container matColumnDef="operation">
-    <th mat-header-cell *matHeaderCellDef> operation </th>
+  <ng-container  matColumnDef="operation">
+    <th mat-header-cell class="head" *matHeaderCellDef> Operation </th>
     <td mat-cell *matCellDef="let row"> {{row.operation}} </td>
   </ng-container>
-  <ng-container matColumnDef="path">
-    <th mat-header-cell *matHeaderCellDef> path </th>
+  <ng-container  matColumnDef="path">
+    <th mat-header-cell class="head" *matHeaderCellDef> Path </th>
     <td mat-cell *matCellDef="let row"> {{row.path}} </td>
   </ng-container>
-  <ng-container matColumnDef="delete">
-    <th mat-header-cell *matHeaderCellDef> delete </th>
+  <ng-container  matColumnDef="delete">
+    <th mat-header-cell class="head" *matHeaderCellDef> Delete </th>
     <td mat-cell *matCellDef="let row"><button (click)="delete(row.id)" mat-icon-button><mat-icon>delete</mat-icon></button></td>
   </ng-container>
-  <ng-container matColumnDef="edit">
-    <th mat-header-cell *matHeaderCellDef> edit </th>
+  <ng-container  matColumnDef="edit">
+    <th mat-header-cell class="head" *matHeaderCellDef> Edit </th>
     <td mat-cell *matCellDef="let row"><button (click)="edit(row.id)" mat-icon-button><mat-icon>edit</mat-icon></button></td>
   </ng-container>
   <tr mat-header-row *matHeaderRowDef="['id','type','operation','path','delete','edit']"></tr>

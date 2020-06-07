@@ -22,19 +22,18 @@ export class BrowseschematicsComponent implements OnInit {
   constructor(private route: Router, public dialog: MatDialog, private configservice: ConfigService) { }
   ngOnInit(): void {
     this.schema = [ ...this.configservice.getschema()];
-    console.log('schema', this.schema);
     this.dataSource.data = this.schema;
     this.dataSource.paginator = this.paginator;
   }
 
   add() {
     const dialogRef = this.dialog.open(FormschemamodalComponent, {
-      width: '350px',
+      width: '500px',
       disableClose: false,
-      data: { id: 0, name: '', description: '', imports: '', fields: '' } as Schemahead
+      // tslint:disable-next-line: max-line-length
+      data: { id: 0, name: '', description: '', imports: '', fields: '' , security: false, classsecurity: '', filesecurity: ''} as Schemahead
     });
     dialogRef.afterClosed().subscribe(data => {
-      console.log('data', data);
       if (data !== undefined) {
         if ( this.schema.length === undefined){
           data.id = 1;
@@ -69,7 +68,7 @@ export class BrowseschematicsComponent implements OnInit {
     // tslint:disable-next-line: variable-name
     const _data = { ...this.schema[id - 1]};
     const dialogRef = this.dialog.open(FormschemamodalComponent, {
-      width: '300px',
+      width: '500px',
       disableClose: true,
       data: _data
     });
@@ -82,14 +81,21 @@ export class BrowseschematicsComponent implements OnInit {
   }
 
   save() {
-   this.configservice.save();
+    const dialogRef = this.dialog.open(YesnoComponent, { width: '300px',
+    disableClose: true, data: 'Save file'});
+    dialogRef.afterClosed().subscribe( data => { if (data !== undefined){
+    this.configservice.save(); }});
   }
 
   load(){
-    this.configservice.load();
-    this.schema = [ ...this.configservice.getschema()];
-    this.dataSource.data = this.schema;
-    this.table.renderRows();
+    const dialogRef = this.dialog.open(YesnoComponent, { width: '300px',
+    disableClose: true, data: 'Load file and lose data'});
+    dialogRef.afterClosed().subscribe( data => { if (data !== undefined){
+      this.configservice.load();
+      this.schema = [ ...this.configservice.getschema()];
+      this.dataSource.data = this.schema;
+      this.table.renderRows();
+    }});
   }
 
   // tslint:disable-next-line: variable-name

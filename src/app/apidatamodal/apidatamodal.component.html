@@ -9,8 +9,18 @@
         {{item.viewValue}}
     </mat-option>
 </mat-select>
+<mat-select *ngIf="selectedOperation==='skiplimitbyfield' || selectedOperation==='skiplimitfilter'" placeholder="Select field" [(ngModel)]="selectedfield" name="selectfield">
+    <mat-option *ngFor="let item of fields" [value]="item">
+        {{item}}
+    </mat-option>
+</mat-select>
 <mat-form-field *ngIf="selectedValue==='get'">
     <input matInput  placeholder="path" [(ngModel)]="path">
+</mat-form-field>
+<mat-checkbox [(ngModel)]="security">Security</mat-checkbox>
+<mat-form-field *ngIf="security===true">
+    <input matInput [(ngModel)]="roles" placeholder="roles" >
+    <mat-icon matSuffix>code</mat-icon>
 </mat-form-field>
 <div mat-dialog-content></div>
 <div mat-dialog-actions style = "justify-content: flex-end;">

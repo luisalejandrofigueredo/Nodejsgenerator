@@ -21,7 +21,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
   fileapigenerating = '';
   reltables: string[] = [];
   editorOptions = { theme: 'vs-dark', language: 'typescript', uri: 'file://' + this.filePath  };
-  ormj = { PrimaryGeneratedColumn: false, OneToMany: false, ManyToOne: false };
+  ormj = { PrimaryGeneratedColumn: false, OneToMany: false, ManyToOne: false , Index: false };
   ngOnInit(): void {
   }
   ngAfterContentInit(): void {
@@ -44,7 +44,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
     for (let index = 0; index < schemas.length; index++) {
       const element = schemas[index].name;
       this.generatingline += 'schema:' + element + '\n';
-      this.ormj = { PrimaryGeneratedColumn: false, OneToMany: false, ManyToOne: false };
+      this.ormj = { PrimaryGeneratedColumn: false, OneToMany: false, ManyToOne: false, Index: false };
       this.reltables = [];
       this.entitygenerator(index);
       this.apigenerator(index, schemas[index].name);
@@ -58,10 +58,16 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
     this.addgenrartinline('Begin generate controller... ');
     this.filegenerating = 'import { Controller, Inject,Post, Body, Get, Put, Delete,Param,UseGuards,Headers, SetMetadata,Query} from "@nestjs/common";\n';
     this.filegenerating += `import { ${this.config.schemas[index].name} } from '../entitys/${this.config.schemas[index].name}.entity';\n`;
+    if (this.config.schemas[index].security === true) {
+      this.filegenerating += `import {${this.config.schemas[index].classsecurity} } from '${this.config.schemas[index].filesecurity}';\n`;
+    }
     // tslint:disable-next-line: max-line-length
     this.filegenerating += `import { ${this.config.schemas[index].name}Service } from '../service/${this.config.schemas[index].name}.service';\n`;
     this.filegenerating += `@Controller('${this.config.schemas[index].name}')\n`;
-    this.filegenerating += `export class ${this.config.schemas[index].name}class {\n`;
+    if (this.config.schemas[index].security === true) {
+        this.filegenerating += `@UseGuards(${this.config.schemas[index].classsecurity})\n`;
+    }
+    this.filegenerating += `export class ${this.config.schemas[index].name}Controler {\n`;
     this.filegenerating += `constructor(private service: ${this.config.schemas[index].name}Service){}\n`;
     // tslint:disable-next-line: prefer-for-of
     for (let ind = 0; ind < this.config.schemas[index].schemasapi.length; ind++) {
@@ -82,13 +88,28 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
               this.filegenerating += `\t return this.service.getOne(+params.id);\n }\n`;
               break;
             case 'skiplimit':
-              this.addgenrartinline('\tadding verb get skiplimit');
+              this.addgenrartinline('\tadding verb get skiplimit by key');
               this.filegenerating += `@Get('skiplimit/:skip/:limit/:order')\n`;
               this.filegenerating += `getskiplimitorder (@Param('skip') skip:number,@Param('limit') limit:number,@Param('order') order:string)`;
               this.filegenerating += '{\n';
               this.filegenerating += '\t return this.service.skiplimit(skip,limit,order);\n';
               this.filegenerating += '}\n';
               break;
+            case 'skiplimitbyfield':
+                this.addgenrartinline('\tadding verb get skiplimit by field');
+                this.filegenerating += `@Get('skiplimitorder${element.field}/:skip/:limit/:order')\n`;
+                this.filegenerating += `getskiplimitorder${element.field} (@Param('skip') skip:number,@Param('limit') limit:number,@Param('order') order:string)`;
+                this.filegenerating += '{\n';
+                this.filegenerating += `\t return this.service.skiplimit${element.field}(skip,limit,order);\n`;
+                this.filegenerating += '}\n';
+                break;
+            case 'skiplimitfilter':
+                this.addgenrartinline('\tadding verb get skiplimit by filter');
+                this.filegenerating += `@Get('skiplimitfilter${element.field}/:skip/:limit/:order/:${element.field}')\n`;
+                this.filegenerating += `skiplimitfilter${element.field} (@Param('skip') skip:number,@Param('limit') limit:number,@Param('order') order:string,@Param('${element.field}') ${element.field}:string ) {\n`;
+                this.filegenerating += `\t return this.service.skiplimitfilter${element.field}(skip,limit,order,${element.field});\n`;
+                this.filegenerating += '}\n';
+                break;
             default:
               break;
           }
@@ -165,6 +186,25 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
               this.filegenerating += `\treturn await this.${schema}Repository.createQueryBuilder("${schema}").orderBy('${this.keyfield}', 'ASC').offset(skip).limit(limit).getMany();\n`;
               this.filegenerating += `} else {\n`;
               this.filegenerating += `\treturn await this.${schema}Repository.createQueryBuilder("${schema}").orderBy('${this.keyfield}', 'DESC').offset(skip).limit(limit).getMany();\n`;
+              this.filegenerating += `}\n}\n`;
+              break;
+              case 'skiplimitbyfield':
+              this.addgenrartinline('\tadding service get skiplimit');
+              // tslint:disable-next-line: max-line-length
+              this.filegenerating += `async skiplimit${element.field}(skip: number, limit: number, order: string): Promise<${schema}[]> {\n`;
+              this.filegenerating += `if (order === 'ASC') {\n`;
+              this.filegenerating += `\treturn await this.${schema}Repository.createQueryBuilder("${schema}").orderBy('${element.field}', 'ASC').offset(skip).limit(limit).getMany();\n`;
+              this.filegenerating += `} else {\n`;
+              this.filegenerating += `\treturn await this.${schema}Repository.createQueryBuilder("${schema}").orderBy('${element.field}', 'DESC').offset(skip).limit(limit).getMany();\n`;
+              this.filegenerating += `}\n}\n`;
+              break;
+              case 'skiplimitfilter':
+              this.addgenrartinline('\tadding service get skiplimit filter');
+              this.filegenerating += `async skiplimitfilter${element.field}(skip: number, limit: number, order: string, ${element.field}:string): Promise<${schema}[]> {\n`;
+              this.filegenerating += `if (order === "ASC") {\n`;
+              this.filegenerating +=  `\treturn await this.${schema}Repository.createQueryBuilder("${schema}").orderBy('${element.field}', 'ASC').offset(skip).limit(limit).where("${schema}.${element.field} like :${element.field}",{ ${element.field}: ${element.field}+'%'}).getMany();\n`;
+              this.filegenerating += `} else {\n`;
+              this.filegenerating +=  `\treturn await this.${schema}Repository.createQueryBuilder("${schema}").orderBy('${element.field}', 'DESC').offset(skip).limit(limit).where("${schema}.${element.field} like :${element.field}",{ ${element.field}: ${element.field}+'%'}).getMany();\n`;
               this.filegenerating += `}\n}\n`;
               break;
               case 'count':
@@ -271,6 +311,9 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
     if (this.ormj.PrimaryGeneratedColumn === true) {
       insertstr += ', PrimaryGeneratedColumn';
     }
+    if (this.ormj.Index === true) {
+      insertstr += ', Index';
+    }
     // tslint:disable-next-line: quotemark
     importorm += insertstr + "} from 'typeorm';\n";
     // tslint:disable-next-line: prefer-for-of
@@ -291,6 +334,10 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
     } else {
       switch (fieldcolumn.type) {
         case 'string':
+          if (fieldcolumn.index === true){
+            this.ormj.Index = true;
+            this.filegenerating += '@Index()\n';
+          }
           if (fieldcolumn.extraparameter === '') {
             this.filegenerating += '@Column()\n';
           }

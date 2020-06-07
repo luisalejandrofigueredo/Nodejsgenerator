@@ -19,6 +19,7 @@ export class DatamodalComponent implements OnInit {
   autonumber: boolean;
   index: boolean;
   selected: string;
+
   // tslint:disable-next-line: max-line-length
   constructor(public dialogRef: MatDialogRef<DatamodalComponent>, @Inject(MAT_DIALOG_DATA) public data: Schemaitem) { }
 

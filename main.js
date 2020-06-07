@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, Menu, screen } = require('electron')
+const { spawn } = require('child_process');
 const url = require("url");
 const path = require("path");
 var fs = require('fs');
@@ -52,14 +53,25 @@ ipcMain.on('loadconfig', (event, arg) => {
   });
 });
 
-ipcMain.on('dir', (event, arg) => {
+ipcMain.on('openvisualcode', (event, arg) => {
   console.log('arg', arg);
   try {
-    process.chdir(arg.path+'\\src\\service');
-    console.log('listo',process.cwd());
+    process.chdir(arg.path);
   }
   catch(err){console.log('operative system error');}
-  event.returnValue = 'cd ready';
+  try {
+    if (process.platform==="win32") {
+        const visu=spawn('cmd.exe',['/c','code','.']);
+    } else {
+        const visu=spawn('code',['.']);
+    }
+  }
+  catch(err){console.log('operative error open visual');}
+  try {
+      process.chdir(__dirname);
+  }
+  catch(err){console.log('operative system error');}
+  event.returnValue = 'visual ready';
 });
 
 ipcMain.on('saveentity', (event, arg) => {
