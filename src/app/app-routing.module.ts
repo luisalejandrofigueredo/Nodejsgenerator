@@ -6,7 +6,7 @@ import {BrowseschematicsComponent} from './browseschematics/browseschematics.com
 import { ApiComponent } from './api/api.component';
 import {GeneratorComponent} from './generator/generator.component';
 import { BrowserelationsComponent } from './browserelations/browserelations.component';
-
+import { GensecurityComponent } from './gensecurity/gensecurity.component';
 const routes: Routes = [{
   path: 'schematics/:id',
   component: SchematicsComponent}, {
@@ -21,6 +21,10 @@ const routes: Routes = [{
   }, {
     path: 'browserelations/:id',
     component: BrowserelationsComponent
+  },
+  {
+    path: 'gensecurity',
+    component: GensecurityComponent
   }
  ];
 

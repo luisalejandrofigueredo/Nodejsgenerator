@@ -4,7 +4,7 @@ import { Relations } from '../interfaces/relations';
 import {Schemahead} from '../interfaces/schemahead';
 import {Schemaitem} from '../interfaces/schema';
 import { ConfigService } from '../service/config.service';
-
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 @Component({
   selector: 'app-relationdatamodal',
   templateUrl: './relationdatamodal.component.html',
@@ -13,13 +13,13 @@ import { ConfigService } from '../service/config.service';
 export class RelationdatamodalComponent implements OnInit {
   entitys: Schemahead[];
   fieldrel: string;
-  impfieldc = 'name of the class';
   entity: number;
   type  = 'onetomany';
   field: string;
   fields: Schemaitem[];
   fieldc: string;
   fieldr: string;
+  profileForm: FormGroup;
   // tslint:disable-next-line: max-line-length
   constructor(public configservice: ConfigService, public dialogRef: MatDialogRef<RelationdatamodalComponent>, @Inject(MAT_DIALOG_DATA) public data: Relations) { }
 
@@ -29,33 +29,34 @@ export class RelationdatamodalComponent implements OnInit {
     if (this.data.table !== 0){
       this.fields  = [ ...this.configservice.getschematable(this.data.table)];
     }
-    this.entity = this.data.table;
-    this.type = this.data.type;
-    this.field = this.data.field;
-    this.fieldc = this.data.fieldc;
-    this.fieldr = this.data.fieldr;
+    this.profileForm = new FormGroup({
+      entity: new FormControl(this.data.table, Validators.required),
+      type: new FormControl(this.data.type, Validators.required),
+      field: new FormControl(this.data.field, Validators.required),
+      fieldc: new FormControl(this.data.fieldc, Validators.required),
+      fieldr: new FormControl(this.data.fieldr, Validators.required)
+    });
   }
 
   selectiontype(e: Event) {
-  
   }
 
   selection($event: Event) {
     this.entitys = [ ...this.configservice.getschema()];
     this.entitys.splice(this.data.idtable - 1 , 1);
-    this.fields  = [ ...this.configservice.getschematable(this.entity)];
+    this.fields  = [ ...this.configservice.getschematable(this.profileForm.get('entity').value)];
   }
 
   onNoClick() {
     this.dialogRef.close();
   }
   onYesClick() {
-    this.data.table = this.entity;
-    this.data.tablename = this.configservice.config.schemas[this.entity - 1].name;
-    this.data.type  = this.type;
-    this.data.field = this.field;
-    this.data.fieldr = this.fieldr;
-    this.data.fieldc = this.fieldc;
+    this.data.table = this.profileForm.get('entity').value;
+    this.data.tablename = this.configservice.config.schemas[this.profileForm.get('entity').value - 1].name;
+    this.data.type  = this.profileForm.get('type').value;
+    this.data.field = this.profileForm.get('field').value;
+    this.data.fieldr = this.profileForm.get('fieldr').value;
+    this.data.fieldc = this.profileForm.get('fieldc').value;
     this.dialogRef.close(this.data);
   }
 }

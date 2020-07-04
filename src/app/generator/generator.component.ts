@@ -10,7 +10,7 @@ import { Relations } from '../interfaces/relations';
   styleUrls: ['./generator.component.scss'],
 })
 export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
-  generatingline = 'Ready for begin\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n';
+  generatingline = 'Ready for begin\n';
   progressbar = false;
   keyfield = '';
   @ViewChild('textgenerating', { static: true }) container: ElementRef;
@@ -20,7 +20,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
   filegenerating = '';
   fileapigenerating = '';
   reltables: string[] = [];
-  editorOptions = { theme: 'vs-dark', language: 'typescript', uri: 'file://' + this.filePath  };
+  editorOptions = { theme: 'vs-dark', language: 'typescript' };
   ormj = { PrimaryGeneratedColumn: false, OneToMany: false, ManyToOne: false , Index: false };
   ngOnInit(): void {
   }
@@ -78,18 +78,21 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
             case 'getall':
               this.addgenrartinline('\tadding verb get getall');
               this.filegenerating += '@Get()\n';
+              this.generatesecurity(element);
               this.filegenerating += 'get()\n';
               this.filegenerating += `{ \n\t return this.service.getall();\n}\n`;
               break;
             case 'getone':
               this.addgenrartinline('\tadding verb get getone');
               this.filegenerating += `@Get('${element.path}/:id')\n`;
+              this.generatesecurity(element);
               this.filegenerating += `getone(@Param() params) {\n`;
               this.filegenerating += `\t return this.service.getOne(+params.id);\n }\n`;
               break;
             case 'skiplimit':
               this.addgenrartinline('\tadding verb get skiplimit by key');
               this.filegenerating += `@Get('skiplimit/:skip/:limit/:order')\n`;
+              this.generatesecurity(element); 
               this.filegenerating += `getskiplimitorder (@Param('skip') skip:number,@Param('limit') limit:number,@Param('order') order:string)`;
               this.filegenerating += '{\n';
               this.filegenerating += '\t return this.service.skiplimit(skip,limit,order);\n';
@@ -98,6 +101,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
             case 'skiplimitbyfield':
                 this.addgenrartinline('\tadding verb get skiplimit by field');
                 this.filegenerating += `@Get('skiplimitorder${element.field}/:skip/:limit/:order')\n`;
+                this.generatesecurity(element);
                 this.filegenerating += `getskiplimitorder${element.field} (@Param('skip') skip:number,@Param('limit') limit:number,@Param('order') order:string)`;
                 this.filegenerating += '{\n';
                 this.filegenerating += `\t return this.service.skiplimit${element.field}(skip,limit,order);\n`;
@@ -106,6 +110,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
             case 'skiplimitfilter':
                 this.addgenrartinline('\tadding verb get skiplimit by filter');
                 this.filegenerating += `@Get('skiplimitfilter${element.field}/:skip/:limit/:order/:${element.field}')\n`;
+                this.generatesecurity(element);
                 this.filegenerating += `skiplimitfilter${element.field} (@Param('skip') skip:number,@Param('limit') limit:number,@Param('order') order:string,@Param('${element.field}') ${element.field}:string ) {\n`;
                 this.filegenerating += `\t return this.service.skiplimitfilter${element.field}(skip,limit,order,${element.field});\n`;
                 this.filegenerating += '}\n';
@@ -117,6 +122,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
         case 'put':
           this.addgenrartinline('\tadding put');
           this.filegenerating += `@Put()\n`;
+          this.generatesecurity(element);
           this.filegenerating += `update(@Body() ${schemalower}: ${schema}) {\n`;
           this.filegenerating += `\t return this.service.update(${schemalower});\n`;
           this.filegenerating += `}\n`;
@@ -124,6 +130,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
         case 'post':
           this.addgenrartinline('\tadding post');
           this.filegenerating += `@Post()\n`;
+          this.generatesecurity(element);
           this.filegenerating += `create(@Body() ${schemalower}: ${schema}) {\n`;
           this.filegenerating += `\t return this.service.create(${schemalower});\n`;
           this.filegenerating += `}\n`;
@@ -131,6 +138,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
         case 'delete':
           this.addgenrartinline('\tadding delete');
           this.filegenerating += `@Delete('/:id')\n`;
+          this.generatesecurity(element);
           this.filegenerating += `delete(@Param() params) {\n\t return this.service.delete(+params.id);\n}\n`;
           break;
         default:
@@ -146,6 +154,15 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
     this.servicegenerator(index, schema);
     this.addgenrartinline('End generate service... ');
     this.addgenrartinline('End generate Api ... ');
+  }
+
+  generatesecurity(element: any){
+    if (element.security !== undefined && element.security !== false){
+      const array = element.roles.split(' ');
+      const strarray = JSON.stringify(array);
+      this.filegenerating += `@SetMetadata('roles', ${strarray})\n`;
+    }
+
   }
 
   servicegenerator(index: number, schema: string) {
@@ -382,6 +399,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
   addgenrartinline(message: string) {
     this.ngzone.runOutsideAngular(x => {
       this.generatingline += message + '\n';
+      this.container.nativeElement.value = this.generatingline;
       this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
     });
   }
@@ -395,3 +413,5 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
     this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
   }
 }
+
+

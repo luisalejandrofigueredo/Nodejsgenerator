@@ -1,25 +1,26 @@
 <h2 mat-dialog-title>Add relation</h2>
 <div mat-dialog-content>
-    <p>Type relation one to Many</p>
-    <mat-select (selectionChange)="selection($event)" placeholder="entity" [(ngModel)]="entity" name="entity">
-        <mat-option *ngFor="let item of entitys" [value]="item.id">
-            {{item.name}}
-        </mat-option>
-    </mat-select>
-    <mat-select placeholder="field" [(ngModel)]="field" name="field">
-        <mat-option *ngFor="let item of fields" [value]="item.name">
-            {{item.name}}
-        </mat-option>
-    </mat-select>
-    <mat-form-field>
-        <input matInput [placeholder]="impfieldc" [(ngModel)]="fieldc" >
-    </mat-form-field>
-    <mat-form-field>
-        <input matInput placeholder="field for relation" [(ngModel)]="fieldr">
-    </mat-form-field>
+    <form [formGroup]="profileForm">
+        <p>Type relation one to Many</p>
+        <mat-select (selectionChange)="selection($event)" placeholder="entity" formControlName="entity" name="entity">
+            <mat-option *ngFor="let item of entitys" [value]="item.id">
+                {{item.name}}
+            </mat-option>
+        </mat-select>
+        <mat-select placeholder="field" formControlName="field" name="field">
+            <mat-option *ngFor="let item of fields" [value]="item.name">
+                {{item.name}}
+            </mat-option>
+        </mat-select>
+        <mat-form-field>
+            <input matInput placeholder="name of the class" formControlName="fieldc">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="field for relation" formControlName="fieldr">
+        </mat-form-field>
+    </form>
 </div>
-<div mat-dialog-actions style = "justify-content: flex-end;">
+<div mat-dialog-actions style="justify-content: flex-end;">
     <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>
-    <button mat-raised-button color="primary" mat-button (click)="onYesClick()" >Yes</button>
+    <button mat-raised-button color="primary" mat-button (click)="onYesClick()">Yes</button>
 </div>
-

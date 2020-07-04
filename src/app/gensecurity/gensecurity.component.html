@@ -1,0 +1,38 @@
+<form [formGroup]="profileForm">
+    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
+        <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
+            <mat-form-field>
+                <mat-select (selectionChange)="changeschema()" placeholder="Schema for security"
+                    formControlName="selectedValue" name="itemschema">
+                    <mat-option *ngFor="let item of schemas" [value]="item.value">
+                        {{item.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-select placeholder="Field for login" formControlName="selectedFieldlogin" name="itemloginfield">
+                    <mat-option *ngFor="let item of fields" [value]="item.value">
+                        {{item.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-select placeholder="Field for password" formControlName="selectedFieldpassword"
+                    name="itemloginfield">
+                    <mat-option *ngFor="let item of fields" [value]="item.value">
+                        {{item.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-select placeholder="Field for bearer token" formControlName="selectedFieldtoken"
+                    name="itemloginfield">
+                    <mat-option *ngFor="let item of fields" [value]="item.value">
+                        {{item.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+</form>
+<button mat-raised-button [disabled]="!profileForm.valid" (click)="generatesecurity()" color="primary">Generate security</button>

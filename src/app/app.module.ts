@@ -37,6 +37,7 @@ import { BrowserelationsComponent } from './browserelations/browserelations.comp
 import { RelationdatamodalComponent } from './relationdatamodal/relationdatamodal.component';
 import { RelationdatamodalonetomanyComponent } from './relationdatamodalonetomany/relationdatamodalonetomany.component';
 import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
+import { GensecurityComponent } from './gensecurity/gensecurity.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,6 +54,7 @@ import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
     BrowserelationsComponent,
     RelationdatamodalComponent,
     RelationdatamodalonetomanyComponent,
+    GensecurityComponent,
   ],
   imports: [
     BrowserModule,

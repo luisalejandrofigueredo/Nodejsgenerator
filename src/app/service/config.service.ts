@@ -12,11 +12,21 @@ export class ConfigService {
     version: 0.1,
     filePath: '',
     enableCors: false,
+    security: {},
     schemas: [],
   };
   /* schemas[id:number,name:string,description:string,schemastable[schemas],
   schemasrelations[],schemasapi[]] */
   constructor(private electron: ElectronService) { }
+
+  setsecurity(set: any) {
+    this.config.security = set;
+  }
+
+  getsecurity(): any{
+    return this.config.security;
+  }
+
   setfilepath(filePath: string) {
     this.config.filePath = filePath;
   }
@@ -26,14 +36,25 @@ export class ConfigService {
   }
 
   // tslint:disable-next-line: variable-name
+  getfieldswithid(_id: number): any[] {
+    // tslint:disable-next-line: prefer-const
+    let fields = [];
+    const columns = this.getschematable(_id);
+    for (const iterator of columns) {
+      fields.push({ id: iterator.id, name: iterator.name });
+    }
+    return fields;
+  }
+
+  // tslint:disable-next-line: variable-name
   getfields(_id: number): string[] {
-   // tslint:disable-next-line: prefer-const
-   let fields = [];
-   const columns = this.getschematable(_id);
-   for (const iterator of columns) {
-     fields.push(iterator.name);
-   }
-   return fields;
+    // tslint:disable-next-line: prefer-const
+    let fields = [];
+    const columns = this.getschematable(_id);
+    for (const iterator of columns) {
+      fields.push(iterator.name);
+    }
+    return fields;
   }
   // tslint:disable-next-line: variable-name
   getrelations(_id: number): Relations[] {
@@ -48,9 +69,9 @@ export class ConfigService {
     const filtera = [...this.getrelations(_id)];
     // tslint:disable-next-line: prefer-const
     let filterb = [];
-    for (const iterator  of filtera ) {
+    for (const iterator of filtera) {
       if (iterator.type === filter) {
-         filterb.push(iterator);
+        filterb.push(iterator);
       }
     }
     return filterb;
@@ -58,19 +79,19 @@ export class ConfigService {
   // tslint:disable-next-line: variable-name
   addapi(_id: number, api: Api) {
     this.config.schemas[_id - 1].schemasapi.push(api);
-   }
+  }
   // tslint:disable-next-line: variable-name
   addrelation(_id: number, relation: Relations) {
     this.config.schemas[_id - 1].schemarelations.push(relation);
-   }
-   // tslint:disable-next-line: variable-name
-   editrelation(_id: number, idr: number, relation: Relations){
-    this.config.schemas[_id - 1].schemarelations[idr - 1] = {...relation};
-   }
+  }
+  // tslint:disable-next-line: variable-name
+  editrelation(_id: number, idr: number, relation: Relations) {
+    this.config.schemas[_id - 1].schemarelations[idr - 1] = { ...relation };
+  }
 
   getapi(schemaid: number, apiid: number): Api {
-   const apis = this.getapis(schemaid);
-   return apis[apiid - 1];
+    const apis = this.getapis(schemaid);
+    return apis[apiid - 1];
   }
 
   editapi(schemaid: number, apiid: number, reg: Api) {
@@ -104,6 +125,15 @@ export class ConfigService {
 
   getschema(): Schemahead[] {
     return this.config.schemas as Schemahead[];
+  }
+
+  getschemasname(): any[] {
+    // tslint:disable-next-line: prefer-const
+    let names = [];
+    this.config.schemas.forEach(element => {
+      names.push({ id: element.id, name: element.name });
+    });
+    return names;
   }
 
   getschemawithtable(): Schemaheaditems[] {

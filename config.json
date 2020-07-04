@@ -38,6 +38,33 @@
 					"keyautonumber": false,
 					"extraparameter": "",
 					"index": true
+				},
+				{
+					"id": 4,
+					"type": "string",
+					"name": "login",
+					"length": 0,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 5,
+					"type": "string",
+					"name": "password",
+					"length": 0,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 6,
+					"type": "string",
+					"name": "bearer",
+					"length": 0,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
 				}
 			],
 			"schemarelations": [
@@ -57,19 +84,40 @@
 					"id": 1,
 					"type": "put",
 					"operation": "",
-					"path": ""
+					"path": "",
+					"fields": [
+						"id",
+						"nombre",
+						"apellido"
+					],
+					"security": true,
+					"roles": "Admin"
 				},
 				{
 					"id": 2,
 					"type": "post",
 					"operation": "",
-					"path": ""
+					"path": "",
+					"fields": [
+						"id",
+						"nombre",
+						"apellido"
+					],
+					"security": true,
+					"roles": "Admin,User"
 				},
 				{
 					"id": 3,
 					"type": "delete",
 					"operation": "",
-					"path": ""
+					"path": "",
+					"fields": [
+						"id",
+						"nombre",
+						"apellido"
+					],
+					"security": true,
+					"roles": "Admin User"
 				},
 				{
 					"id": 4,
@@ -93,19 +141,35 @@
 						"id",
 						"nombre",
 						"apellido"
-					]
+					],
+					"security": true,
+					"roles": "Users"
 				},
 				{
 					"id": 6,
 					"type": "get",
 					"operation": "getall",
-					"path": ""
+					"path": "getall",
+					"fields": [
+						"id",
+						"nombre",
+						"apellido"
+					],
+					"security": true,
+					"roles": "Admin User"
 				},
 				{
 					"id": 7,
 					"type": "get",
 					"operation": "getone",
-					"path": "getone"
+					"path": "getone",
+					"fields": [
+						"id",
+						"nombre",
+						"apellido"
+					],
+					"security": true,
+					"roles": "Users"
 				},
 				{
 					"id": 8,
@@ -113,8 +177,13 @@
 					"operation": "skiplimitbyfield",
 					"path": "",
 					"field": "apellido",
-					"security": false,
-					"roles": ""
+					"fields": [
+						"id",
+						"nombre",
+						"apellido"
+					],
+					"security": true,
+					"roles": "Users"
 				},
 				{
 					"id": 9,
@@ -122,8 +191,13 @@
 					"operation": "skiplimitfilter",
 					"path": "filterapellido",
 					"field": "apellido",
-					"security": false,
-					"roles": ""
+					"fields": [
+						"id",
+						"nombre",
+						"apellido"
+					],
+					"security": true,
+					"roles": "Users"
 				}
 			],
 			"security": true,
@@ -209,5 +283,10 @@
 			"filesecurity": null
 		}
 	],
-	"api": []
+	"security": {
+		"table": 1,
+		"login": 4,
+		"password": 5,
+		"bearertoken": 6
+	}
 }
