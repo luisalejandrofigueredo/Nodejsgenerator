@@ -81,7 +81,7 @@ export class BrowserelationsComponent implements OnInit {
   }
 
   // tslint:disable-next-line: variable-name
-  edit(_id: number) {
+  onetomany(_id: number) {
     const data = this.relations[_id - 1];
     if (data.type === 'onetomany') {
       const dialogRef = this.dialog.open(RelationdatamodalComponent, {
