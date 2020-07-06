@@ -3,6 +3,8 @@ import { ConfigService } from '../service/config.service';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { Relations} from '../interfaces/relations';
 import { Schemahead } from '../interfaces/schemahead';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
+
 @Component({
   selector: 'app-relationdatamodalonetomany',
   templateUrl: './relationdatamodalonetomany.component.html',
@@ -13,6 +15,7 @@ export class RelationdatamodalonetomanyComponent implements OnInit {
   vector: Schemahead[];
   selectedRelation = 0;
   selectedSchema: number;
+  profileForm: FormGroup;
   // tslint:disable-next-line: max-line-length
   constructor(public configservice: ConfigService, public dialogRef: MatDialogRef<RelationdatamodalonetomanyComponent>, @Inject(MAT_DIALOG_DATA) public data: Relations) { }
 
@@ -22,8 +25,12 @@ export class RelationdatamodalonetomanyComponent implements OnInit {
     this.vector.splice(this.data.idtable - 1, 1);
     if (this.vector.length !== 0){
       this.relations = [...this.configservice.getrelationfilter(this.selectedSchema - 1, 'onetomany')];
-      this.selectedRelation = this.data.idtable - 1;
     }
+    this.profileForm = new FormGroup({
+      selectedSchema: new FormControl(this.data.table, Validators.required),
+      selectedRelation: new FormControl(this.data.idtable - 1, Validators.required),
+      fieldc: new FormControl(this.data.fieldc, Validators.required)
+    });
   }
 
   changeschema(){
@@ -40,10 +47,10 @@ export class RelationdatamodalonetomanyComponent implements OnInit {
 
   onYesClick(){
     this.data.type = 'manytoone';
-    this.data.table = this.selectedSchema;
-    this.data.idtable = this.selectedRelation;
-    this.data.tablename = this.configservice.getschemaname(this.selectedSchema);
-    this.data.fieldr =  this.configservice.getrelation(this.selectedSchema - 1, this.selectedRelation - 1).fieldr;
+    this.data.table = this.profileForm.get('selectedSchema').value;
+    this.data.idtable = this.profileForm.get('selectedRelation').value;
+    this.data.tablename = this.configservice.getschemaname(this.profileForm.get('selectedSchema').value);
+    this.data.fieldr =  this.configservice.getrelation(this.profileForm.get('selectedSchema').value - 1, this.profileForm.get('selectedRelation').value - 1).fieldr;
     this.dialogRef.close(this.data);
   }
 }

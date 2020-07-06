@@ -239,7 +239,18 @@
 					"index": false
 				}
 			],
-			"schemarelations": [],
+			"schemarelations": [
+				{
+					"id": 1,
+					"idtable": 1,
+					"tablename": "Clientes",
+					"type": "manytoone",
+					"field": "",
+					"table": 1,
+					"fieldc": "Facturas",
+					"fieldr": "facturas"
+				}
+			],
 			"schemasapi": [
 				{
 					"id": 1,
