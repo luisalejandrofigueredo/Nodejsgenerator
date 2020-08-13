@@ -58,7 +58,9 @@ export class ConfigService {
   }
   // tslint:disable-next-line: variable-name
   getrelations(_id: number): Relations[] {
-    return this.config.schemas[_id].schemarelations;
+    if ( this.config.schemas[_id].schemarelations !== undefined){
+      return this.config.schemas[_id].schemarelations;
+    } else {return []; }
   }
 
   getrelation(idschema: number, idrelation: number): Relations {

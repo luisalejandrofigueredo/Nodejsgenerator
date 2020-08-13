@@ -38,7 +38,6 @@ export class RelationdatamodalonetomanyComponent implements OnInit {
   }
 
   changerelation(){
-    
   }
 
   onNoClick(){

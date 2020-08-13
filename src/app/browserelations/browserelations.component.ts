@@ -57,7 +57,7 @@ export class BrowserelationsComponent implements OnInit {
       }
     });
   }
-  add() {
+  addonetomany() {
     const dialogRef = this.dialog.open(RelationdatamodalComponent, {
       width: '300px',
       disableClose: true,

@@ -1,10 +1,6 @@
 <div>
-  <button (click)="add()" mat-icon-button>
-    <mat-icon>share</mat-icon>
-  </button>
-  <button (click)="addmanytone()" mat-icon-button>
-    <mat-icon>add</mat-icon>
-  </button>
+  <button matTooltip="One to many" mat-icon-button (click)="addmanytone() "><mat-icon>share</mat-icon></button>
+  <button matTooltip="Many to one" mat-icon-button (click)="addonetomany()" ><mat-icon>shuffle</mat-icon></button>
 </div>
 <h3>Schema:{{ schemaname}}</h3>
 <table mat-table matSort [dataSource]="dataSource">
@@ -36,11 +32,17 @@
   </ng-container>
   <ng-container matColumnDef="onetomany">
     <th mat-header-cell class="head" *matHeaderCellDef> One to many </th>
-    <td mat-cell *matCellDef="let row"><button (click)="onetomany(row.id)" mat-icon-button>
-        <mat-icon>edit</mat-icon>
+    <td mat-cell *matCellDef="let row"><button  mat-icon-button>
+        <mat-icon>share</mat-icon>
       </button></td>
   </ng-container>
-  <tr mat-header-row *matHeaderRowDef="['id','type','tablename','field','fieldr','delete','onetomany']"></tr>
-  <tr mat-row *matRowDef="let row; columns: ['id','type','tablename','field','fieldr','delete','onetomany'];"></tr>
+  <ng-container matColumnDef="manytoone">
+    <th mat-header-cell class="head" *matHeaderCellDef> Many to one </th>
+    <td mat-cell *matCellDef="let row"><button  mat-icon-button>
+        <mat-icon>shuffle</mat-icon>
+      </button></td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="['id','type','tablename','field','fieldr','delete','onetomany','manytoone']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['id','type','tablename','field','fieldr','delete','onetomany','manytoone'];"></tr>
 </table>
 <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
