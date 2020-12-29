@@ -52,6 +52,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
     this.addgenrartinline('end generating schemas ...');
   }
 
+  // generando api
   apigenerator(index: number, schema: string) {
     const schemalower = schema.toLowerCase();
     this.addgenrartinline('Begin generate Api... ');
@@ -156,6 +157,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
     this.addgenrartinline('End generate Api ... ');
   }
 
+  // generando seguridad
   generatesecurity(element: any){
     if (element.security !== undefined && element.security !== false){
       const array = element.roles.split(' ');
@@ -165,6 +167,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
 
   }
 
+  //generando servicio
   servicegenerator(index: number, schema: string) {
     const schemalower = schema.toLowerCase();
     this.filegenerating = '';
@@ -413,5 +416,3 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
     this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
   }
 }
-
-

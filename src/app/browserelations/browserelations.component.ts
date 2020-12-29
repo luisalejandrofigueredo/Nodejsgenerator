@@ -35,7 +35,7 @@ export class BrowserelationsComponent implements OnInit {
       this.dataSource = new MatTableDataSource(this.relations);
     });
   }
-  addmanytone() {
+  addonetomany() {
     const dialogRef = this.dialog.open(RelationdatamodalonetomanyComponent, {
       width: '300px',
       disableClose: true,
@@ -57,7 +57,7 @@ export class BrowserelationsComponent implements OnInit {
       }
     });
   }
-  addonetomany() {
+  addmanytoone() {
     const dialogRef = this.dialog.open(RelationdatamodalComponent, {
       width: '300px',
       disableClose: true,

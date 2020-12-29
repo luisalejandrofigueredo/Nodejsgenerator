@@ -1,7 +1,7 @@
 <p>Relation many to one</p>
 <form formGroup="profileForm">
     <mat-form-field>
-        <mat-select (selectionChange)="changeschema()" placeholder="Schema" formControlName="selectedSchema" name="item2">
+        <mat-select (selectionChange)="changeschema()" placeholder="Schema" formControlName="selectedSchema" >
             <mat-option *ngFor="let item of vector" [value]="item.id">
                 {{item.name}}
             </mat-option>
@@ -10,7 +10,7 @@
     <p>Relation one to many</p>
     <mat-form-field>
         <mat-select (selectionChange)="changerelation()" placeholder="Relations one to many"
-            formControlName="selectedRelation" name="item">
+            formControlName="selectedRelation" >
             <mat-option *ngFor="let item of relations" [value]="item.id">
                 {{item.fieldr}}
             </mat-option>

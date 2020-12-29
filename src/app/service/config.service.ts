@@ -67,8 +67,8 @@ export class ConfigService {
     return this.config.schemas[idschema].schemarelations[idrelation];
   }
   // tslint:disable-next-line: variable-name
-  getrelationfilter(_id: number, filter: string): Relations[] {
-    const filtera = [...this.getrelations(_id)];
+  getrelationfilter(idschema: number, filter: string): Relations[] {
+    const filtera = [...this.getrelations(idschema)];
     // tslint:disable-next-line: prefer-const
     let filterb = [];
     for (const iterator of filtera) {
