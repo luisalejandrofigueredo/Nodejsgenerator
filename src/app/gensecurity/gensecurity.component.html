@@ -10,29 +10,31 @@
                 </mat-select>
             </mat-form-field>
             <mat-form-field>
-                <mat-select placeholder="Field for login" formControlName="selectedFieldlogin" name="itemloginfield">
+                <mat-select placeholder="Field for login" formControlName="selectedFieldlogin" >
                     <mat-option *ngFor="let item of fields" [value]="item.value">
                         {{item.viewValue}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
             <mat-form-field>
-                <mat-select placeholder="Field for password" formControlName="selectedFieldpassword"
-                    name="itemloginfield">
+                <mat-select placeholder="Field for password" formControlName="selectedFieldpassword">
                     <mat-option *ngFor="let item of fields" [value]="item.value">
                         {{item.viewValue}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
             <mat-form-field>
-                <mat-select placeholder="Field for bearer token" formControlName="selectedFieldtoken"
-                    name="itemloginfield">
+                <mat-select placeholder="Field for bearer token" formControlName="selectedFieldtoken">
                     <mat-option *ngFor="let item of fields" [value]="item.value">
                         {{item.viewValue}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+            <mat-form-field>
+                    <input matInput placeholder="Generate File" formControlName="filegenerated" value="securityaction">
+            </mat-form-field>
+            <mat-checkbox formControlName="backdoor">Generate back door</mat-checkbox>
+            <button mat-raised-button [disabled]="!profileForm.valid" (click)="generatesecurity()" color="primary">Generate security</button>
         </div>
     </div>
 </form>
-<button mat-raised-button [disabled]="!profileForm.valid" (click)="generatesecurity()" color="primary">Generate security</button>

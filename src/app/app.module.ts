@@ -21,11 +21,13 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import {MatSortModule} from '@angular/material/sort';
+import {  MatSortModule } from '@angular/material/sort';
+import { MonacoEditorModule, MONACO_PATH } from '@materia-ui/ngx-monaco-editor';
 import { SchematicsComponent } from './schematics/schematics.component';
-import { NgxElectronModule } from 'ngx-electron';
 import { DatamodalComponent } from './datamodal/datamodal.component';
+import { NgxElectronModule } from 'ngx-electron';
 import { YesnoComponent } from './yesno/yesno.component';
 import { ConfigComponent } from './config/config.component';
 import { BrowseschematicsComponent } from './browseschematics/browseschematics.component';
@@ -36,7 +38,6 @@ import { GeneratorComponent } from './generator/generator.component';
 import { BrowserelationsComponent } from './browserelations/browserelations.component';
 import { RelationdatamodalComponent } from './relationdatamodal/relationdatamodal.component';
 import { RelationdatamodalonetomanyComponent } from './relationdatamodalonetomany/relationdatamodalonetomany.component';
-import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 import { GensecurityComponent } from './gensecurity/gensecurity.component';
 @NgModule({
   declarations: [
@@ -56,12 +57,15 @@ import { GensecurityComponent } from './gensecurity/gensecurity.component';
     RelationdatamodalonetomanyComponent,
     GensecurityComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
+  imports: [ 
+    BrowserModule, 
     BrowserAnimationsModule,
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
     FlexLayoutModule,
     LayoutModule,
+    MatFormFieldModule,
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
@@ -78,13 +82,10 @@ import { GensecurityComponent } from './gensecurity/gensecurity.component';
     MatTooltipModule,
     MatProgressBarModule,
     MatSortModule,
-    FormsModule,
-    ReactiveFormsModule,
     NgxElectronModule,
-    MonacoEditorModule
-  ],
+    MonacoEditorModule ],
   providers: [{
-    provide: 'MONACO_PATH',
+    provide: MONACO_PATH,
     useValue: 'https://unpkg.com/monaco-editor@0.18.1/min/vs'
   }],
   bootstrap: [AppComponent],

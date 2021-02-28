@@ -30,12 +30,19 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
   }
+  
   addingPath() {
     this.addgenrartinline('reading file path ...');
     this.filePath = this.config.filePath;
     // const end = this.electronservice.ipcRenderer.sendSync('dir', { path: this.config.filePath});
     this.generateschemas();
+    this.generatesecurityfile();
     this.addgenrartinline('End generate');
+  }
+  
+  generatesecurityfile(){
+    this.addgenrartinline('begin generating security file ...');
+    this.addgenrartinline('end generating security file ...');
   }
   generateschemas() {
     this.addgenrartinline('begin generating schemas ...');
@@ -406,6 +413,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
       this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
     });
   }
+
 
   generate(event: Event) {
     this.progressbar = true;

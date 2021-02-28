@@ -9,7 +9,7 @@ import { Api } from '../interfaces/api';
 })
 export class ConfigService {
   config = {
-    version: 0.1,
+    version: 0.2,
     filePath: '',
     enableCors: false,
     security: {},
