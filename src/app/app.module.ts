@@ -39,6 +39,7 @@ import { BrowserelationsComponent } from './browserelations/browserelations.comp
 import { RelationdatamodalComponent } from './relationdatamodal/relationdatamodal.component';
 import { RelationdatamodalonetomanyComponent } from './relationdatamodalonetomany/relationdatamodalonetomany.component';
 import { GensecurityComponent } from './gensecurity/gensecurity.component';
+import { ViewsecurityComponent } from './viewsecurity/viewsecurity.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,6 +57,7 @@ import { GensecurityComponent } from './gensecurity/gensecurity.component';
     RelationdatamodalComponent,
     RelationdatamodalonetomanyComponent,
     GensecurityComponent,
+    ViewsecurityComponent,
   ],
   imports: [ 
     BrowserModule, 

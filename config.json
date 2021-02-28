@@ -295,9 +295,13 @@
 		}
 	],
 	"security": {
-		"table": 1,
-		"login": 4,
-		"password": 5,
-		"bearertoken": 6
+		"table": "Clientes",
+		"login": "login",
+		"password": "password",
+		"bearertoken": "bearer",
+		"rolesclass": "RolesGuardclass",
+		"filegenerated": "llll",
+		"path": "C:\\Users\\luisa\\cmder\\nestcazaor\\src",
+		"backdoor": true
 	}
 }

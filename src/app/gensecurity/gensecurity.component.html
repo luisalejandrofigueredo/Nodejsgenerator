@@ -33,7 +33,13 @@
             <mat-form-field>
                     <input matInput placeholder="Generate File" formControlName="filegenerated" value="securityaction">
             </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="Class" formControlName="rolesclass" value="Roles class">
+        </mat-form-field>
             <mat-checkbox formControlName="backdoor">Generate back door</mat-checkbox>
+            <mat-checkbox formControlName="logger">Generate logger</mat-checkbox>
+            <p>Path for generate file:{{path}}</p>
+            <button mat-raised-button (click)="getpath()" color="primary">Path for file</button>
             <button mat-raised-button [disabled]="!profileForm.valid" (click)="generatesecurity()" color="primary">Generate security</button>
         </div>
     </div>

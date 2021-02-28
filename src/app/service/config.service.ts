@@ -36,7 +36,7 @@ export class ConfigService {
   }
 
   // tslint:disable-next-line: variable-name
-  getfieldswithid(_id: number): any[] {
+  getfieldschemaswithid(_id: number): any[] {
     // tslint:disable-next-line: prefer-const
     let fields = [];
     const columns = this.getschematable(_id);
@@ -46,6 +46,13 @@ export class ConfigService {
     return fields;
   }
 
+  getfieldid(table:number,namefield:string): number {
+    const columns: Schemaitem[] = this.getschematable(table);
+    for (let index = 0; index < columns.length; index++) {
+      if (namefield===columns[index].name) return(columns[index].id);
+    }
+    return 0;
+  }
   // tslint:disable-next-line: variable-name
   getfields(_id: number): string[] {
     // tslint:disable-next-line: prefer-const
@@ -148,6 +155,18 @@ export class ConfigService {
 
   getschemaname(id: number): string {
     return this.config.schemas[id - 1].name;
+  }
+
+  getschemaid(name:string): number {
+    var array : Schemahead[];
+    array = this.getschemawithtable();
+    for (let index = 0; index < array.length; index++) {
+      const element = array[index];
+      if (element.name === name){
+        return element.id;
+      }
+    };
+    return(0);
   }
 
   addschema(SchemaHead: Schemahead) {
