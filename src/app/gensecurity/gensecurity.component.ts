@@ -16,6 +16,7 @@ export class GensecurityComponent implements OnInit {
   fields: Selectvalues[] = [];
   path:string;
   file:string='';
+  filelogin:string='';
   filegenerated= false;
   profileForm: FormGroup;
 
@@ -100,14 +101,15 @@ export class GensecurityComponent implements OnInit {
       logger: this.profileForm.get('logger').value
     };
     this.configservice.setsecurity(sec);
-    this.generatefile();
+    this.generatefilesecurity();
+    this.generatefileloginservice();
     this.matsnackbar.open('all generated not forget save schema','Action write file',{
-      duration: 5000,
+      duration: 2000,
     });
     this.filegenerated=true;
   }
 
-  generatefile() {
+  generatefilesecurity() {
     const sec=this.configservice.getsecurity();
     this.file= `import { Injectable, Inject,CanActivate, ExecutionContext} from '@nestjs/common';\n`
     this.file+=`import { Reflector } from '@nestjs/core';\n`;
@@ -143,7 +145,12 @@ export class GensecurityComponent implements OnInit {
    this.file+=`}`;
    
 }
+
+generatefileloginservice(){
+ this.filelogin='//login service' 
+}
+
 viewfilegenerated(){
-   this.router.navigate(['/viewsecurity',this.file]);
+   this.router.navigate(['/viewsecurity',this.file,this.filelogin]);
 }
 }

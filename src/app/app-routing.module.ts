@@ -28,7 +28,7 @@ const routes: Routes = [{
     component: GensecurityComponent
   },
   {
-    path: 'viewsecurity/:file',
+    path: 'viewsecurity/:file/:filelogin',
     component: ViewsecurityComponent
   }
  ];

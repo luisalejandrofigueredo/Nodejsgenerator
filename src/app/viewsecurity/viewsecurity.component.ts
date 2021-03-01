@@ -7,12 +7,14 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 })
 export class ViewsecurityComponent implements OnInit {
   file:string;
+  filelogin:string;
   editorOptions = { theme: 'vs-dark', language: 'typescript' };
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.file = params.file;
+      this.filelogin= params.filelogin;
     });
   }
 }
