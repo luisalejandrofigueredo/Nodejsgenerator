@@ -31,6 +31,10 @@ export class ConfigService {
     this.config.filePath = filePath;
   }
 
+  getfilepath():string  {
+    return this.config.filePath;
+  }
+
   enableCors(cors: boolean) {
     this.config.enableCors = cors;
   }

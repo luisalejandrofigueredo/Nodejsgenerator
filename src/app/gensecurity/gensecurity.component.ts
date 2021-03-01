@@ -109,15 +109,41 @@ export class GensecurityComponent implements OnInit {
 
   generatefile() {
     const sec=this.configservice.getsecurity();
-    this.file=`import { Injectable, Inject,CanActivate, ExecutionContext} from '@nestjs/common';\n`
+    this.file= `import { Injectable, Inject,CanActivate, ExecutionContext} from '@nestjs/common';\n`
     this.file+=`import { Reflector } from '@nestjs/core';\n`;
     this.file+=`import { JwtService } from '@nestjs/jwt';\n`;
     this.file+=`import { Request } from 'express';\n`;
     if (sec.logger === true){
       this.file+=`import { Logger } from 'winston';\n`;
   }
+  //importing security service and entity
+  this.file+=`import { ${sec.table}Service } from '../${sec.table.toLowerCase()}/${sec.table.toLowerCase()}.service';\n`;
+  this.file+=`import { ${sec.table} } from '../${sec.table.toLowerCase()}/${sec.table.toLowerCase()}.entity';\n`;
+  this.file+='@Injectable()\n';
+  this.file+=`export class ${sec.rolesclass} implements CanActivate {\n`;
+  this.file+='constructor(';
+  if (sec.logger === true){
+    this.file+=`@Inject('winston') private readonly logger: Logger,`;
+   }
+   this.file+='private reflector:Reflector,';
+   this.file+=`private ${sec.table.toLowerCase()}service:${sec.table}Service,`;
+   this.file+=`private readonly jwtService: JwtService){}\n`;
+   this.file+=`async canActivate(context: ExecutionContext): Promise<boolean>\n`;
+   this.file+='{\n';
+   this.file+=` const roles = this.reflector.get<string[]>('roles', context.getHandler());\n`;
+   this.file+=` const request:Request = context.switchToHttp().getRequest();\n`;
+   this.file+=` const ip= request.ip;\n`;
+   this.file+=` let ${sec.table.toLowerCase()}:${sec.table};\n`;
+   this.file+=`if (request.headers.token === undefined) {\n`;
+   this.file+=` const date= new Date();\n`;
+   if (sec.logger === true){
+    this.file+=" this.logger.warn(`Hacker from ip ${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`)\n";
+   }
+   this.file+=' return false;\n }\n';
+   this.file+=`}`;
+   
 }
 viewfilegenerated(){
-   this.router.navigate(['/viewsecurity',this.file]).then(value=> console.log('navegó',value));
+   this.router.navigate(['/viewsecurity',this.file]);
 }
 }
