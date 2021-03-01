@@ -65,6 +65,15 @@
 					"keyautonumber": false,
 					"extraparameter": "",
 					"index": false
+				},
+				{
+					"id": 7,
+					"type": "string",
+					"name": "Roles",
+					"length": 50,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
 				}
 			],
 			"schemarelations": [
@@ -299,9 +308,11 @@
 		"login": "login",
 		"password": "password",
 		"bearertoken": "bearer",
+		"roles": "Roles",
 		"rolesclass": "RolesGuardclass",
 		"filegenerated": "llll",
 		"path": "C:\\Users\\luisa\\cmder\\nestcazaor\\src",
-		"backdoor": true
+		"backdoor": true,
+		"logger": true
 	}
 }

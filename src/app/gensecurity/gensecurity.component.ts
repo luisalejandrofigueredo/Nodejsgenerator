@@ -47,6 +47,7 @@ export class GensecurityComponent implements OnInit {
         selectedFieldlogin: new FormControl(this.configservice.getfieldid(tableid,sec.login), Validators.required),
         selectedFieldpassword: new FormControl(this.configservice.getfieldid(tableid,sec.password), Validators.required),
         selectedFieldtoken: new FormControl(this.configservice.getfieldid(tableid,sec.bearertoken), Validators.required),
+        selectedFieldroles: new FormControl(this.configservice.getfieldid(tableid,sec.roles), Validators.required),
         filegenerated: new FormControl(sec.filegenerated,Validators.required ),
         rolesclass: new FormControl(sec.rolesclass,Validators.required ),
         backdoor: new FormControl(sec.backdoor),
@@ -59,11 +60,11 @@ export class GensecurityComponent implements OnInit {
         selectedFieldlogin: new FormControl('',Validators.required),
         selectedFieldpassword: new FormControl('',Validators.required),
         selectedFieldtoken: new FormControl('',Validators.required),
+        selectedFieldroles: new FormControl('', Validators.required),
         filegenerated: new FormControl('',Validators.required),
         rolesclass: new FormControl('',Validators.required ),
         backdoor: new FormControl(''),
         logger:new FormControl('')
-
       });
     }
     this.getfields();
@@ -91,6 +92,7 @@ export class GensecurityComponent implements OnInit {
       login: this.fields[this.profileForm.get('selectedFieldlogin').value-1].viewValue,
       password: this.fields[this.profileForm.get('selectedFieldpassword').value-1].viewValue,
       bearertoken: this.fields[this.profileForm.get('selectedFieldtoken').value-1].viewValue,
+      roles: this.fields[this.profileForm.get('selectedFieldroles').value-1].viewValue,
       rolesclass: this.profileForm.get('rolesclass').value,
       filegenerated: this.profileForm.get('filegenerated').value,
       path: this.path,
