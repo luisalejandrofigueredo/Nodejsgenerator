@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import{Router} from '@angular/router';
 import { ConfigService } from '../service/config.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ElectronService } from 'ngx-electron';
 import {Selectvalues} from '../selectvalues';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { from } from 'rxjs';
 @Component({
   selector: 'app-gensecurity',
   templateUrl: './gensecurity.component.html',
@@ -13,10 +15,11 @@ export class GensecurityComponent implements OnInit {
   schemas: Selectvalues[] = [];
   fields: Selectvalues[] = [];
   path:string;
-  file:string;
+  file:string='';
+  filegenerated= false;
   profileForm: FormGroup;
 
-  constructor(private matsnackbar:MatSnackBar, private configservice: ConfigService,private electronservice: ElectronService,) { }
+  constructor(private router:Router,private matsnackbar:MatSnackBar, private configservice: ConfigService,private electronservice: ElectronService,) { }
 
   ngOnInit(): void {
     const sec = this.configservice.getsecurity();
@@ -99,16 +102,20 @@ export class GensecurityComponent implements OnInit {
     this.matsnackbar.open('all generated not forget save schema','Action write file',{
       duration: 5000,
     });
+    this.filegenerated=true;
   }
 
   generatefile() {
     const sec=this.configservice.getsecurity();
-    this.file=`import { Injectable, Inject,CanActivate, ExecutionContext} from '@nestjs/common';`
-    this.file+=`import { Reflector } from '@nestjs/core';`;
-    this.file+=`import { JwtService } from '@nestjs/jwt';`;
-    this.file+=`import { Request } from 'express';`;
+    this.file=`import { Injectable, Inject,CanActivate, ExecutionContext} from '@nestjs/common';\n`
+    this.file+=`import { Reflector } from '@nestjs/core';\n`;
+    this.file+=`import { JwtService } from '@nestjs/jwt';\n`;
+    this.file+=`import { Request } from 'express';\n`;
     if (sec.logger === true){
-      this.file+=`import { Logger } from 'winston';`;
+      this.file+=`import { Logger } from 'winston';\n`;
   }
+}
+viewfilegenerated(){
+   this.router.navigate(['/viewsecurity',this.file]).then(value=> console.log('navegó',value));
 }
 }
