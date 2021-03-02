@@ -28,7 +28,10 @@
         Security
       </mat-expansion-panel-header>
       <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
-        <mat-checkbox formControlName="security">Enable security</mat-checkbox>
+        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+          <mat-checkbox formControlName="security">Enable security</mat-checkbox>
+          <mat-checkbox style="padding-left: 10px;" formControlName="mastersecurity">Is master security</mat-checkbox>
+        </div>
         <mat-form-field *ngIf="Userdata.get('security').value===true">
           <input matInput formControlName="classsecurity" placeholder="security class">
           <mat-icon matSuffix>code</mat-icon>

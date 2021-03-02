@@ -211,7 +211,8 @@
 			],
 			"security": true,
 			"classsecurity": "RolesGuard",
-			"filesecurity": "C:/Users/luisa/cmder/nestcazaor/src/roles/roles.guard"
+			"filesecurity": "C:/Users/luisa/cmder/nestcazaor/src/roles/roles.guard",
+			"mastersecurity": true
 		},
 		{
 			"id": 2,
@@ -276,8 +277,13 @@
 					"operation": "",
 					"path": "",
 					"field": "",
-					"security": false,
-					"roles": ""
+					"fields": [
+						"id",
+						"Descripcion",
+						"Total"
+					],
+					"security": true,
+					"roles": "Admin User"
 				},
 				{
 					"id": 3,
@@ -298,9 +304,10 @@
 					"roles": ""
 				}
 			],
-			"security": null,
-			"classsecurity": null,
-			"filesecurity": null
+			"security": true,
+			"classsecurity": "RolesGuardclass",
+			"filesecurity": "C:/Users/luisa/cmder/nestcazaor/dist/roles/roles.guard.js",
+			"mastersecurity": null
 		}
 	],
 	"security": {

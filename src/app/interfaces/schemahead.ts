@@ -8,6 +8,7 @@ export interface Schemahead {
     security?: boolean;
     classsecurity?: string;
     filesecurity: string;
+    mastersecurity?:boolean;
 }
 
 export interface Schemaheaditems extends Schemahead {

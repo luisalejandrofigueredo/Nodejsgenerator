@@ -24,7 +24,8 @@ export class FormschemamodalComponent implements OnInit {
       fields: new FormControl(this.data.fields),
       security: new FormControl(this.data.security),
       classsecurity: new FormControl(this.data.classsecurity),
-      filesecurity: new FormControl(this.data.filesecurity)
+      filesecurity: new FormControl(this.data.filesecurity),
+      mastersecurity:new FormControl(this.data.mastersecurity)
     });
   }
 
@@ -43,7 +44,6 @@ export class FormschemamodalComponent implements OnInit {
   }
 
   onNoClick() {
-    console.log('no click');
     this.dialogRef.close(undefined);
   }
   onYesClick() {
@@ -54,6 +54,7 @@ export class FormschemamodalComponent implements OnInit {
     this.data.security = this.Userdata.value.security;
     this.data.classsecurity = this.Userdata.value.classsecurity;
     this.data.filesecurity = this.Userdata.value.filesecurity;
+    this.data.mastersecurity= this.Userdata.value.mastersecurity;
     this.dialogRef.close(this.data);
   }
 }

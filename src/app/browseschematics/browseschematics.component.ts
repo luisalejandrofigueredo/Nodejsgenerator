@@ -31,7 +31,7 @@ export class BrowseschematicsComponent implements OnInit {
       width: '500px',
       disableClose: false,
       // tslint:disable-next-line: max-line-length
-      data: { id: 0, name: '', description: '', imports: '', fields: '' , security: false, classsecurity: '', filesecurity: ''} as Schemahead
+      data: { id: 0, name: '', description: '', imports: '', fields: '' , security: false, classsecurity: '', filesecurity: '', mastersecurity:false} as Schemahead
     });
     dialogRef.afterClosed().subscribe(data => {
       if (data !== undefined) {

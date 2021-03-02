@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, NgZone, AfterContentInit, OnC
 import { ElectronService } from 'ngx-electron';
 import { Schemaitem } from '../interfaces/schema';
 import { Relations } from '../interfaces/relations';
-
+import {ConfigService} from '../service/config.service';
 
 @Component({
   selector: 'app-generator',
@@ -14,7 +14,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
   progressbar = false;
   keyfield = '';
   @ViewChild('textgenerating', { static: true }) container: ElementRef;
-  constructor(private ngzone: NgZone, private electronservice: ElectronService) { }
+  constructor(private configservice:ConfigService,private ngzone: NgZone, private electronservice: ElectronService) { }
   config: any;
   filePath: string;
   filegenerating = '';
@@ -33,8 +33,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
   
   addingPath() {
     this.addgenrartinline('reading file path ...');
-    this.filePath = this.config.filePath;
-    // const end = this.electronservice.ipcRenderer.sendSync('dir', { path: this.config.filePath});
+    this.filePath = this.configservice.config.filePath;
     this.generateschemas();
     this.generatesecurityfile();
     this.addgenrartinline('End generate');
@@ -46,7 +45,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
   }
   generateschemas() {
     this.addgenrartinline('begin generating schemas ...');
-    const schemas = this.config.schemas;
+    const schemas = this.configservice.getschema();
     // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < schemas.length; index++) {
       const element = schemas[index].name;
@@ -54,13 +53,13 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
       this.ormj = { PrimaryGeneratedColumn: false, OneToMany: false, ManyToOne: false, Index: false };
       this.reltables = [];
       this.entitygenerator(index);
-      this.apigenerator(index, schemas[index].name);
+      this.apigenerator(index, schemas[index].name,schemas[index].mastersecurity);
     }
     this.addgenrartinline('end generating schemas ...');
   }
 
   // generando api
-  apigenerator(index: number, schema: string) {
+  apigenerator(index: number, schema: string, mastersecurity: boolean) {
     const schemalower = schema.toLowerCase();
     this.addgenrartinline('Begin generate Api... ');
     this.addgenrartinline('Begin generate controller... ');
@@ -159,7 +158,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
     const end = this.electronservice.ipcRenderer.sendSync('savecontroler', args);
     this.addgenrartinline('End generate controller... ');
     this.addgenrartinline('Begin generate service... ');
-    this.servicegenerator(index, schema);
+    this.servicegenerator(index, schema,mastersecurity);
     this.addgenrartinline('End generate service... ');
     this.addgenrartinline('End generate Api ... ');
   }
@@ -175,7 +174,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
   }
 
   //generando servicio
-  servicegenerator(index: number, schema: string) {
+  servicegenerator(index: number, schema: string,mastersecurity: boolean) {
     const schemalower = schema.toLowerCase();
     this.filegenerating = '';
     this.filegenerating += `import { Injectable, Inject, UseGuards } from '@nestjs/common';\n`;
@@ -187,6 +186,17 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
     this.filegenerating += `export class ${schema}Service {\n`;
     this.filegenerating += `constructor(@InjectRepository(${schema}) private ${schema}Repository: Repository<${schema}>) { }\n`;
     // tslint:disable-next-line: prefer-for-of
+    if (mastersecurity === true){
+      this.filegenerating +='// get for security\n';
+      this.addgenrartinline('\tadding predicate in service for security');
+      const sec=this.configservice.getsecurity();
+      this.filegenerating += `async getlogin(${sec.login}: string): Promise<${schema}> {\n`;
+      this.filegenerating += `\t return await this.${schema}Repository.findOne({`;
+      this.filegenerating += `where: [{ "${sec.login}": ${sec.login} }]`;
+      this.filegenerating += `});\n`;
+      this.filegenerating += `}\n`;
+      this.addgenrartinline('\tend predicate for security');
+    }
     for (let ind = 0; ind < this.config.schemas[index].schemasapi.length; ind++) {
       const element = this.config.schemas[index].schemasapi[ind];
       switch (element.type) {
@@ -258,8 +268,8 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
           break;
           case 'delete':
             this.addgenrartinline('\tadding delete service');
-            this.filegenerating += `async delete(_id: Number) {\n`;
-            this.filegenerating += `\t let ${schemalower}: ${schema} = await this.${schema}Repository.findOne({where: [{ "id": _id }]});\n`;
+            this.filegenerating += `async delete(_id: number) {\n`;
+            this.filegenerating += `\t const ${schemalower}: ${schema} = await this.${schema}Repository.findOne({where: [{ "id": _id }]});\n`;
             this.filegenerating += `\t return await this.${schema}Repository.delete(${schemalower});\n`;
             this.filegenerating += `}\n`;
             break;
