@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import{Router} from '@angular/router';
+import{ Router } from '@angular/router';
 import { ConfigService } from '../service/config.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ElectronService } from 'ngx-electron';
-import {Selectvalues} from '../selectvalues';
+import { Selectvalues } from '../selectvalues';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { from } from 'rxjs';
 @Component({
@@ -119,8 +119,8 @@ export class GensecurityComponent implements OnInit {
       this.file+=`import { Logger } from 'winston';\n`;
   }
   //importing security service and entity
-  this.file+=`import { ${sec.table}Service } from '../${sec.table.toLowerCase()}/${sec.table.toLowerCase()}.service';\n`;
-  this.file+=`import { ${sec.table} } from '../${sec.table.toLowerCase()}/${sec.table.toLowerCase()}.entity';\n`;
+  this.file+=`import { ${sec.table}Service } from '../service/${sec.table.toLowerCase()}.service';\n`;
+  this.file+=`import { ${sec.table} } from '../entitys/${sec.table.toLowerCase()}.entity';\n`;
   this.file+='@Injectable()\n';
   this.file+=`export class ${sec.rolesclass} implements CanActivate {\n`;
   this.file+='constructor(';
@@ -142,12 +142,50 @@ export class GensecurityComponent implements OnInit {
     this.file+=" this.logger.warn(`Hacker from ip ${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`)\n";
    }
    this.file+=' return false;\n }\n';
-   this.file+=`}`;
-   
+   this.file+=`}\n`;
+   this.file+='const username = this.jwtService.decode(request.headers.token as string) as {login:string | null} | null;\n';
+   this.file+='if (username ===  null || username=== undefined) { this.logger.warn("hacker");return false; };\n';
+   this.file+=`await this.${sec.table}Service.getloginbygenerator(username.login).then( userb=> ${sec.table.toLowerCase()}=userb);\n`;
+   this.file+=`if (${sec.table.toLowerCase()} === undefined || ${sec.table.toLowerCase()} === null) {\n`;
+   this.file+=' this.logger.warn(`Undefined user hacker ip:${ip}`);\n';
+   this.file+=` return false;\n`;
+   this.file+='}\n';
+   this.file+=`if (${sec.table.toLowerCase()}.${sec.bearertoken} === request.headers.bearer) {\n`;
+   this.file+=` return true;`;
+   this.file+=`} else { \n`;
+   this.file+=` const date= new Date();`;
+   this.file+=' this.logger.warn(`No logged false bearer from ip: ${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);';
+   this.file+=' return false;';
+   this.file+=`}\n`;
+   this.file+='}\n';
+   this.file+='autroles(roles:string[],rolessuser:string):boolean {\n';
+   this.file+=' const arolesuser:string[]=rolessuser.split(" ");\n';
+   this.file+=' let find= false;\n';
+   this.file+=' arolesuser.forEach(element => {\n';
+   this.file+=' if (roles.find(elementa => elementa === element)) {\n';
+   this.file+=' find=true;';
+   this.file+='}});\n'
+   this.file+=' return find;\n';
+   this.file+='}\n}\n';
+
 }
 
 generatefileloginservice(){
- this.filelogin='//login service' 
+ const sec=this.configservice.getsecurity();
+ this.filelogin='import { Controller, Inject, Get, Headers, Post, Ip } from "@nestjs/common";\n';
+ this.filelogin+=`import { ${sec.table}Service } from '../service/${sec.table.toLowerCase()}.service';\n`;
+ this.filelogin+=`import { ${sec.table} } from '../entitys/${sec.table.toLowerCase()}.entity';\n`;
+ this.filelogin+='import { JwtService } from "@nestjs/jwt"\n';
+ this.filelogin+='import * as bcrypt from "bcrypt";\n';
+ this.filelogin+='import { Logger } from "winston";\n\n';
+ this.filelogin+='@Controller("login")\n';
+ this.filelogin+='export class LoginController {\n';
+ this.filelogin+='constructor(@Inject("winston") private readonly logger: Logger,';
+ this.filelogin+=`private ${sec.table.toLowerCase()}service:${sec.table}Service,`;
+ this.filelogin+='private readonly jwtService: JwtService) { }\n';
+ this.filelogin+='@Post';
+ this.filelogin+='async login(@Ip() ip,@Headers() header) {\n';
+ this.filelogin+=`const ${sec.table.toLowerCase()}: ${sec.table} = (await this.${sec.table}service.getloginbygenerator(header.login));`;
 }
 
 viewfilegenerated(){
