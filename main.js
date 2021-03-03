@@ -27,7 +27,8 @@ function createWindow() {
     height: maxiSize.height,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    icon: path.join(__dirname, `/dist/generador/assets/logo.svg`)
   })
 
   mainWindow.loadURL(
@@ -89,7 +90,7 @@ ipcMain.on('saveentity', (event, arg) => {
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
   writeFile(filepath, arg.file);
-  event.returnValue = 'file saved';
+  event.returnValue = filepath;
 });
 
 ipcMain.on('saveservice', (event, arg) => {
@@ -107,7 +108,7 @@ ipcMain.on('saveservice', (event, arg) => {
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
   writeFile(filepath, arg.file);
-  event.returnValue = 'file saved';
+  event.returnValue = filepath;
 });
 
 ipcMain.on('savecontroler', (event, arg) => {
@@ -125,7 +126,7 @@ ipcMain.on('savecontroler', (event, arg) => {
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
   writeFile(filepath, arg.file);
-  event.returnValue = 'file controler saved';
+  event.returnValue = filepath;
 });
 
 function writeFile(filepath, file) {

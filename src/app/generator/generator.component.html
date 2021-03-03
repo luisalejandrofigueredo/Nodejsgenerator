@@ -1,15 +1,12 @@
 <mat-progress-bar *ngIf="progressbar" mode="indeterminate"></mat-progress-bar>
 <div>
-    <mat-form-field style="width: 100%;">
-        <textarea  matInput #textgenerating rows="20" 
+    <p>Actions</p>
+   <textarea style="background-color: black; color:whitesmoke;width: 100%;" matInput #textgenerating rows="15" 
         readonly="true" placeholder="" ></textarea>
-    </mat-form-field>
 </div>
-<p>Destination Path: {{filePath}}</p>
+<p>Files writed</p>
+<textarea style="background-color: black; color:whitesmoke;width: 100%;" matInput #fileswriting rows="6" 
+        readonly="true" placeholder="" ></textarea>
 <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
-    <button id="button" color="primary" mat-raised-button (click)="generate($event)"><mat-icon >build</mat-icon>Start Generating</button>
+    <button id="button" color="primary" mat-raised-button (click)="generate($event)"><mat-icon>build</mat-icon>Start Generating</button>
 </div>
-<div style="height: 500px">
-    <ngx-monaco-editor style="height: 100%" [options]="editorOptions" [(ngModel)]="filegenerating"></ngx-monaco-editor>
-</div>
-

@@ -9,26 +9,28 @@ import {ConfigService} from '../service/config.service';
   templateUrl: './generator.component.html',
   styleUrls: ['./generator.component.scss'],
 })
-export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
+export class GeneratorComponent implements OnInit, OnChanges {
   generatingline = 'Ready for begin\n';
   progressbar = false;
   keyfield = '';
-  @ViewChild('textgenerating', { static: true }) container: ElementRef;
+  @ViewChild('textgenerating', { static: false }) container: ElementRef;
+  @ViewChild('fileswriting', { static: false }) containerfiles: ElementRef;
   constructor(private configservice:ConfigService,private ngzone: NgZone, private electronservice: ElectronService) { }
   config: any;
   filePath: string;
+  line:string;
   filegenerating = '';
+  generatingfile = '';
   fileapigenerating = '';
   reltables: string[] = [];
   editorOptions = { theme: 'vs-dark', language: 'typescript' };
   ormj = { PrimaryGeneratedColumn: false, OneToMany: false, ManyToOne: false , Index: false };
   ngOnInit(): void {
   }
-  ngAfterContentInit(): void {
-    this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
-  }
+  
   ngOnChanges(changes: SimpleChanges): void {
     this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
+    this.containerfiles.nativeElement.scrollTop = this.containerfiles.nativeElement.scrollHeight;
   }
   
   addingPath() {
@@ -156,6 +158,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
     this.addgenrartinline('Saving controller... ');
     const args = { path: this.config.filePath, name: schema, file: this.filegenerating };
     const end = this.electronservice.ipcRenderer.sendSync('savecontroler', args);
+    this.addgenrartinlinefile(end);
     this.addgenrartinline('End generate controller... ');
     this.addgenrartinline('Begin generate service... ');
     this.servicegenerator(index, schema,mastersecurity);
@@ -280,6 +283,7 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
     this.filegenerating += `}\n`;
     const args = { path: this.config.filePath, name: schema, file: this.filegenerating };
     const end = this.electronservice.ipcRenderer.sendSync('saveservice', args);
+    this.addgenrartinlinefile(end);
   }
 
   entitygenerator(ind: number) {
@@ -309,6 +313,8 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
     this.addgenrartinline('saving entity');
     const args = { path: this.config.filePath, name: this.config.schemas[ind].name, file: this.filegenerating };
     const end = this.electronservice.ipcRenderer.sendSync('saveentity', args);
+    this.addgenrartinlinefile(end);
+
   }
 
   generaterelation(element: Relations) {
@@ -418,9 +424,18 @@ export class GeneratorComponent implements OnInit, AfterContentInit, OnChanges {
 
   addgenrartinline(message: string) {
     this.ngzone.runOutsideAngular(x => {
+      this.line=message;
       this.generatingline += message + '\n';
       this.container.nativeElement.value = this.generatingline;
       this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
+    });
+  }
+
+  addgenrartinlinefile(message: string) {
+    this.ngzone.runOutsideAngular(x => {
+      this.generatingfile += message + '\n';
+      this.containerfiles.nativeElement.value = this.generatingfile;
+      this.containerfiles.nativeElement.scrollTop = this.containerfiles.nativeElement.scrollHeight;
     });
   }
 

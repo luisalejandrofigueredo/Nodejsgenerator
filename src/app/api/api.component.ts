@@ -76,7 +76,8 @@ export class ApiComponent implements OnInit {
   edit(_id: number){
     const reg = this.configservice.getapi(this.id, _id);
     const matRef = this.dialog.open(ApidatamodalComponent, { width: '300px' ,
-     data: { id: _id, type: reg.type,
+     data: { id: _id, 
+      type: reg.type,
       operation: reg.operation,
       path: reg.path,
       field: reg.field,

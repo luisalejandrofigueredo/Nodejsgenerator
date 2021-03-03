@@ -1,7 +1,22 @@
 {
-  "name": "generador",
+  "name": "generator",
   "version": "0.0.0",
+  "author": "Luis Alejandro Figueredo Casadei",
+  "description": "Generator for Nestjs",
   "main": "main.js",
+  "icon": "dist/generador/assets/logo.svg",
+  "build": {
+    "appId": "generador",
+    "files": [
+      "dist/generador/**/*",
+      "node_modules/**/*",
+      "package.json",
+      "main.js"
+    ],
+    "win": {
+      "icon": "dist/generador/logo.ico"
+    }
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -10,7 +25,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "start:electron": "ng build --base-href ./ && electron . ",
-    "start:electronserv": "ng build --base-href ./ && electron . --serve"
+    "start:electronserv": "ng build --base-href ./ && electron . --serve",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "private": true,
   "dependencies": {
@@ -26,6 +43,7 @@
     "@angular/platform-browser-dynamic": "~10.0.2",
     "@angular/router": "~10.0.2",
     "@materia-ui/ngx-monaco-editor": "^4.0.2",
+    "electron-builder-squirrel-windows": "^22.10.5",
     "monaco-editor": "^0.18.1",
     "ngx-electron": "^2.2.0",
     "ngx-monaco-editor": "^9.0.0",
@@ -44,6 +62,7 @@
     "@types/node": "^12.11.1",
     "codelyzer": "^5.1.2",
     "electron": "^8.2.2",
+    "electron-builder": "^22.10.5",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~5.0.0",
