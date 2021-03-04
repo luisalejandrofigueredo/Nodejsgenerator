@@ -183,9 +183,18 @@ generatefileloginservice(){
  this.filelogin+='constructor(@Inject("winston") private readonly logger: Logger,';
  this.filelogin+=`private ${sec.table.toLowerCase()}service:${sec.table}Service,`;
  this.filelogin+='private readonly jwtService: JwtService) { }\n';
- this.filelogin+='@Post';
+ this.filelogin+='@Post\n';
  this.filelogin+='async login(@Ip() ip,@Headers() header) {\n';
- this.filelogin+=`const ${sec.table.toLowerCase()}: ${sec.table} = (await this.${sec.table}service.getloginbygenerator(header.login));`;
+ this.filelogin+=`const ${sec.table.toLowerCase()}: ${sec.table} = (await this.${sec.table}service.getloginbygenerator(header.login));\n`;
+ this.filelogin+=`if ( ${sec.table.toLowerCase()} === undefined ||  ${sec.table.toLowerCase()} === null) {\n`;
+ this.filelogin+='const date = new Date(Date.now());\n';
+ this.filelogin+="this.logger.warn(`Login fail user no exist possible hacker atack ip:${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);\n";
+ this.filelogin+="return { message:'no login'}\n";
+ this.filelogin+='}\n';
+ this.filelogin+=`if (bcrypt.compareSync(header.password, ${sec.table.toLowerCase()}.${sec.password})) {\n`;
+ this.filelogin+=`${sec.table.toLowerCase()}.${sec.bearertoken} = this.jwtService.sign({ login: header.login });\n`;
+ this.filelogin+='}\n';
+ this.filelogin+=`await this.${sec.table.toLowerCase()}service.update${sec.table}(${sec.table.toLowerCase()})\n`;
 }
 
 viewfilegenerated(){
