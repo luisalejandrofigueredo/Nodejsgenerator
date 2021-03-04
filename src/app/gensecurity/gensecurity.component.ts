@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import{ Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ConfigService } from '../service/config.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ElectronService } from 'ngx-electron';
 import { Selectvalues } from '../selectvalues';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { from } from 'rxjs';
 @Component({
   selector: 'app-gensecurity',
   templateUrl: './gensecurity.component.html',
@@ -41,7 +40,6 @@ export class GensecurityComponent implements OnInit {
       this.schemas.push({ value: element.id, viewValue: element.name });
     });
     if (sec.table !== undefined) {
-      console.log('load form');
       const tableid=this.configservice.getschemaid(sec.table);
       this.profileForm = new FormGroup({
         selectedValue: new FormControl(tableid, Validators.required),
@@ -55,7 +53,6 @@ export class GensecurityComponent implements OnInit {
         logger: new FormControl(sec.logger)
       });
     } else {
-      console.log('new form');
       this.profileForm = new FormGroup({
         selectedValue: new FormControl('',Validators.required),
         selectedFieldlogin: new FormControl('',Validators.required),
@@ -167,7 +164,6 @@ export class GensecurityComponent implements OnInit {
    this.file+='}});\n'
    this.file+=' return find;\n';
    this.file+='}\n}\n';
-
 }
 
 generatefileloginservice(){
@@ -185,16 +181,25 @@ generatefileloginservice(){
  this.filelogin+='private readonly jwtService: JwtService) { }\n';
  this.filelogin+='@Post\n';
  this.filelogin+='async login(@Ip() ip,@Headers() header) {\n';
- this.filelogin+=`const ${sec.table.toLowerCase()}: ${sec.table} = (await this.${sec.table}service.getloginbygenerator(header.login));\n`;
+ this.filelogin+=`const ${sec.table.toLowerCase()}: ${sec.table} = (await this.${sec.table.toLowerCase()}service.getloginbygenerator(header.login));\n`;
  this.filelogin+=`if ( ${sec.table.toLowerCase()} === undefined ||  ${sec.table.toLowerCase()} === null) {\n`;
  this.filelogin+='const date = new Date(Date.now());\n';
- this.filelogin+="this.logger.warn(`Login fail user no exist possible hacker atack ip:${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);\n";
+ this.filelogin+="this.logger.warn(`Login fail user no exist possible hacker atack from ip:${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);\n";
  this.filelogin+="return { message:'no login'}\n";
  this.filelogin+='}\n';
  this.filelogin+=`if (bcrypt.compareSync(header.password, ${sec.table.toLowerCase()}.${sec.password})) {\n`;
  this.filelogin+=`${sec.table.toLowerCase()}.${sec.bearertoken} = this.jwtService.sign({ login: header.login });\n`;
  this.filelogin+='}\n';
- this.filelogin+=`await this.${sec.table.toLowerCase()}service.update${sec.table}(${sec.table.toLowerCase()})\n`;
+ this.filelogin+=`await this.${sec.table.toLowerCase()}service.update(${sec.table.toLowerCase()});\n`;
+ if (sec.logger === true) {
+     this.filelogin+='const date = new Date();\n';
+     this.filelogin+="this.logger.info(`Login:";
+     this.filelogin+="${";
+     this.filelogin+=`${sec.table.toLowerCase()}.${sec.login}}`; 
+     this.filelogin+="${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);\n";
+    }
+    this.filelogin+=`return { mensaje:"ok",token: ${sec.table.toLowerCase()}.${sec.bearertoken}};\n`;
+    this.filelogin+=`} else {`;
 }
 
 viewfilegenerated(){

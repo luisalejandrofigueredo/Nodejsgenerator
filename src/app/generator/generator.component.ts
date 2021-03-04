@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, NgZone, AfterContentInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, NgZone, OnChanges, SimpleChanges } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { Schemaitem } from '../interfaces/schema';
 import { Relations } from '../interfaces/relations';
-import {ConfigService} from '../service/config.service';
+import { ConfigService } from '../service/config.service';
 
 @Component({
   selector: 'app-generator',
