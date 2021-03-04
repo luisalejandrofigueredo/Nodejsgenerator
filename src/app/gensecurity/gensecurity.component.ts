@@ -200,6 +200,45 @@ generatefileloginservice(){
     }
     this.filelogin+=`return { mensaje:"ok",token: ${sec.table.toLowerCase()}.${sec.bearertoken}};\n`;
     this.filelogin+=`} else {`;
+    if (sec.logger === true) {
+     this.filelogin+="this.logger.warn(`contraseña equivocada de ${";
+     this.filelogin+=`${sec.table.toLowerCase()}.${sec.login}}`;
+     this.filelogin+="`);\n";
+    }
+    this.filelogin+="return { mensaje:'no login'}};\n"
+    this.filelogin+='@Get()\n';
+    this.filelogin+=`async logout(@Ip() ip,@Headers() header) {\n`;
+    this.filelogin+=`const ${sec.table.toLowerCase()}: ${sec.table} = (await this.${sec.table.toLowerCase()}.getloginbygenerator(header.login));\n`;
+    this.filelogin+=`const date = new Date(Date.now());\n`;
+    this.filelogin+=`const locdate= date.toLocaleDateString();\n`;
+    this.filelogin+=`const hour= date.toLocaleTimeString();\n`;
+    this.filelogin+=`if (${sec.table.toLowerCase()} === undefined || ${sec.table.toLowerCase()} === null) {\n`;
+    if (sec.logger === true) {
+      this.filelogin+="this.logger.warn(`suspect hacker atack in logoout user no exist :${";
+      this.filelogin+="date}";
+      this.filelogin+="${";
+      this.filelogin+="hour}`);\n";
+    }
+    this.filelogin+="return { mensaje:'error'};\n";
+    this.filelogin+='}\n';
+    this.filelogin+=`if (${sec.table.toLowerCase()}.token !== header.token) {`;
+    if (sec.logger === true) {
+      this.filelogin+="this.logger.warn(`posible hacker atack false bearer token from ip $";
+      this.filelogin+="{ip} ${date} ${hour}`);\n";
+    }
+    this.filelogin+="return { mensaje:'error'}\n";
+    this.filelogin+='}\n';
+    this.filelogin+=`${sec.table.toLowerCase()}.token = '';\n`
+    this.filelogin+=`await this.${sec.table.toLowerCase()}service.update(${sec.table.toLowerCase()});\n`;
+    if (sec.logger === true) {
+      this.filelogin+="this.logger.info(`logout: ${";
+      this.filelogin+=`${sec.table.toLowerCase()}.${sec.login}}`;
+      this.filelogin+="${locdate} ${hour}`);\n";
+      this.filelogin+="return { mensaje:'logout'};\n"
+    }
+    this.filelogin+="}\n";
+    this.filelogin+="}\n";
+    
 }
 
 viewfilegenerated(){
