@@ -1,3 +1,5 @@
+Under developent  if you like view proyects under construction read the package.json for compile in your machine. 
+
 # Generador
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.1.
