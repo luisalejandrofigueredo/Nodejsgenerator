@@ -12,6 +12,7 @@ export class ConfigComponent implements OnInit {
   constructor(private configservice: ConfigService, private electron: ElectronService) { }
   filePath: string;
   enableCors = false;
+  dbconf:any;
   driverdatabase: Selectvalues[] = [{value:0,viewValue:'My Sql'},
   {value:1,viewValue:"PostgreSQL"},
   {value:2,viewValue:"SQLite"},
@@ -25,13 +26,14 @@ export class ConfigComponent implements OnInit {
   ngOnInit(): void {
     this.enableCors = this.configservice.config.enableCors;
     this.filePath = this.configservice.config.filePath;
+    this.dbconf= this.configservice.getdatabase();
     this.profileForm = new FormGroup({
-      selecteddatabase: new FormControl(0, Validators.required),
-      host: new FormControl('', Validators.required),
-      port: new FormControl(3306, Validators.required),
-      username: new FormControl('', Validators.required),
-      password: new FormControl('', Validators.required),
-      database: new FormControl('',Validators.required ),
+      selecteddatabase: new FormControl(this.dbconf.selecteddatabase, Validators.required),
+      host: new FormControl(this.dbconf.host, Validators.required),
+      port: new FormControl(this.dbconf.port, Validators.required),
+      username: new FormControl(this.dbconf.username, Validators.required),
+      password: new FormControl(this.dbconf.password, Validators.required),
+      database: new FormControl(this.dbconf.database,Validators.required ),
     });
   }
   browse() {
@@ -42,6 +44,15 @@ export class ConfigComponent implements OnInit {
           this.filePath = result.filePaths[0];
         }
       });
+  }
+  updatedbconf(){
+    this.dbconf.selecteddatabase=this.profileForm.get('selecteddatabase').value;
+    this.dbconf.host=this.profileForm.get('host').value;
+    this.dbconf.port=this.profileForm.get('port').value;
+    this.dbconf.username=this.profileForm.get('username').value;
+    this.dbconf.password=this.profileForm.get('password').value;
+    this.dbconf.database=this.profileForm.get('database').value;
+    this.configservice.setdatabase(this.dbconf);
   }
   change(){
     this.configservice.enableCors(this.enableCors);

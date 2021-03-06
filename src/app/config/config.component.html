@@ -35,6 +35,7 @@
                     <input matInput placeholder="Database" formControlName="database">
                 </mat-form-field>
             </div>
+            <button mat-raised-button [disabled]="!profileForm.valid" (click)="updatedbconf()" color="primary">Ok</button>
         </form>
 </div>
 </div>

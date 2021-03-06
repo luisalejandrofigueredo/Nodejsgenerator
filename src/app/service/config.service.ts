@@ -12,12 +12,24 @@ export class ConfigService {
     version: 0.2,
     filePath: '',
     enableCors: false,
+    dbconf:{ selecteddatabase:1,host:'',port:0,username:'',password:'',database:''},
     security: {},
     schemas: [],
   };
   /* schemas[id:number,name:string,description:string,schemastable[schemas],
   schemasrelations[],schemasapi[]] */
   constructor(private electron: ElectronService) { }
+  setdatabase(set: any) {
+    this.config.dbconf = set;
+  }
+
+  getdatabase(): any{
+    if (this.config.dbconf===undefined) // for version conf compatibitili
+    {
+     this.config.dbconf={ selecteddatabase:0,host:'',port:0,username:'',password:'',database:''};
+    }
+    return this.config.dbconf;
+  }
 
   setsecurity(set: any) {
     this.config.security = set;
