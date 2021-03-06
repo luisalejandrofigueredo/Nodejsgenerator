@@ -9,10 +9,11 @@ import { Api } from '../interfaces/api';
 })
 export class ConfigService {
   config = {
-    version: 0.2,
+    version: 0.3,
     filePath: '',
     enableCors: false,
-    dbconf:{ selecteddatabase:1,host:'',port:0,username:'',password:'',database:''},
+    dbconf:{ selecteddatabase:0,host:'',port:0,username:'',password:'',database:''},
+    jwtsk:'',
     security: {},
     schemas: [],
   };

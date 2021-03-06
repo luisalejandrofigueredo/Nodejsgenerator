@@ -111,6 +111,21 @@ ipcMain.on('saveservice', (event, arg) => {
   event.returnValue = filepath;
 });
 
+ipcMain.on('saveormconfig', (event, arg) => {
+  console.log('writing files os:', process.platform);
+  let dir = '';
+  let filepath = '';
+  if (process.platform === "win32") {
+    console.log('writing in windows...');
+    filepath = arg.path + '\\src\\' + arg.name;
+  } else {
+    console.log('writing in unix...');
+    filepath = arg.path + '/src/' + arg.name;
+  }
+  writeFile(filepath, arg.file);
+  event.returnValue = filepath;
+});
+
 ipcMain.on('savecontroler', (event, arg) => {
   console.log('writing files os:', process.platform);
   let dir = '';

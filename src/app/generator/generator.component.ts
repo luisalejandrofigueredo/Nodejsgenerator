@@ -36,15 +36,61 @@ export class GeneratorComponent implements OnInit, OnChanges {
   addingPath() {
     this.addgenrartinline('reading file path ...');
     this.filePath = this.configservice.config.filePath;
+    this.generatedatabaseconfig();
     this.generateschemas();
     this.generatesecurityfile();
     this.addgenrartinline('End generate');
+  }
+
+  generatedatabaseconfig(){
+    this.addgenrartinline('begin generating database config file ...');
+    const database=this.configservice.getdatabase();
+    let driver="";
+    this.filegenerating='';
+    switch (database.selecteddatabase) {
+      case 0:
+        driver='mysql';
+        break;
+      case 1:
+        driver='postgres';
+        break;
+      case 2:
+        driver='sqlite3';
+        break;
+      case 3:
+        driver='mssql';
+        break;
+      case 4:
+        driver='sql.js';
+        break;
+      case 5:
+        driver='oracledb';
+        break;      
+      default:
+        break;
+    }
+    const databaseconfig={
+      "type":driver,
+      "host":database.host,
+      "port":database.port,
+      "username":database.username,
+      "password":database.password,
+      "database":database.database,
+      "entities": ["dist/**/*.entity.js"],
+      "synchronize": true
+    }
+    this.addgenrartinline('end generating database config file.');
+    this.filegenerating =JSON.stringify(databaseconfig);
+    const args = { path: this.config.filePath, name: "ormconfig.json", file: this.filegenerating };
+    const end = this.electronservice.ipcRenderer.sendSync('saveormconfig', args);
+    this.addgenrartinlinefile(end);
   }
   
   generatesecurityfile(){
     this.addgenrartinline('begin generating security file ...');
     this.addgenrartinline('end generating security file ...');
   }
+
   generateschemas() {
     this.addgenrartinline('begin generating schemas ...');
     const schemas = this.configservice.getschema();

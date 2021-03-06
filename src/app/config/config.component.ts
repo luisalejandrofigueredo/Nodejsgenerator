@@ -13,6 +13,7 @@ export class ConfigComponent implements OnInit {
   filePath: string;
   enableCors = false;
   dbconf:any;
+  jwtsk:string;
   driverdatabase: Selectvalues[] = [{value:0,viewValue:'My Sql'},
   {value:1,viewValue:"PostgreSQL"},
   {value:2,viewValue:"SQLite"},
@@ -26,6 +27,11 @@ export class ConfigComponent implements OnInit {
   ngOnInit(): void {
     this.enableCors = this.configservice.config.enableCors;
     this.filePath = this.configservice.config.filePath;
+    if (this.configservice.config.jwtsk === undefined){ //for compa delete las version
+        this.configservice.config.jwtsk=''
+    } else{
+      this.jwtsk=this.configservice.config.jwtsk;
+    }
     this.dbconf= this.configservice.getdatabase();
     this.profileForm = new FormGroup({
       selecteddatabase: new FormControl(this.dbconf.selecteddatabase, Validators.required),
@@ -54,8 +60,12 @@ export class ConfigComponent implements OnInit {
     this.dbconf.database=this.profileForm.get('database').value;
     this.configservice.setdatabase(this.dbconf);
   }
+  
   change(){
     this.configservice.enableCors(this.enableCors);
+  }
+  chsecret(){
+    this.configservice.config.jwtsk=this.jwtsk;
   }
   save() {
     this.configservice.save();

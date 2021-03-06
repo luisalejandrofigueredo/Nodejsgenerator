@@ -329,5 +329,6 @@
 		"username": "root",
 		"password": "root",
 		"database": "cazaor"
-	}
+	},
+	"jwtsk": "jwtsecretkey"
 }

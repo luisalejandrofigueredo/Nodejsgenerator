@@ -1,41 +1,58 @@
 <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
     <p style="color: whitesmoke;background-color: blue;">Configuration </p>
-    <div style="border-style: solid;">
-        <p>If you no select a valid NestJS folder the program crash at generated files</p>
-        <button mat-raised-button color="primary" (click)="browse()">
-            <mat-icon>folder</mat-icon> select folder NestJS
-        </button>
-        <p>File Path:{{filePath}}</p>
-        <mat-checkbox [(ngModel)]="enableCors" (change)="change()">Enable CORS</mat-checkbox>
-    </div>
-    <div>
-        <form [formGroup]="profileForm">
-            <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            Principal configuration
+        </mat-expansion-panel-header>
+        <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
+            <p>If you no select a valid NestJS folder the program crash at generated files</p>
+            <button mat-raised-button color="primary" (click)="browse()">
+                <mat-icon>folder</mat-icon> select folder NestJS
+            </button>
+            <p>File Path:{{filePath}}</p>
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
                 <mat-form-field>
-                    <mat-select placeholder="Select database driver" formControlName="selecteddatabase"
-                        name="itemsdatabase">
-                        <mat-option *ngFor="let item of driverdatabase" [value]="item.value">
-                            {{item.viewValue}}
-                        </mat-option>
-                    </mat-select>
+                    <input matInput placeholder="JWT secret key" [(ngModel)]="jwtsk">
                 </mat-form-field>
-                <mat-form-field>
-                    <input matInput placeholder="Host" formControlName="host">
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput type="number" placeholder="Port" formControlName="port">
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput placeholder="User name" formControlName="username">
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput placeholder="Password" formControlName="password">
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput placeholder="Database" formControlName="database">
-                </mat-form-field>
+                <button style="padding-left: 10px;" mat-raised-button (click)="chsecret()" color="primary">Change secret key</button>
             </div>
-            <button mat-raised-button [disabled]="!profileForm.valid" (click)="updatedbconf()" color="primary">Ok</button>
-        </form>
-</div>
+            <mat-checkbox [(ngModel)]="enableCors" (change)="change()">Enable CORS</mat-checkbox>
+        </div>
+    </mat-expansion-panel>
+    <div>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                Database config
+            </mat-expansion-panel-header>
+            <form [formGroup]="profileForm">
+                <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
+                    <mat-form-field>
+                        <mat-select placeholder="Select database driver" formControlName="selecteddatabase"
+                            name="itemsdatabase">
+                            <mat-option *ngFor="let item of driverdatabase" [value]="item.value">
+                                {{item.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="Host" formControlName="host">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput type="number" placeholder="Port" formControlName="port">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="User name" formControlName="username">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="Password" formControlName="password">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="Database" formControlName="database">
+                    </mat-form-field>
+                </div>
+                <button mat-raised-button [disabled]="!profileForm.valid" (click)="updatedbconf()"
+                    color="primary">Ok</button>
+            </form>
+        </mat-expansion-panel>
+    </div>
 </div>
