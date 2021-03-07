@@ -14,6 +14,7 @@ export class ConfigService {
     enableCors: false,
     dbconf:{ selecteddatabase:0,host:'',port:0,username:'',password:'',database:''},
     jwtsk:'',
+    logger:{ type:0,file:'info.log',maxsize:50000,typewarn:0,filewarn:'warn.log',maxsizewarn:10000,typeerror:0,fileerror:'error.log',maxsizeerror:10000},
     security: {},
     schemas: [],
   };
