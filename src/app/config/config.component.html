@@ -12,7 +12,12 @@
             <p>File Path:{{filePath}}</p>
             <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
                 <mat-form-field>
-                    <input matInput placeholder="JWT secret key" [(ngModel)]="jwtsk">
+                    <input matInput placeholder="JWT secret key" [type]="hide ? 'password' : 'text'"
+                        [(ngModel)]="jwtsk">
+                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                        [attr.aria-pressed]="hide">
+                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
                 </mat-form-field>
                 <button style="padding-left: 10px;" mat-raised-button (click)="chsecret()" color="primary">Change secret
                     key</button>
@@ -51,7 +56,12 @@
                         <input matInput placeholder="User name" formControlName="username">
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput placeholder="Password" formControlName="password">
+                        <input matInput [type]="hidep ? 'password' : 'text'" placeholder="Password"
+                            formControlName="password">
+                        <button mat-icon-button matSuffix (click)="hidep = !hidep" [attr.aria-label]="'Hide password'"
+                            [attr.aria-pressed]="hidep">
+                            <mat-icon>{{hidep ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
                     </mat-form-field>
                     <mat-form-field>
                         <input matInput placeholder="Database" formControlName="database">

@@ -14,6 +14,8 @@ export class ConfigComponent implements OnInit {
   enableCors = false;
   dbconf:any;
   jwtsk:string;
+  hide=true;
+  hidep=true;
   driverdatabase: Selectvalues[] = [{value:0,viewValue:'My Sql'},
   {value:1,viewValue:"PostgreSQL"},
   {value:2,viewValue:"SQLite"},
