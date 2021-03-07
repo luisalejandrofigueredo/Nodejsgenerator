@@ -1,0 +1,62 @@
+<form [formGroup]="profileForm">
+    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
+        <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                <p class="info" style="padding-right: 10px;">Info</p>
+                <mat-form-field>
+                    <mat-select placeholder="type" formControlName="type">
+                        <mat-option *ngFor="let item of logdestination" [value]="item.value">
+                            {{item.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field
+                    *ngIf="this.profileForm.get('type').value===0 || this.profileForm.get('type').value===2">
+                    <input matInput formControlName="file" placeholder="File" >
+                </mat-form-field>
+                <mat-form-field
+                    *ngIf="this.profileForm.get('type').value===0 || this.profileForm.get('type').value===2">
+                    <input matInput type="number" formControlName="maxsize" placeholder="Max Size" >
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                <p class="warn" style="padding-right: 10px;">Warn</p>
+                <mat-form-field>
+                    <mat-select placeholder="type" formControlName="typewarn">
+                        <mat-option *ngFor="let item of logdestination" [value]="item.value">
+                            {{item.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field
+                    *ngIf="this.profileForm.get('typewarn').value===0 || this.profileForm.get('typewarn').value===2">
+                    <input matInput formControlName="filewarn" placeholder="File" >
+                </mat-form-field>
+                <mat-form-field
+                    *ngIf="this.profileForm.get('type').value===0 || this.profileForm.get('type').value===2">
+                    <input matInput type="number" formControlName="maxsizewarn" placeholder="Max Size" >
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                <p class="error" style="padding-right: 10px;">Error</p>
+                <mat-form-field>
+                    <mat-select placeholder="type" formControlName="typeerror">
+                        <mat-option *ngFor="let item of logdestination" [value]="item.value">
+                            {{item.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field
+                    *ngIf="this.profileForm.get('typeerror').value===0 || this.profileForm.get('typeerror').value===2">
+                    <input matInput formControlName="fileerror" placeholder="File" >
+                </mat-form-field>
+                <mat-form-field
+                    *ngIf="this.profileForm.get('type').value===0 || this.profileForm.get('type').value===2">
+                    <input matInput type="number" formControlName="maxsizeerror" placeholder="Max Size" >
+                </mat-form-field>
+            </div>
+        </div>
+        <button mat-raised-button [disabled]="!profileForm.valid" (click)="update()"
+                    color="primary">Ok</button>
+    </div>
+</form>

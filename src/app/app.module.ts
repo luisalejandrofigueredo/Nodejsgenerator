@@ -40,6 +40,7 @@ import { RelationdatamodalComponent } from './relationdatamodal/relationdatamoda
 import { RelationdatamodalonetomanyComponent } from './relationdatamodalonetomany/relationdatamodalonetomany.component';
 import { GensecurityComponent } from './gensecurity/gensecurity.component';
 import { ViewsecurityComponent } from './viewsecurity/viewsecurity.component';
+import { LoggerComponent } from './config/logger/logger.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -58,6 +59,7 @@ import { ViewsecurityComponent } from './viewsecurity/viewsecurity.component';
     RelationdatamodalonetomanyComponent,
     GensecurityComponent,
     ViewsecurityComponent,
+    LoggerComponent,
   ],
   imports: [ 
     BrowserModule, 

@@ -16,8 +16,14 @@
                 </mat-form-field>
                 <button style="padding-left: 10px;" mat-raised-button (click)="chsecret()" color="primary">Change secret key</button>
             </div>
-            <mat-checkbox [(ngModel)]="enableCors" (change)="change()">Enable CORS</mat-checkbox>
+            <mat-checkbox [(ngModel)]="enableCors" (change)="change()">Enable CORS (recomended)</mat-checkbox>
         </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            Logger
+        </mat-expansion-panel-header>
+        <app-logger></app-logger>
     </mat-expansion-panel>
     <div>
         <mat-expansion-panel>
