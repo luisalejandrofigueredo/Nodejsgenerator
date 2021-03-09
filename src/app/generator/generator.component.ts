@@ -4,6 +4,7 @@ import { Schemaitem } from '../interfaces/schema';
 import { Relations } from '../interfaces/relations';
 import { ConfigService } from '../service/config.service';
 
+
 @Component({
   selector: 'app-generator',
   templateUrl: './generator.component.html',
@@ -102,10 +103,45 @@ export class GeneratorComponent implements OnInit, OnChanges {
       this.reltables = [];
       this.entitygenerator(index);
       this.apigenerator(index, schemas[index].name,schemas[index].mastersecurity);
+      this.generatemodules(index, schemas[index].name,schemas[index].mastersecurity);
     }
     this.addgenrartinline('end generating schemas ...');
   }
-
+  generatemodules(index:number,schema:string,mastersecurity:boolean):boolean{
+    console.log('master security',mastersecurity);
+    let mastersec:any;
+    this.addgenrartinline(`begin generating module ${schema} ...`);
+    mastersec=  this.configservice.getschemamastersecurity();
+    if (mastersec === undefined) {
+        this.addgenrartinline(`No schema master security.`);
+        return false;  
+    }
+    this.filegenerating="import { Module } from '@nestjs/common';\n";
+    this.filegenerating+="import { JwtModule } from '@nestjs/jwt';\n";
+    this.filegenerating+="import { TypeOrmModule } from '@nestjs/typeorm';\n";
+    this.filegenerating+="import * as winston from 'winston';\n";
+    this.filegenerating+="import { WinstonModule } from 'nest-winston';\n";
+    this.filegenerating+=`import { ${schema}Service } from '../service/${schema}.service'\n`;
+    this.filegenerating+=`import { ${schema}Controler } from '../controler/${schema}.controler';\n`;
+    this.filegenerating+=`import { ${schema} } from '../entitys/${schema}.entity';\n`;
+    if (mastersecurity===false){
+      this.filegenerating+=`import { ${mastersec.name}Service } from '../service/${mastersec.name}.service'\n`;
+      this.filegenerating+=`import { ${mastersec.name}Controler } from '../controler/${mastersec.name}.controler';\n`;
+      this.filegenerating+=`import { ${mastersec.name} } from '../entitys/${mastersec.name}.entity';\n`;
+    }
+    this.filegenerating+='@Module({\n';
+    this.filegenerating+=`imports:[TypeOrmModule.forFeature([${schema}`;
+    if (mastersecurity===false){
+      this.filegenerating+=`,${mastersec.name}`;
+    }
+    this.filegenerating+=`}),\n`;
+    this.filegenerating+=`JwtModule.register({  secret: '${this.configservice.config.jwtsk}' }),\n`;
+    const args = { path: this.config.filePath, name: schema, file: this.filegenerating };
+    const end = this.electronservice.ipcRenderer.sendSync('savemodule', args);
+    this.addgenrartinlinefile(end);
+    this.addgenrartinline('end generating module ...');
+    return(true);
+   }
   // generando api
   apigenerator(index: number, schema: string, mastersecurity: boolean) {
     const schemalower = schema.toLowerCase();

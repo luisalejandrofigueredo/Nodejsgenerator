@@ -75,6 +75,24 @@ ipcMain.on('openvisualcode', (event, arg) => {
   event.returnValue = 'visual ready';
 });
 
+ipcMain.on('savemodule', (event, arg) => {
+  console.log('writing files os:', process.platform);
+  let dir = '';
+  let filepath = '';
+  if (process.platform === "win32") {
+    console.log('writing in windows...');
+    filepath = arg.path + '\\src\\module\\' + arg.name + '.module.ts';
+    dir = arg.path + '\\src\\module'
+  } else {
+    console.log('writing in unix...');
+    filepath = arg.path + '/src/module/' + arg.name + '.module.ts';
+    dir = arg.path + '/src/module'
+  }
+  if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
+  writeFile(filepath, arg.file);
+  event.returnValue = filepath;
+});
+
 ipcMain.on('saveentity', (event, arg) => {
   console.log('writing files os:', process.platform);
   let dir = '';

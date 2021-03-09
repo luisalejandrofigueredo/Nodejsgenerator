@@ -21,6 +21,18 @@ export class ConfigService {
   /* schemas[id:number,name:string,description:string,schemastable[schemas],
   schemasrelations[],schemasapi[]] */
   constructor(private electron: ElectronService) { }
+
+  getschemamastersecurity(){
+    let array : Schemahead[];
+    array=this.getschema();
+    for (let index = 0; index < array.length; index++) {
+      const element = array[index];
+      if (element.mastersecurity===true){
+        return(element)
+      }
+    }
+    return(undefined);
+  }
   setdatabase(set: any) {
     this.config.dbconf = set;
   }
