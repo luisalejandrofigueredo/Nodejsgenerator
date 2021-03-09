@@ -332,7 +332,7 @@
 	},
 	"jwtsk": "jwtsecretkey",
 	"logger": {
-		"type": 0,
+		"type": 2,
 		"file": "info.log",
 		"maxsize": 50000,
 		"typewarn": 0,
