@@ -137,6 +137,19 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating+=`]),\n`;
     this.filegenerating+=`JwtModule.register({  secret: '${this.configservice.config.jwtsk}' }),\n`;
     this.generatewinston();
+    this.filegenerating+='providers:';
+    this.filegenerating+=`[${schema}Service`;
+    if (mastersecurity===false){
+      this.filegenerating+=`,${mastersec.name}Service`;
+    }
+    this.filegenerating+=`],\n`;
+    this.filegenerating+='controllers:'
+    this.filegenerating+=`[${schema}Controler`;
+    if (mastersecurity===false){
+      this.filegenerating+=`,${mastersec.name}Controler`;
+    }
+    this.filegenerating+='],\n})\n';
+    this.filegenerating+=`export class ${schema}Module{}`;
     const args = { path: this.config.filePath, name: schema, file: this.filegenerating };
     const end = this.electronservice.ipcRenderer.sendSync('savemodule', args);
     this.addgenrartinlinefile(end);
@@ -148,19 +161,19 @@ export class GeneratorComponent implements OnInit, OnChanges {
      const sec=this.configservice.config.logger;
      this.filegenerating+='WinstonModule.forRoot({transports: [\n';
      if (sec.type===0 || sec.type===2){
-       this.filegenerating+=`new winston.transports.File({ format:winston.format.simple(), level: 'info', filename:${sec.file}, maxsize:${sec.maxsize}}),\n`;
+       this.filegenerating+=`new winston.transports.File({ format:winston.format.simple(), level: 'info', filename:'${sec.file}', maxsize:${sec.maxsize}}),\n`;
     }
     if (sec.type===1 || sec.type===2){
       this.filegenerating+=`new winston.transports.Console({format: winston.format.combine(winston.format.colorize({all:true}),winston.format.simple()), level:'info' }),\n`;
     }
     if (sec.typewarn===0 || sec.typewarn===2){
-      this.filegenerating+=`new winston.transports.File({ format:winston.format.simple(), level: 'warn', filename:${sec.filewarn}, maxsize:${sec.maxsizewarn}}),\n`;
+      this.filegenerating+=`new winston.transports.File({ format:winston.format.simple(), level: 'warn', filename:'${sec.filewarn}', maxsize:${sec.maxsizewarn}}),\n`;
    }
    if (sec.typewarn===1 || sec.typewarn===2){
      this.filegenerating+=`new winston.transports.Console({format: winston.format.combine(winston.format.colorize({all:true}),winston.format.simple()), level:'warn' }),\n`;
    }
    if (sec.typeerror===0 || sec.typeerror===2){
-    this.filegenerating+=`new winston.transports.File({ format:winston.format.simple(), level: 'error', filename:${sec.fileerror}, maxsize:${sec.maxsizeerror}}),\n`;
+    this.filegenerating+=`new winston.transports.File({ format:winston.format.simple(), level: 'error', filename:'${sec.fileerror}', maxsize:${sec.maxsizeerror}}),\n`;
    }
   if (sec.typeerror===1 || sec.typeerror===2){
    this.filegenerating+=`new winston.transports.Console({format: winston.format.combine(winston.format.colorize({all:true}),winston.format.simple()), level:'error' })\n`;
