@@ -144,18 +144,18 @@ ipcMain.on('saveormconfig', (event, arg) => {
   event.returnValue = filepath;
 });
 
-ipcMain.on('savecontroler', (event, arg) => {
+ipcMain.on('saveController', (event, arg) => {
   console.log('writing files os:', process.platform);
   let dir = '';
   let filepath = '';
   if (process.platform === "win32") {
     console.log('writing in windows...');
-    filepath = arg.path + '\\src\\controler\\' + arg.name + '.controler.ts';
-    dir = arg.path + '\\src\\controler'
+    filepath = arg.path + '\\src\\controller\\' + arg.name + '.controller.ts';
+    dir = arg.path + '\\src\\controller'
   } else {
     console.log('writing in unix...');
-    filepath = arg.path + '/src/controler/' + arg.name + '.controler.ts';
-    dir = arg.path + '/src/controler'
+    filepath = arg.path + '/src/controller/' + arg.name + '.controller.ts';
+    dir = arg.path + '/src/controller'
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
   writeFile(filepath, arg.file);

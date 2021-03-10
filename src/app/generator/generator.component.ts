@@ -105,8 +105,41 @@ export class GeneratorComponent implements OnInit, OnChanges {
       this.apigenerator(index, schemas[index].name,schemas[index].mastersecurity);
       this.generatemodules(index, schemas[index].name,schemas[index].mastersecurity);
     }
+    this.generateloginmodule()
     this.addgenrartinline('end generating schemas ...');
   }
+
+  generateloginmodule():boolean {
+    this.addgenrartinline('begin generating login module ...');
+    let mastersec:any;
+    mastersec=  this.configservice.getschemamastersecurity();
+    if (mastersec === undefined) {
+      this.addgenrartinline(`No schema master security fail in login module.`);
+      return false;  
+    }
+    this.addgenrartinline(`begin generating module login for ${mastersec.name} ...`);
+    this.filegenerating = "import { Module } from '@nestjs/common';\n"
+    this.filegenerating +="import { JwtModule } from '@nestjs/jwt';\n"
+    this.filegenerating +="import { TypeOrmModule } from '@nestjs/typeorm';\n"
+    this.filegenerating +="import * as winston from 'winston';\n"
+    this.filegenerating+="import { WinstonModule } from 'nest-winston';\n"
+    this.filegenerating +=`import { ${mastersec.name}Service } from '../service/${mastersec.name}.service';\n`;
+    this.filegenerating +=`import { ${mastersec.name} } from '../entitys/${mastersec.name}.entity';\n`;
+    this.filegenerating+=`import { ${mastersec.name}Controller } from '../controller/${mastersec.name}.controller';\n`;
+    this.filegenerating += "@Module({\n";
+    this.filegenerating += `imports: [TypeOrmModule.forFeature([${mastersec.name}]),\n`;
+    this.filegenerating += `JwtModule.register({  secret: '${this.configservice.config.jwtsk}' }),\n`;
+    this.generatewinston();
+    this.filegenerating += `providers:[${mastersec.name}Service],\n`;
+    this.filegenerating += `controllers:[${mastersec.name}Controller]})\n`;
+    this.filegenerating += `export class LoginModule{}`;
+    const args = { path: this.config.filePath, name: 'login', file: this.filegenerating };
+    const end = this.electronservice.ipcRenderer.sendSync('savemodule', args);
+    this.addgenrartinlinefile(end);
+    this.addgenrartinline('end generating login module ...');
+    return true;
+  }
+
   generatemodules(index:number,schema:string,mastersecurity:boolean):boolean{
     console.log('master security',mastersecurity);
     let mastersec:any;
@@ -122,11 +155,11 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating+="import * as winston from 'winston';\n";
     this.filegenerating+="import { WinstonModule } from 'nest-winston';\n";
     this.filegenerating+=`import { ${schema}Service } from '../service/${schema}.service'\n`;
-    this.filegenerating+=`import { ${schema}Controler } from '../controler/${schema}.controler';\n`;
+    this.filegenerating+=`import { ${schema}Controller } from '../controller/${schema}.controller';\n`;
     this.filegenerating+=`import { ${schema} } from '../entitys/${schema}.entity';\n`;
     if (mastersecurity===false){
       this.filegenerating+=`import { ${mastersec.name}Service } from '../service/${mastersec.name}.service'\n`;
-      this.filegenerating+=`import { ${mastersec.name}Controler } from '../controler/${mastersec.name}.controler';\n`;
+      this.filegenerating+=`import { ${mastersec.name}Controller } from '../controller/${mastersec.name}.controller';\n`;
       this.filegenerating+=`import { ${mastersec.name} } from '../entitys/${mastersec.name}.entity';\n`;
     }
     this.filegenerating+='@Module({\n';
@@ -144,9 +177,9 @@ export class GeneratorComponent implements OnInit, OnChanges {
     }
     this.filegenerating+=`],\n`;
     this.filegenerating+='controllers:'
-    this.filegenerating+=`[${schema}Controler`;
+    this.filegenerating+=`[${schema}Controller`;
     if (mastersecurity===false){
-      this.filegenerating+=`,${mastersec.name}Controler`;
+      this.filegenerating+=`,${mastersec.name}Controller`;
     }
     this.filegenerating+='],\n})\n';
     this.filegenerating+=`export class ${schema}Module{}`;
@@ -196,7 +229,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     if (this.config.schemas[index].security === true) {
         this.filegenerating += `@UseGuards(${this.config.schemas[index].classsecurity})\n`;
     }
-    this.filegenerating += `export class ${this.config.schemas[index].name}Controler {\n`;
+    this.filegenerating += `export class ${this.config.schemas[index].name}Controller {\n`;
     this.filegenerating += `constructor(private service: ${this.config.schemas[index].name}Service){}\n`;
     // tslint:disable-next-line: prefer-for-of
     for (let ind = 0; ind < this.config.schemas[index].schemasapi.length; ind++) {
@@ -277,7 +310,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating += '}';
     this.addgenrartinline('Saving controller... ');
     const args = { path: this.config.filePath, name: schema, file: this.filegenerating };
-    const end = this.electronservice.ipcRenderer.sendSync('savecontroler', args);
+    const end = this.electronservice.ipcRenderer.sendSync('saveController', args);
     this.addgenrartinlinefile(end);
     this.addgenrartinline('End generate controller... ');
     this.addgenrartinline('Begin generate service... ');

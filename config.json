@@ -306,7 +306,7 @@
 			],
 			"security": true,
 			"classsecurity": "RolesGuardclass",
-			"filesecurity": "C:/Users/luisa/cmder/nestcazaor/dist/roles/roles.guard.js",
+			"filesecurity": "C:/Users/luisa/cmder/nestcazaor/src/roles/roles.guard",
 			"mastersecurity": false
 		}
 	],
