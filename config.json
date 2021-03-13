@@ -1,6 +1,6 @@
 {
 	"version": 0.1,
-	"filePath": "C:\\Users\\luisa\\cmder\\nestcazaor",
+	"filePath": "C:\\Users\\luisa\\cmder\\prueba",
 	"enableCors": true,
 	"schemas": [
 		{
@@ -211,7 +211,7 @@
 			],
 			"security": true,
 			"classsecurity": "RolesGuard",
-			"filesecurity": "C:/Users/luisa/cmder/nestcazaor/src/roles/roles.guard",
+			"filesecurity": "C:/Users/luisa/cmder/prueba/src/roles/roles.guard",
 			"mastersecurity": true
 		},
 		{
@@ -305,8 +305,8 @@
 				}
 			],
 			"security": true,
-			"classsecurity": "RolesGuardclass",
-			"filesecurity": "C:/Users/luisa/cmder/nestcazaor/src/roles/roles.guard",
+			"classsecurity": "RolesGuard",
+			"filesecurity": "C:/Users/luisa/cmder/prueba/src/roles/roles.guard",
 			"mastersecurity": false
 		}
 	],
@@ -316,9 +316,8 @@
 		"password": "password",
 		"bearertoken": "bearer",
 		"roles": "Roles",
-		"rolesclass": "RolesGuardclass",
+		"rolesclass": "RolesGuard",
 		"filegenerated": "llll",
-		"path": "C:\\Users\\luisa\\cmder\\nestcazaor\\src",
 		"backdoor": true,
 		"logger": true
 	},
@@ -328,7 +327,7 @@
 		"port": 3306,
 		"username": "root",
 		"password": "root",
-		"database": "cazaor"
+		"database": "cazaor_project"
 	},
 	"jwtsk": "jwtsecretkey",
 	"logger": {

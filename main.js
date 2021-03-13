@@ -75,6 +75,24 @@ ipcMain.on('openvisualcode', (event, arg) => {
   event.returnValue = 'visual ready';
 });
 
+ipcMain.on('saveappmodule', (event, arg) => {
+  console.log('writing files os:', process.platform);
+  let dir = '';
+  let filepath = '';
+  if (process.platform === "win32") {
+    console.log('writing in windows...');
+    filepath = arg.path + '\\src\\' + arg.name + '.module.ts';
+    dir = arg.path + '\\src\\'
+  } else {
+    console.log('writing in unix...');
+    filepath = arg.path + '/src/' + arg.name + '.module.ts';
+    dir = arg.path + '/src/'
+  }
+  if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
+  writeFile(filepath, arg.file);
+  event.returnValue = filepath;
+});
+
 ipcMain.on('savemodule', (event, arg) => {
   console.log('writing files os:', process.platform);
   let dir = '';
@@ -135,11 +153,29 @@ ipcMain.on('saveormconfig', (event, arg) => {
   let filepath = '';
   if (process.platform === "win32") {
     console.log('writing in windows...');
-    filepath = arg.path + '\\src\\' + arg.name;
+    filepath = arg.path + '\\' + arg.name;
   } else {
     console.log('writing in unix...');
-    filepath = arg.path + '/src/' + arg.name;
+    filepath = arg.path + '/' + arg.name;
   }
+  writeFile(filepath, arg.file);
+  event.returnValue = filepath;
+});
+
+ipcMain.on('savecanactivate', (event, arg) => {
+  console.log('writing files os:', process.platform);
+  let dir = '';
+  let filepath = '';
+  if (process.platform === "win32") {
+    console.log('writing in windows...');
+    filepath = arg.path + '\\src\\roles\\' + arg.name + '.guard.ts';
+    dir = arg.path + '\\src\\roles'
+  } else {
+    console.log('writing in unix...');
+    filepath = arg.path + '/src/roles/' + arg.name + '.guard.ts';
+    dir = arg.path + '/src/roles'
+  }
+  if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
   writeFile(filepath, arg.file);
   event.returnValue = filepath;
 });

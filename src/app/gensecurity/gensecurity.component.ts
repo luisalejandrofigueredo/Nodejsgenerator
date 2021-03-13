@@ -139,10 +139,9 @@ export class GensecurityComponent implements OnInit {
     this.file+=" this.logger.warn(`Hacker from ip ${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`)\n";
    }
    this.file+=' return false;\n }\n';
-   this.file+=`}\n`;
    this.file+='const username = this.jwtService.decode(request.headers.token as string) as {login:string | null} | null;\n';
    this.file+='if (username ===  null || username=== undefined) { this.logger.warn("hacker");return false; };\n';
-   this.file+=`await this.${sec.table}Service.getloginbygenerator(username.login).then( userb=> ${sec.table.toLowerCase()}=userb);\n`;
+   this.file+=`await this.${sec.table.toLowerCase()}service.getlogin(username.login).then( userb=> ${sec.table.toLowerCase()}=userb);\n`;
    this.file+=`if (${sec.table.toLowerCase()} === undefined || ${sec.table.toLowerCase()} === null) {\n`;
    this.file+=' this.logger.warn(`Undefined user hacker ip:${ip}`);\n';
    this.file+=` return false;\n`;
@@ -164,6 +163,8 @@ export class GensecurityComponent implements OnInit {
    this.file+='}});\n'
    this.file+=' return find;\n';
    this.file+='}\n}\n';
+   const args = { path: this.configservice.config.filePath, name: 'roles', file: this.file };
+   const end = this.electronservice.ipcRenderer.sendSync('savecanactivate', args);
 }
 
 generatefileloginservice(){
@@ -177,68 +178,55 @@ generatefileloginservice(){
  this.filelogin+='@Controller("login")\n';
  this.filelogin+='export class LoginController {\n';
  this.filelogin+='constructor(@Inject("winston") private readonly logger: Logger,';
- this.filelogin+=`private ${sec.table.toLowerCase()}service:${sec.table}Service,`;
- this.filelogin+='private readonly jwtService: JwtService) { }\n';
- this.filelogin+='@Post\n';
- this.filelogin+='async login(@Ip() ip,@Headers() header) {\n';
- this.filelogin+=`const ${sec.table.toLowerCase()}: ${sec.table} = (await this.${sec.table.toLowerCase()}service.getloginbygenerator(header.login));\n`;
- this.filelogin+=`if ( ${sec.table.toLowerCase()} === undefined ||  ${sec.table.toLowerCase()} === null) {\n`;
- this.filelogin+='const date = new Date(Date.now());\n';
- this.filelogin+="this.logger.warn(`Login fail user no exist possible hacker atack from ip:${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);\n";
- this.filelogin+="return { message:'no login'}\n";
+ this.filelogin+=`  private ${sec.table.toLowerCase()}service:${sec.table}Service,`;
+ this.filelogin+='  private readonly jwtService: JwtService) { }\n';
+ this.filelogin+='  @Post()\n';
+ this.filelogin+='  async login(@Ip() ip,@Headers() header) {\n';
+ this.filelogin+=`  const date = new Date();\n`;
+ this.filelogin+=`  const ${sec.table.toLowerCase()}: ${sec.table} = (await this.${sec.table.toLowerCase()}service.getlogin(header.login));\n`;
+ this.filelogin+=`  if ( ${sec.table.toLowerCase()} === undefined ||  ${sec.table.toLowerCase()} === null) {\n`;
+ this.filelogin+='    const date = new Date(Date.now());\n';
+ this.filelogin+="    this.logger.warn(`Login fail user no exist possible hacker atack from ip:${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);\n";
+ this.filelogin+="    return { message:'no login'}\n";
+ this.filelogin+='  }\n';
+ this.filelogin+=`if (bcrypt.compareSync(header.password, ${sec.table.toLowerCase()}.${sec.password})) {`;
+ this.filelogin+=` ${sec.table.toLowerCase()}.${sec.bearertoken} = this.jwtService.sign({ Login:${sec.table.toLowerCase()}.${sec.login} });`;
+ this.filelogin+=` await this.${sec.table.toLowerCase()}service.update(${sec.table.toLowerCase()});`;
+ this.filelogin+=" this.logger.info(`Login: ${";
+ this.filelogin+=` ${sec.table.toLowerCase()}.${sec.login}}`;
+ this.filelogin+=" ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);\n"
+ this.filelogin+= " return { mensaje:'ok',token:";
+ this.filelogin+= `${sec.table.toLowerCase()}.${sec.bearertoken}};\n`;
+ this.filelogin+= "} else {\n"
+ this.filelogin+= " this.logger.warn(`wrong password user ${";
+ this.filelogin+=`${sec.table.toLowerCase()}.${sec.login}}`;
+ this.filelogin+="}`)\n";
+ this.filelogin+="return { mensaje:'no login'}}\n";
+ this.filelogin+="}\n";
+ this.filelogin+="@Get()\n";
+ this.filelogin+=`async logout(@Ip() ip,@Headers() header) {\n`;
+ this.filelogin+=`const ${sec.table.toLowerCase()}: ${sec.table} = (await this.${sec.table.toLowerCase()}service.getlogin(header.login));\n`;
+ this.filelogin+='const date = new Date(Date.now());\n'
+ this.filelogin+='const locdate= date.toLocaleDateString();\n';
+ this.filelogin+='const hour= date.toLocaleTimeString();\n'
+ this.filelogin+=`if (${sec.table.toLowerCase()} === undefined || ${sec.table.toLowerCase()} === null) {`;
+ this.filelogin+='this.logger.warn(`Posible ataque hacker en logout usuario inexistente:${date} ${hour}`);\n';
+ this.filelogin+=`return { mensaje:'error'};\n`;
  this.filelogin+='}\n';
- this.filelogin+=`if (bcrypt.compareSync(header.password, ${sec.table.toLowerCase()}.${sec.password})) {\n`;
- this.filelogin+=`${sec.table.toLowerCase()}.${sec.bearertoken} = this.jwtService.sign({ login: header.login });\n`;
- this.filelogin+='}\n';
+ this.filelogin+=`if (${sec.table.toLowerCase()}.${sec.bearertoken} !== header.token) {\n`;
+ this.filelogin+='this.logger.warn(`hacker attack false bearer token ${ip} ${date} ${hour}`);\n';
+ this.filelogin+=`return { mensaje:'error'}`;
+ this.filelogin+='}';
+ this.filelogin+=`${sec.table.toLowerCase()}.${sec.bearertoken}=''\n`;
  this.filelogin+=`await this.${sec.table.toLowerCase()}service.update(${sec.table.toLowerCase()});\n`;
- if (sec.logger === true) {
-     this.filelogin+='const date = new Date();\n';
-     this.filelogin+="this.logger.info(`Login:";
-     this.filelogin+="${";
-     this.filelogin+=`${sec.table.toLowerCase()}.${sec.login}}`; 
-     this.filelogin+="${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);\n";
-    }
-    this.filelogin+=`return { mensaje:"ok",token: ${sec.table.toLowerCase()}.${sec.bearertoken}};\n`;
-    this.filelogin+=`} else {`;
-    if (sec.logger === true) {
-     this.filelogin+="this.logger.warn(`contraseña equivocada de ${";
-     this.filelogin+=`${sec.table.toLowerCase()}.${sec.login}}`;
-     this.filelogin+="`);\n";
-    }
-    this.filelogin+="return { mensaje:'no login'}};\n"
-    this.filelogin+='@Get()\n';
-    this.filelogin+=`async logout(@Ip() ip,@Headers() header) {\n`;
-    this.filelogin+=`const ${sec.table.toLowerCase()}: ${sec.table} = (await this.${sec.table.toLowerCase()}.getloginbygenerator(header.login));\n`;
-    this.filelogin+=`const date = new Date(Date.now());\n`;
-    this.filelogin+=`const locdate= date.toLocaleDateString();\n`;
-    this.filelogin+=`const hour= date.toLocaleTimeString();\n`;
-    this.filelogin+=`if (${sec.table.toLowerCase()} === undefined || ${sec.table.toLowerCase()} === null) {\n`;
-    if (sec.logger === true) {
-      this.filelogin+="this.logger.warn(`suspect hacker atack in logoout user no exist :${";
-      this.filelogin+="date}";
-      this.filelogin+="${";
-      this.filelogin+="hour}`);\n";
-    }
-    this.filelogin+="return { mensaje:'error'};\n";
-    this.filelogin+='}\n';
-    this.filelogin+=`if (${sec.table.toLowerCase()}.token !== header.token) {`;
-    if (sec.logger === true) {
-      this.filelogin+="this.logger.warn(`posible hacker atack false bearer token from ip $";
-      this.filelogin+="{ip} ${date} ${hour}`);\n";
-    }
-    this.filelogin+="return { mensaje:'error'}\n";
-    this.filelogin+='}\n';
-    this.filelogin+=`${sec.table.toLowerCase()}.token = '';\n`
-    this.filelogin+=`await this.${sec.table.toLowerCase()}service.update(${sec.table.toLowerCase()});\n`;
-    if (sec.logger === true) {
-      this.filelogin+="this.logger.info(`logout: ${";
-      this.filelogin+=`${sec.table.toLowerCase()}.${sec.login}}`;
-      this.filelogin+="${locdate} ${hour}`);\n";
-      this.filelogin+="return { mensaje:'logout'};\n"
-    }
-    this.filelogin+="}\n";
-    this.filelogin+="}\n";
-    
+ this.filelogin+="this.logger.info(`logout:${";
+ this.filelogin+=`${sec.table.toLowerCase()}.${sec.login}}`; 
+ this.filelogin+='${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);\n';
+ this.filelogin+="return { mensaje:'logout'};\n"
+ this.filelogin+='}\n}\n';
+
+ const args = { path: this.configservice.config.filePath, name: 'Login', file: this.filelogin };
+ const end = this.electronservice.ipcRenderer.sendSync('saveController', args);   
 }
 
 viewfilegenerated(){

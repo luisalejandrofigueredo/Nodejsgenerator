@@ -40,7 +40,38 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.generatedatabaseconfig();
     this.generateschemas();
     this.generatesecurityfile();
+    this.generateappmodule();
     this.addgenrartinline('End generate');
+  }
+
+  generateappmodule(){
+    this.addgenrartinline('begin generating app module ...');
+    this.filegenerating  ="import { Module } from '@nestjs/common';\n"
+    this.filegenerating +="import { TypeOrmModule } from '@nestjs/typeorm';\n"
+    this.filegenerating +="import { AppController } from './app.controller';\n";
+    this.filegenerating+="import { AppService } from './app.service';\n"
+    const schemas = this.configservice.getschema();
+    for (let index = 0; index < schemas.length; index++) {
+      const element = schemas[index].name;
+      this.filegenerating+=`import {${element}Module} from './module/${element}.module';\n`;
+    }
+    this.filegenerating+=`import {LoginModule} from './module/Login.module';\n`;
+    this.filegenerating+='@Module({\n';
+    this.filegenerating+='imports:[TypeOrmModule.forRoot()'
+    for (let index = 0; index < schemas.length; index++) {
+      const element = schemas[index].name;
+      this.filegenerating+=`,${element}Module`;
+    }
+    this.filegenerating+=',LoginModule';
+    this.filegenerating+='],\n';
+    this.filegenerating+='controllers:[AppController],\n';
+    this.filegenerating+='providers: [AppService],\n';
+    this.filegenerating+='})\n';
+    this.filegenerating+='export class AppModule {}';
+    const args = { path: this.config.filePath, name: 'app', file: this.filegenerating };
+    const end = this.electronservice.ipcRenderer.sendSync('saveappmodule', args);
+    this.addgenrartinlinefile(end);
+    this.addgenrartinline('end  generating app module ...');
   }
 
   generatedatabaseconfig(){
@@ -89,6 +120,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
   
   generatesecurityfile(){
     this.addgenrartinline('begin generating security file ...');
+
     this.addgenrartinline('end generating security file ...');
   }
 
@@ -125,15 +157,15 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating+="import { WinstonModule } from 'nest-winston';\n"
     this.filegenerating +=`import { ${mastersec.name}Service } from '../service/${mastersec.name}.service';\n`;
     this.filegenerating +=`import { ${mastersec.name} } from '../entitys/${mastersec.name}.entity';\n`;
-    this.filegenerating+=`import { ${mastersec.name}Controller } from '../controller/${mastersec.name}.controller';\n`;
+    this.filegenerating+=`import { LoginController } from '../controller/Login.controller';\n`;
     this.filegenerating += "@Module({\n";
     this.filegenerating += `imports: [TypeOrmModule.forFeature([${mastersec.name}]),\n`;
     this.filegenerating += `JwtModule.register({  secret: '${this.configservice.config.jwtsk}' }),\n`;
     this.generatewinston();
     this.filegenerating += `providers:[${mastersec.name}Service],\n`;
-    this.filegenerating += `controllers:[${mastersec.name}Controller]})\n`;
+    this.filegenerating += `controllers:[LoginController]})\n`;
     this.filegenerating += `export class LoginModule{}`;
-    const args = { path: this.config.filePath, name: 'login', file: this.filegenerating };
+    const args = { path: this.config.filePath, name: 'Login', file: this.filegenerating };
     const end = this.electronservice.ipcRenderer.sendSync('savemodule', args);
     this.addgenrartinlinefile(end);
     this.addgenrartinline('end generating login module ...');
@@ -221,7 +253,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating = 'import { Controller, Inject,Post, Body, Get, Put, Delete,Param,UseGuards,Headers, SetMetadata,Query} from "@nestjs/common";\n';
     this.filegenerating += `import { ${this.config.schemas[index].name} } from '../entitys/${this.config.schemas[index].name}.entity';\n`;
     if (this.config.schemas[index].security === true) {
-      this.filegenerating += `import {${this.config.schemas[index].classsecurity} } from '${this.config.schemas[index].filesecurity}';\n`;
+      this.filegenerating += `import {${this.config.schemas[index].classsecurity} } from '../roles/roles.guard';\n`;
     }
     // tslint:disable-next-line: max-line-length
     this.filegenerating += `import { ${this.config.schemas[index].name}Service } from '../service/${this.config.schemas[index].name}.service';\n`;
