@@ -37,6 +37,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
   addingPath() {
     this.addgenrartinline('reading file path ...');
     this.filePath = this.configservice.config.filePath;
+    this.loadtemplate('roles.guard.ts');
     this.generatedatabaseconfig();
     this.generateschemas();
     this.generatesecurityfile();
@@ -622,6 +623,16 @@ export class GeneratorComponent implements OnInit, OnChanges {
       this.containerfiles.nativeElement.value = this.generatingfile;
       this.containerfiles.nativeElement.scrollTop = this.containerfiles.nativeElement.scrollHeight;
     });
+  }
+
+  loadtemplate(filetemplate:string){
+    const sec= this.configservice.getsecurity();
+    this.addgenrartinline('load templates...');
+    let template = this.electronservice.ipcRenderer.sendSync('loadtemplate', `./templates/${filetemplate}`);
+    template = template.replace(/\/\*tablelower\*\//g, `${sec.table.toLowerCase()}`);
+    template = template.replace(/\/\*table\*\//g, `${sec.table}`);
+    this.addgenrartinline('end load templates');
+    console.log('template file:',template);
   }
 
 

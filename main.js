@@ -46,6 +46,13 @@ function createWindow() {
   })
 }
 
+ipcMain.on('loadtemplate', (event, arg) => {
+  fs.readFile(arg, 'utf-8',function (err, data) {
+    if (err) throw err;
+    event.returnValue = data;
+  });
+});
+
 ipcMain.on('loadconfig', (event, arg) => {
   fs.readFile(arg, function (err, data) {
     if (err) throw err;
