@@ -629,10 +629,19 @@ export class GeneratorComponent implements OnInit, OnChanges {
     const sec= this.configservice.getsecurity();
     this.addgenrartinline('load templates...');
     let template = this.electronservice.ipcRenderer.sendSync('loadtemplate', `./templates/${filetemplate}`);
+    this.addgenrartinline('end load templates');
+    this.addgenrartinline('begin generate templates...');
     template = template.replace(/\/\*tablelower\*\//g, `${sec.table.toLowerCase()}`);
     template = template.replace(/\/\*table\*\//g, `${sec.table}`);
-    this.addgenrartinline('end load templates');
-    console.log('template file:',template);
+    template = template.replace(/\/\*roles\*\//g, `${sec.roles}`);
+    template = template.replace(/\/\*login\*\//g, `${sec.login}`);
+    template =template.replace(/\/\*bearertoken\*\//g, `${sec.bearertoken}`);
+    this.addgenrartinline('end generate templates...');
+    this.addgenrartinline('begin save template...');
+    const args = { path: this.configservice.config.filePath, name: 'rolestemp', file: template };
+    const end = this.electronservice.ipcRenderer.sendSync('savecanactivate', args);
+    this.addgenrartinline('end save template...');
+    this.addgenrartinlinefile(end);
   }
 
 
