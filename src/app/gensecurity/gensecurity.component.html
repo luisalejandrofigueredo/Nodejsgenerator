@@ -52,12 +52,8 @@
                 <p>Path for generate file:{{path}}</p>
                 <button mat-raised-button (click)="getpath()" color="primary">Path for file</button>
                 <button mat-raised-button [disabled]="!profileForm.valid" (click)="generatesecurity()"
-                    color="primary">Generate security</button>
+                    color="primary">Change security</button>
             </div>
         </div>
     </form>
 </mat-expansion-panel>
-<div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
-    <button mat-raised-button [disabled]="!filegenerated" (click)="viewfilegenerated()" color="primary">View
-        Files Generated</button>
-</div>

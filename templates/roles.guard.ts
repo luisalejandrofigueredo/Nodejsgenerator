@@ -3,8 +3,8 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { Logger } from 'winston';
-import { /*table*/Service } from '..//*tablelower*///*tablelower*/.service';
-import { /*table*/ } from '..//*tablelower*///*tablelower*/.entity';
+import { /*table*/Service } from '../service//*table*/.service';
+import { /*table*/ } from '../entitys//*table*/.entity';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -22,7 +22,7 @@ export class RolesGuard implements CanActivate {
     }
     const username = this.jwtService.decode(request.headers.token as string) as { login: string | null } | null;
     if (username === null || username === undefined) { this.logger.warn('hacker'); return false; };
-    await this.userservice.getUserbyname(username.login).then(usuario => /*tablelower*/ = usuario);
+    await this.userservice.getlogin(username.login).then(usuario => /*tablelower*/ = usuario);
     if (/*tablelower*/ === undefined || /*tablelower*/ === null) {
       this.logger.warn(`Usuario indefinido hacker ip:${ip}`);
       return false

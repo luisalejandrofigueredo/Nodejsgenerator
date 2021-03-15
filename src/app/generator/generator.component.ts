@@ -37,10 +37,9 @@ export class GeneratorComponent implements OnInit, OnChanges {
   addingPath() {
     this.addgenrartinline('reading file path ...');
     this.filePath = this.configservice.config.filePath;
-    this.loadtemplate('roles.guard.ts');
+    this.loadtemplate('roles.guard.ts','login.controller.ts');
     this.generatedatabaseconfig();
     this.generateschemas();
-    this.generatesecurityfile();
     this.generateappmodule();
     this.addgenrartinline('End generate');
   }
@@ -119,12 +118,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.addgenrartinlinefile(end);
   }
   
-  generatesecurityfile(){
-    this.addgenrartinline('begin generating security file ...');
-
-    this.addgenrartinline('end generating security file ...');
-  }
-
+ 
   generateschemas() {
     this.addgenrartinline('begin generating schemas ...');
     const schemas = this.configservice.getschema();
@@ -625,25 +619,36 @@ export class GeneratorComponent implements OnInit, OnChanges {
     });
   }
 
-  loadtemplate(filetemplate:string){
-    const sec= this.configservice.getsecurity();
-    this.addgenrartinline('load templates...');
+  loadtemplate(filetemplate:string,loginfiletemplate:string){
+    this.addgenrartinline('load templates for can activate...');
     let template = this.electronservice.ipcRenderer.sendSync('loadtemplate', `./templates/${filetemplate}`);
-    this.addgenrartinline('end load templates');
-    this.addgenrartinline('begin generate templates...');
+    template=this.replacetemplate(template);
+    this.addgenrartinline('end generate templates can activate...');
+    this.addgenrartinline('begin save  can activate..');
+    let args = { path: this.configservice.config.filePath, name: 'roles', file: template };
+    let end = this.electronservice.ipcRenderer.sendSync('savecanactivate', args);
+    this.addgenrartinline('end save  can activate...');
+    this.addgenrartinlinefile(end);
+    /*generate login*/
+    this.addgenrartinline('load templates for login..');
+    template = this.electronservice.ipcRenderer.sendSync('loadtemplate', `./templates/${loginfiletemplate}`);
+    this.addgenrartinline('end load templates for login');
+    template=this.replacetemplate(template);
+    args = { path: this.configservice.config.filePath, name: 'Login', file: template };
+    end = this.electronservice.ipcRenderer.sendSync('saveController', args); 
+    this.addgenrartinlinefile(end); 
+  }
+
+  replacetemplate(template:string):string{
+    const sec= this.configservice.getsecurity();
     template = template.replace(/\/\*tablelower\*\//g, `${sec.table.toLowerCase()}`);
     template = template.replace(/\/\*table\*\//g, `${sec.table}`);
     template = template.replace(/\/\*roles\*\//g, `${sec.roles}`);
     template = template.replace(/\/\*login\*\//g, `${sec.login}`);
-    template =template.replace(/\/\*bearertoken\*\//g, `${sec.bearertoken}`);
-    this.addgenrartinline('end generate templates...');
-    this.addgenrartinline('begin save template...');
-    const args = { path: this.configservice.config.filePath, name: 'rolestemp', file: template };
-    const end = this.electronservice.ipcRenderer.sendSync('savecanactivate', args);
-    this.addgenrartinline('end save template...');
-    this.addgenrartinlinefile(end);
+    template = template.replace(/\/\*bearertoken\*\//g, `${sec.bearertoken}`);
+    template = template.replace(/\/\*password\*\//g, `${sec.password}`);
+    return(template);
   }
-
 
   generate(event: Event) {
     this.progressbar = true;
