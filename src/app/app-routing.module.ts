@@ -8,6 +8,7 @@ import {GeneratorComponent} from './generator/generator.component';
 import {BrowserelationsComponent } from './browserelations/browserelations.component';
 import {GensecurityComponent } from './gensecurity/gensecurity.component';
 import {ViewsecurityComponent} from './viewsecurity/viewsecurity.component';
+import {HelpComponent} from './help/help.component';
 const routes: Routes = [{
   path: 'schematics/:id',
   component: SchematicsComponent}, {
@@ -30,6 +31,10 @@ const routes: Routes = [{
   {
     path: 'viewsecurity/:file/:filelogin',
     component: ViewsecurityComponent
+  },
+  {
+    path: 'help',
+    component: HelpComponent
   }
  ];
 

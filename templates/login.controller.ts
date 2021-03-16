@@ -14,7 +14,7 @@ export class LoginController {
         const /*tablelower*/:/*table*/ = (await this.userservice.getlogin(header.login));
         if (/*tablelower*/ === undefined || /*tablelower*/ === null) {
             const date = new Date(Date.now());
-            this.logger.warn(`Posible intento de hackeo intento de login con usuario inexistente ip:${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);
+            this.logger.warn(`hacker from ip:${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);
             return { mensaje:'no login'}
         };
         if (bcrypt.compareSync(header.password, /*tablelower*/./*password*/)) {
@@ -24,7 +24,7 @@ export class LoginController {
             this.logger.info(`Login: ${/*tablelower*/./*login*/} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);
             return { mensaje:'ok',token: /*tablelower*/./*bearertoken*/ };
         } else {
-            this.logger.warn(`contraseña equivocada de ${/*tablelower*/./*login*/}`)
+            this.logger.warn(`wrong password ${/*tablelower*/./*login*/}`)
             return { mensaje:'no login'}};
     }
     @Get()
@@ -34,11 +34,11 @@ export class LoginController {
         const locdate= date.toLocaleDateString();
         const hour= date.toLocaleTimeString();
         if (/*tablelower*/ === undefined || /*tablelower*/ === null) {
-            this.logger.warn(`Posible ataque hacker en logout usuario inexistente:${date} ${hour}`);
+            this.logger.warn(`undefined user unexist user :${date} ${hour}`);
             return { mensaje:'error'};
         }
         if (/*tablelower*/./*bearertoken*/ !== header.token) {
-            this.logger.warn(`Posible ataque hacker en logout intento de falsificación de token de ip ${ip} ${date} ${hour}`);
+            this.logger.warn(`hacker false bearer token from  ip ${ip} ${date} ${hour}`);
             return { mensaje:'error'}
         }
         /*tablelower*/./*bearertoken*/ = '';

@@ -41,6 +41,7 @@ import { RelationdatamodalonetomanyComponent } from './relationdatamodalonetoman
 import { GensecurityComponent } from './gensecurity/gensecurity.component';
 import { ViewsecurityComponent } from './viewsecurity/viewsecurity.component';
 import { LoggerComponent } from './config/logger/logger.component';
+import { HelpComponent } from './help/help.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -60,6 +61,7 @@ import { LoggerComponent } from './config/logger/logger.component';
     GensecurityComponent,
     ViewsecurityComponent,
     LoggerComponent,
+    HelpComponent,
   ],
   imports: [ 
     BrowserModule, 
