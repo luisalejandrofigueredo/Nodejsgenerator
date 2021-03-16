@@ -209,7 +209,7 @@
 					"roles": "Users"
 				}
 			],
-			"security": true,
+			"security": false,
 			"classsecurity": "RolesGuard",
 			"filesecurity": "C:/Users/luisa/cmder/prueba/src/roles/roles.guard",
 			"mastersecurity": true

@@ -359,6 +359,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
   //generando servicio
   servicegenerator(index: number, schema: string,mastersecurity: boolean) {
     const schemalower = schema.toLowerCase();
+    const sec=this.configservice.getsecurity();
     this.filegenerating = '';
     this.filegenerating += `import { Injectable, Inject, UseGuards } from '@nestjs/common';\n`;
     this.filegenerating += `import { InjectRepository } from '@nestjs/typeorm';\n`;
@@ -446,6 +447,10 @@ export class GeneratorComponent implements OnInit, OnChanges {
         case 'post':
           this.addgenrartinline('\tadding post service');
           this.filegenerating += `async create(${schemalower}: ${schema} ): Promise<${schema}> {\n`;
+          if (mastersecurity===true)
+          {
+            this.filegenerating +=`${schemalower}.${sec.password}=bcrypt.hashSync(${schemalower}.${sec.password},5);\n`;
+          }
           this.filegenerating += `\t return await this.${schema}Repository.save(${schemalower});\n`;
           this.filegenerating += `}\n`;
           break;
