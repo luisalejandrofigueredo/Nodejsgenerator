@@ -44,6 +44,7 @@ import { LoggerComponent } from './config/logger/logger.component';
 import { HelpComponent } from './help/help.component';
 import { HelpconfigComponent } from './help/helpconfig/helpconfig.component';
 import { ConfigprincipalComponent } from './help/helpconfig/configprincipal/configprincipal.component';
+import { ConfigloggerComponent } from './help/helpconfig/configlogger/configlogger.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,6 +67,7 @@ import { ConfigprincipalComponent } from './help/helpconfig/configprincipal/conf
     HelpComponent,
     HelpconfigComponent,
     ConfigprincipalComponent,
+    ConfigloggerComponent,
   ],
   imports: [ 
     BrowserModule, 

@@ -14,7 +14,7 @@ export class HelpconfigComponent implements OnInit {
   }
 
   nextpage(){
-    this.router.navigate(['configprincipal']);
+    this.router.navigate(['configlogger']);
    } 
 
 }
