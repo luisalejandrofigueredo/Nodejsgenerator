@@ -42,6 +42,8 @@ import { GensecurityComponent } from './gensecurity/gensecurity.component';
 import { ViewsecurityComponent } from './viewsecurity/viewsecurity.component';
 import { LoggerComponent } from './config/logger/logger.component';
 import { HelpComponent } from './help/help.component';
+import { HelpconfigComponent } from './help/helpconfig/helpconfig.component';
+import { ConfigprincipalComponent } from './help/helpconfig/configprincipal/configprincipal.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -62,6 +64,8 @@ import { HelpComponent } from './help/help.component';
     ViewsecurityComponent,
     LoggerComponent,
     HelpComponent,
+    HelpconfigComponent,
+    ConfigprincipalComponent,
   ],
   imports: [ 
     BrowserModule, 

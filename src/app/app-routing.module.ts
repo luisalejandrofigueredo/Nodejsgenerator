@@ -9,6 +9,8 @@ import {BrowserelationsComponent } from './browserelations/browserelations.compo
 import {GensecurityComponent } from './gensecurity/gensecurity.component';
 import {ViewsecurityComponent} from './viewsecurity/viewsecurity.component';
 import {HelpComponent} from './help/help.component';
+import {HelpconfigComponent} from './help/helpconfig/helpconfig.component';
+import {ConfigprincipalComponent} from './help/helpconfig/configprincipal/configprincipal.component'
 const routes: Routes = [{
   path: 'schematics/:id',
   component: SchematicsComponent}, {
@@ -35,7 +37,16 @@ const routes: Routes = [{
   {
     path: 'help',
     component: HelpComponent
+  },
+  {
+    path: 'helpconfig',
+    component: HelpconfigComponent
+  },
+  {
+    path:'configprincipal',
+    component:ConfigprincipalComponent
   }
+
  ];
 
 @NgModule({
