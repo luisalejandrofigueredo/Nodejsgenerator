@@ -16,5 +16,8 @@ export class HelpconfigComponent implements OnInit {
   nextpage(){
     this.router.navigate(['configprincipal']);
    } 
+   prevpage(){
+    this.router.navigate(['help']);
+   }
 
 }

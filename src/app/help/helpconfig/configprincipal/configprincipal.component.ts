@@ -12,8 +12,13 @@ export class ConfigprincipalComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  nextpage(){
+  prevpage(){
     this.router.navigate(['helpconfig']);
+   }
+
+
+  nextpage(){
+    this.router.navigate(['configlogger']);
    }
 
 }
