@@ -12,6 +12,7 @@ import {HelpComponent} from './help/help.component';
 import {HelpconfigComponent} from './help/helpconfig/helpconfig.component';
 import {ConfigprincipalComponent} from './help/helpconfig/configprincipal/configprincipal.component'
 import {ConfigloggerComponent} from './help/helpconfig/configlogger/configlogger.component';
+import {ConfigdatabaseComponent} from  './help/helpconfig/configdatabase/configdatabase.component';
 const routes: Routes = [{
   path: 'schematics/:id',
   component: SchematicsComponent}, {
@@ -50,6 +51,10 @@ const routes: Routes = [{
   {
     path:'configlogger',
     component:ConfigloggerComponent
+  },
+  {
+    path:'configdatabase',
+    component:ConfigdatabaseComponent,
   }
 
  ];

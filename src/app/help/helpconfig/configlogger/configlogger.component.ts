@@ -13,6 +13,11 @@ export class ConfigloggerComponent implements OnInit {
   }
 
   nextpage(){
-    this.router.navigate(['helpconfig']);
+    this.router.navigate(['configdatabase']);
    }
+
+   prevpage(){
+    this.router.navigate(['configprincipal']);
+   }
+
 }
