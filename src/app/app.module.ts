@@ -24,6 +24,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {  MatSortModule } from '@angular/material/sort';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 import { MonacoEditorModule, MONACO_PATH } from '@materia-ui/ngx-monaco-editor';
 import { SchematicsComponent } from './schematics/schematics.component';
 import { DatamodalComponent } from './datamodal/datamodal.component';
@@ -96,6 +97,7 @@ import { ConfigdatabaseComponent } from './help/helpconfig/configdatabase/config
     MatTooltipModule,
     MatProgressBarModule,
     MatSortModule,
+    ClipboardModule,
     NgxElectronModule,
     MonacoEditorModule ],
   providers: [{
