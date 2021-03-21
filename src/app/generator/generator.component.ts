@@ -39,11 +39,29 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filePath = this.configservice.config.filePath;
     this.loadtemplate('roles.guard.ts','login.controller.ts');
     this.generatedatabaseconfig();
+    this.generateenablecors();
     this.generateschemas();
     this.generateappmodule();
     this.addgenrartinline('End generate');
   }
-
+ generateenablecors(){
+  this.addgenrartinline('begin generating main module ...');
+   this.filegenerating='';
+   this.filegenerating+="import { NestFactory } from '@nestjs/core';\n";
+   this.filegenerating+="import { AppModule } from './app.module';\n\n";
+   this.filegenerating+="async function bootstrap() {\n";
+   this.filegenerating+="  const app = await NestFactory.create(AppModule);\n";
+   if (this.configservice.config.enableCors===true){
+     this.filegenerating+="  app.enableCors();\n"
+    }
+     this.filegenerating+="  await app.listen(3000);\n"
+     this.filegenerating+="}\n";
+     this.filegenerating+="bootstrap();\n"
+     this.addgenrartinline('end generate main module ...');
+     const args = { path: this.config.filePath, name: "main.ts", file: this.filegenerating };
+     const end = this.electronservice.ipcRenderer.sendSync('savemain', args);
+     this.addgenrartinlinefile(end);
+  }
   generateappmodule(){
     this.addgenrartinline('begin generating app module ...');
     this.filegenerating  ="import { Module } from '@nestjs/common';\n"
