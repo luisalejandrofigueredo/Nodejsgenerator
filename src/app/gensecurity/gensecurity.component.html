@@ -1,59 +1,44 @@
-<mat-expansion-panel>
-    <mat-expansion-panel-header>
-        security configuration fields
-    </mat-expansion-panel-header>
-    <form [formGroup]="profileForm">
-        <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
-            <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
-                <mat-form-field>
-                    <mat-select (selectionChange)="changeschema()" placeholder="Schema for security"
-                        formControlName="selectedValue" name="itemschema">
-                        <mat-option *ngFor="let item of schemas" [value]="item.value">
-                            {{item.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-select placeholder="Field for login" formControlName="selectedFieldlogin">
-                        <mat-option *ngFor="let item of fields" [value]="item.value">
-                            {{item.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-select placeholder="Field for password" formControlName="selectedFieldpassword">
-                        <mat-option *ngFor="let item of fields" [value]="item.value">
-                            {{item.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-select placeholder="Field for roles" formControlName="selectedFieldroles">
-                        <mat-option *ngFor="let item of fields" [value]="item.value">
-                            {{item.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-select placeholder="Field for bearer token" formControlName="selectedFieldtoken">
-                        <mat-option *ngFor="let item of fields" [value]="item.value">
-                            {{item.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput placeholder="Generate File" formControlName="filegenerated" value="securityaction">
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput placeholder="Class" formControlName="rolesclass" value="Roles class">
-                </mat-form-field>
-                <mat-checkbox formControlName="backdoor">Generate back door</mat-checkbox>
-                <mat-checkbox formControlName="logger">Generate logger</mat-checkbox>
-                <p>Path for generate file:{{path}}</p>
-                <button mat-raised-button (click)="getpath()" color="primary">Path for file</button>
-                <button mat-raised-button [disabled]="!profileForm.valid" (click)="generatesecurity()"
-                    color="primary">Change security</button>
-            </div>
+<form [formGroup]="profileForm">
+    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
+        <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
+            <mat-form-field>
+                <mat-select (selectionChange)="changeschema()" placeholder="Schema for security"
+                    formControlName="selectedValue" name="itemschema">
+                    <mat-option *ngFor="let item of schemas" [value]="item.value">
+                        {{item.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-select placeholder="Field for login" formControlName="selectedFieldlogin">
+                    <mat-option *ngFor="let item of fields" [value]="item.value">
+                        {{item.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-select placeholder="Field for password" formControlName="selectedFieldpassword">
+                    <mat-option *ngFor="let item of fields" [value]="item.value">
+                        {{item.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-select placeholder="Field for roles" formControlName="selectedFieldroles">
+                    <mat-option *ngFor="let item of fields" [value]="item.value">
+                        {{item.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-select placeholder="Field for bearer token" formControlName="selectedFieldtoken">
+                    <mat-option *ngFor="let item of fields" [value]="item.value">
+                        {{item.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button mat-raised-button [disabled]="!profileForm.valid" (click)="generatesecurity()"
+                color="primary">Change security</button>
         </div>
-    </form>
-</mat-expansion-panel>
+    </div>
+</form>

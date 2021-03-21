@@ -315,11 +315,7 @@
 		"login": "login",
 		"password": "password",
 		"bearertoken": "bearer",
-		"roles": "Roles",
-		"rolesclass": "RolesGuard",
-		"filegenerated": "llll",
-		"backdoor": true,
-		"logger": true
+		"roles": "Roles"
 	},
 	"dbconf": {
 		"selecteddatabase": 0,
