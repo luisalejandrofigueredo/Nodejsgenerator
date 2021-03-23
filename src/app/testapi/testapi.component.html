@@ -1,0 +1,31 @@
+<mat-expansion-panel>
+        <mat-expansion-panel-header>
+            Login/Logout   
+         </mat-expansion-panel-header>
+         <p class="title">Login</p>
+         <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+             <mat-form-field>
+                 <input matInput placeholder="Login" [(ngModel)]="login">
+             </mat-form-field>
+             <mat-form-field>
+                 <input matInput placeholder="Password" [(ngModel)]="password">
+             </mat-form-field>
+             <mat-form-field fxFlex="50">
+                 <input matInput placeholder="reponse" [(ngModel)]="reponse">
+             </mat-form-field>
+             <button mat-raised-button color="primary" (click)="dologin()">send</button>
+         </div>
+         <p class="title">Logout</p>
+         <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+             <mat-form-field>
+                 <input matInput placeholder="Login" [(ngModel)]="logout">
+             </mat-form-field>
+             <mat-form-field fxFlex="50">
+                 <input matInput placeholder="Token"  [(ngModel)]="token">
+             </mat-form-field>
+             <mat-form-field>
+                 <input matInput placeholder="reponse" [(ngModel)]="reponselogout">
+             </mat-form-field>
+             <button mat-raised-button color="primary" (click)="dologout()">send</button>
+         </div>
+</mat-expansion-panel>

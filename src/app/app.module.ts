@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpClientModule} from '@angular/common/http'
 import {FormsModule , ReactiveFormsModule} from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppRoutingModule } from './app-routing.module';
@@ -47,6 +48,7 @@ import { HelpconfigComponent } from './help/helpconfig/helpconfig.component';
 import { ConfigprincipalComponent } from './help/helpconfig/configprincipal/configprincipal.component';
 import { ConfigloggerComponent } from './help/helpconfig/configlogger/configlogger.component';
 import { ConfigdatabaseComponent } from './help/helpconfig/configdatabase/configdatabase.component';
+import { TestapiComponent } from './testapi/testapi.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -71,10 +73,12 @@ import { ConfigdatabaseComponent } from './help/helpconfig/configdatabase/config
     ConfigprincipalComponent,
     ConfigloggerComponent,
     ConfigdatabaseComponent,
+    TestapiComponent,
   ],
   imports: [ 
     BrowserModule, 
     BrowserAnimationsModule,
+    HttpClientModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,

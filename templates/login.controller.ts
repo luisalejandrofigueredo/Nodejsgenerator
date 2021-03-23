@@ -9,16 +9,18 @@ import { Logger } from 'winston';
 export class LoginController {
     constructor(@Inject('winston') private readonly logger: Logger, private userservice: /*table*/Service, private readonly jwtService: JwtService) { }
     @Post()
-    async login(@Ip() ip,@Headers() header) {
-        this.logger.info('login:',header.login);
-        const /*tablelower*/:/*table*/ = (await this.userservice.getlogin(header.login));
+    async login(@Ip() ip,@Headers() header:any,@Headers('login') login:string,@Headers('password') password:string) {
+        this.logger.info('header:',header);
+        console.log('login',login)
+        this.logger.info('pasword:',password);
+        const /*tablelower*/:/*table*/ = (await this.userservice.getlogin(login));
         if (/*tablelower*/ === undefined || /*tablelower*/ === null) {
             const date = new Date(Date.now());
             this.logger.warn(`hacker from ip:${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);
             return { mensaje:'no login'}
         };
-        if (bcrypt.compareSync(header.password, /*tablelower*/./*password*/)) {
-            /*tablelower*/./*bearertoken*/ = this.jwtService.sign({ login: header.login });
+        if (bcrypt.compareSync(password, /*tablelower*/./*password*/)) {
+            /*tablelower*/./*bearertoken*/ = this.jwtService.sign({ login: login });
             await this.userservice.update(/*tablelower*/);
             const date = new Date();
             this.logger.info(`Login: ${/*tablelower*/./*login*/} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);
@@ -38,6 +40,8 @@ export class LoginController {
             return { mensaje:'error'};
         }
         if (/*tablelower*/./*bearertoken*/ !== header.token) {
+            console.log(header.token);
+            console.log(/*tablelower*/./*bearertoken*/);
             this.logger.warn(`hacker false bearer token from  ip ${ip} ${date} ${hour}`);
             return { mensaje:'error'}
         }
