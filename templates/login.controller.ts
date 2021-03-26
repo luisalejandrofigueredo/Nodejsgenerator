@@ -9,10 +9,7 @@ import { Logger } from 'winston';
 export class LoginController {
     constructor(@Inject('winston') private readonly logger: Logger, private userservice: /*table*/Service, private readonly jwtService: JwtService) { }
     @Post()
-    async login(@Ip() ip,@Headers() header:any,@Headers('login') login:string,@Headers('password') password:string) {
-        this.logger.info('header:',header);
-        console.log('login',login)
-        this.logger.info('pasword:',password);
+    async login(@Ip() ip,@Headers('login') login:string,@Headers('password') password:string) {    
         const /*tablelower*/:/*table*/ = (await this.userservice.getlogin(login));
         if (/*tablelower*/ === undefined || /*tablelower*/ === null) {
             const date = new Date(Date.now());
@@ -20,7 +17,7 @@ export class LoginController {
             return { mensaje:'no login'}
         };
         if (bcrypt.compareSync(password, /*tablelower*/./*password*/)) {
-            /*tablelower*/./*bearertoken*/ = this.jwtService.sign({ login: login });
+            /*tablelower*/./*bearertoken*/ = this.jwtService.sign({ login: login, ip:ip });
             await this.userservice.update(/*tablelower*/);
             const date = new Date();
             this.logger.info(`Login: ${/*tablelower*/./*login*/} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);
@@ -33,7 +30,6 @@ export class LoginController {
     async logout(@Ip() ip,@Headers() header) {
         const /*tablelower*/: /*table*/  = (await this.userservice.getlogin(header.login));
         const date = new Date(Date.now());
-        const locdate= date.toLocaleDateString();
         const hour= date.toLocaleTimeString();
         if (/*tablelower*/ === undefined || /*tablelower*/ === null) {
             this.logger.warn(`undefined user unexist user :${date} ${hour}`);

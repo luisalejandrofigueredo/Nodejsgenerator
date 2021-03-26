@@ -145,11 +145,16 @@
 					"id": 5,
 					"type": "get",
 					"operation": "skiplimitbyfield",
-					"path": "nombres",
+					"path": "nombre",
+					"field": "nombre",
 					"fields": [
 						"id",
 						"nombre",
-						"apellido"
+						"apellido",
+						"login",
+						"password",
+						"bearer",
+						"Roles"
 					],
 					"security": true,
 					"roles": "Users"

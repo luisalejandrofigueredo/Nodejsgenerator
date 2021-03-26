@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Typeoperation } from '../interfaces/typeoperation';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+import {ConfigService} from '../service/config.service';
 interface Type {
   value: string;
   viewValue: string;
@@ -36,9 +37,11 @@ export class ApidatamodalComponent implements OnInit {
   security: boolean;
   roles: string;
   profileForm: FormGroup;
-  constructor(public dialogRef: MatDialogRef<ApidatamodalComponent>, @Inject(MAT_DIALOG_DATA) public data: Typeoperation) { }
+  constructor(private configservice:ConfigService ,public dialogRef: MatDialogRef<ApidatamodalComponent>, @Inject(MAT_DIALOG_DATA) public data: Typeoperation) { }
 
   ngOnInit(): void {
+    this.fields=this.data.fields;
+    console.log('fields:',this.data.fields);
     this.profileForm = new FormGroup({
       selectedValue: new FormControl(this.data.type, Validators.required),
       selectedOperation: new FormControl(this.data.operation, Validators.required),

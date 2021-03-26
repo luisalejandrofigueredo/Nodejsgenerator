@@ -13,8 +13,8 @@
         </mat-select>
         <mat-select *ngIf="profileForm.get('selectedOperation').value==='skiplimitbyfield' || profileForm.get('selectedOperation').value==='skiplimitfilter'"
             placeholder="Select field" formControlName="selectedfield" name="selectfield">
-            <mat-option *ngFor="let item of fields" [value]="item">
-                {{item}}
+            <mat-option *ngFor="let items of fields" [value]="items">
+                {{items}}
             </mat-option>
         </mat-select>
         <mat-form-field *ngIf="profileForm.get('selectedValue').value==='get'">

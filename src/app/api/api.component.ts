@@ -31,6 +31,7 @@ export class ApiComponent implements OnInit {
       this.id = params.id;
       this.schemaname = this.configservice.getschemaname(this.id);
       this.fields = this.configservice.getfields(this.id);
+      console.log('fields',this.fields)
       this.apis = [...this.configservice.getapis(this.id)];
       this.dataSource.data = [...this.apis];
     });
