@@ -1,69 +1,91 @@
 <mat-expansion-panel>
-        <mat-expansion-panel-header>
-            Login/Logout   
-         </mat-expansion-panel-header>
-         <p class="title">Login</p>
+    <mat-expansion-panel-header>
+        Login/Logout
+    </mat-expansion-panel-header>
+    <p class="title">Login</p>
 
-         <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-             <mat-form-field>
-                 <input matInput placeholder="Login" [(ngModel)]="login">
-             </mat-form-field>
-             <mat-form-field>
-                 <input matInput placeholder="Password" [(ngModel)]="password">
-             </mat-form-field>
-             <mat-form-field fxFlex="50">
-                 <input matInput placeholder="reponse" [(ngModel)]="reponse">
-             </mat-form-field>
-             <mat-form-field>
-                 <input matInput placeholder="Repose token" [(ngModel)]="rtoken">
-             </mat-form-field>
-             <button mat-raised-button color="primary" (click)="dologin()">send</button>
-         </div>
-         <p class="title">Logout</p>
-         <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-             <mat-form-field>
-                 <input matInput placeholder="Login" [(ngModel)]="logout">
-             </mat-form-field>
-             <mat-form-field fxFlex="50">
-                 <input matInput placeholder="Token"  [(ngModel)]="token">
-             </mat-form-field>
-             <button color="primary" mat-raised-button (click)="copytoken()">Copy token</button>
-             <mat-form-field>
-                 <input matInput placeholder="reponse" [(ngModel)]="reponselogout">
-             </mat-form-field>
-             <button mat-raised-button color="primary" (click)="dologout()">send</button>
-         </div>
+    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+        <mat-form-field>
+            <input matInput placeholder="Login" [(ngModel)]="login">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Password" [(ngModel)]="password">
+        </mat-form-field>
+        <mat-form-field fxFlex="50">
+            <input matInput placeholder="reponse" [(ngModel)]="reponse">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Repose token" [(ngModel)]="rtoken">
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="dologin()">send</button>
+    </div>
+    <p class="title">Logout</p>
+    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+        <mat-form-field>
+            <input matInput placeholder="Login" [(ngModel)]="logout">
+        </mat-form-field>
+        <mat-form-field fxFlex="50">
+            <input matInput placeholder="Token" [(ngModel)]="token">
+        </mat-form-field>
+        <button color="primary" mat-raised-button (click)="copytoken()">Copy token</button>
+        <mat-form-field>
+            <input matInput placeholder="reponse" [(ngModel)]="reponselogout">
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="dologout()">send</button>
+    </div>
 </mat-expansion-panel>
 <mat-expansion-panel>
-        <mat-expansion-panel-header>
-            Test API   
-         </mat-expansion-panel-header>
-         <form [formGroup]="profileForm" (ngSubmit)="send()">
-             <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-             
-         <mat-select placeholder="Schema" (selectionChange)="change()" formControlName="Schema" name="schema">
-             <mat-option *ngFor="let item of schemas" [value]="item.id">
-                 {{item.name}}
-             </mat-option>
-         </mat-select>
-         <mat-select placeholder="Operation" formControlName="operation" name="operation">
-             <mat-option *ngFor="let item of apis" [value]="item.type+' '+item.operation">
-                 {{item.type}} {{item.operation}}
-             </mat-option>
-         </mat-select>
-         <mat-form-field>
-             <input matInput placeholder="header" formControlName="header">
-         </mat-form-field>
-         <button color="primary" type="button" mat-raised-button (click)="gheader()">Generate Header</button>
+    <mat-expansion-panel-header>
+        Test API
+    </mat-expansion-panel-header>
+    <form [formGroup]="profileForm" (ngSubmit)="send()">
+        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+
+            <mat-select placeholder="Schema" (selectionChange)="change()" formControlName="Schema" name="schema">
+                <mat-option *ngFor="let item of schemas" [value]="item.id">
+                    {{item.name}}
+                </mat-option>
+            </mat-select>
+            <mat-select placeholder="Operation" (selectionChange)="changeoperation()" formControlName="operation"
+                name="operation">
+                <mat-option *ngFor="let item of apis"
+                    [value]="(item.field===undefined)?item.type+' '+item.operation:item.type+' '+item.operation+' '+item.field">
+                    {{item.type}} {{item.operation}} {{item.field}}
+                </mat-option>
+            </mat-select>
+            <mat-form-field *ngIf="this.profileForm.get('operation').value==='get getone'">
+                <input matInput type="number" placeholder="record" formControlName="getone">
+            </mat-form-field>
+            <mat-form-field
+                *ngIf="this.profileForm.get('operation').value==='get skiplimit' || (this.profileForm.get('operation').value).startsWith('get skiplimitbyfield')">
+                <input matInput type="number" placeholder="skip" formControlName="skip">
+            </mat-form-field>
+            <mat-form-field
+                *ngIf="this.profileForm.get('operation').value==='get skiplimit' || (this.profileForm.get('operation').value).startsWith('get skiplimitbyfield')">
+                <input matInput type="number" placeholder="limit" formControlName="limit">
+            </mat-form-field>
+            <mat-form-field
+                *ngIf="this.profileForm.get('operation').value==='get skiplimit' || (this.profileForm.get('operation').value).startsWith('get skiplimitbyfield')">
+                <input matInput type="text" maxlength="3" placeholder="order" formControlName="order">
+            </mat-form-field>
+            <mat-form-field *ngIf="(this.profileForm.get('operation').value).startsWith('get skiplimitfilter')">
+                <input matInput placeholder="field" formControlName="field">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="header" formControlName="header">
+            </mat-form-field>
+            <button color="primary" type="button" mat-raised-button (click)="gheader()">Generate Header</button>
         </div>
         <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-         <mat-form-field style="width: 100%;">
-             <textarea matInput name="body" placeholder="body" formControlName="body" cdkTextareaAutosize rows="10"></textarea>
-         </mat-form-field>
+            <mat-form-field style="width: 100%;">
+                <textarea matInput name="body" placeholder="body" formControlName="body" cdkTextareaAutosize
+                    rows="10"></textarea>
+            </mat-form-field>
         </div>
         <mat-form-field style="width: 100%;">
-            <textarea matInput name="reponse" placeholder="reponse" formControlName="reponse" cols="30" rows="10"></textarea>
+            <textarea matInput name="reponse" placeholder="reponse" formControlName="reponse" cols="30"
+                rows="10"></textarea>
         </mat-form-field>
         <button mat-raised-button type="submit" color="primary" mat-button [disabled]="!profileForm.valid">Send</button>
-        </form>
+    </form>
 </mat-expansion-panel>
