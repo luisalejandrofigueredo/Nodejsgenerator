@@ -1,9 +1,10 @@
-<mat-expansion-panel>
+<mat-accordion>
+<mat-expansion-panel (afterExpand)="expand()">
     <mat-expansion-panel-header>
         Login/Logout
     </mat-expansion-panel-header>
     <p class="title">Login</p>
-
+    <p>URL:<span class="terminal">{{url}}</span></p>
     <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
         <mat-form-field>
             <input matInput placeholder="Login" [(ngModel)]="login">
@@ -16,6 +17,12 @@
         </mat-form-field>
         <mat-form-field>
             <input matInput placeholder="Repose token" [(ngModel)]="rtoken">
+        </mat-form-field>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
+        <mat-form-field style="width: 100%;">
+            <textarea matInput name="loginheader" placeholder="Header" [(ngModel)]="loginheader"
+                cdkTextareaAutosize></textarea>
         </mat-form-field>
         <button mat-raised-button color="primary" (click)="dologin()">send</button>
     </div>
@@ -34,13 +41,13 @@
         <button mat-raised-button color="primary" (click)="dologout()">send</button>
     </div>
 </mat-expansion-panel>
-<mat-expansion-panel>
+<mat-expansion-panel (afterExpand)="expand()">
     <mat-expansion-panel-header>
         Test API
     </mat-expansion-panel-header>
+    <p>URL:<span class="terminal">{{url}}</span></p>
     <form [formGroup]="profileForm" (ngSubmit)="send()">
         <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-
             <mat-select placeholder="Schema" (selectionChange)="change()" formControlName="Schema" name="schema">
                 <mat-option *ngFor="let item of schemas" [value]="item.id">
                     {{item.name}}
@@ -53,8 +60,9 @@
                     {{item.type}} {{item.operation}} {{item.field}}
                 </mat-option>
             </mat-select>
-            <mat-form-field *ngIf="this.profileForm.get('operation').value==='get getone'">
-                <input matInput type="number" placeholder="record" formControlName="getone">
+            <mat-form-field
+                *ngIf="(this.profileForm.get('operation').value).startsWith('get getone') || (this.profileForm.get('operation').value).startsWith('delete')">
+                <input matInput type="number" placeholder="record id" formControlName="record">
             </mat-form-field>
             <mat-form-field
                 *ngIf="this.profileForm.get('operation').value==='get skiplimit' || (this.profileForm.get('operation').value).startsWith('get skiplimitbyfield')">
@@ -66,26 +74,28 @@
             </mat-form-field>
             <mat-form-field
                 *ngIf="this.profileForm.get('operation').value==='get skiplimit' || (this.profileForm.get('operation').value).startsWith('get skiplimitbyfield')">
-                <input matInput type="text" maxlength="3" placeholder="order" formControlName="order">
+                <input matInput type="text" maxlength="4" placeholder="order" formControlName="order">
             </mat-form-field>
             <mat-form-field *ngIf="(this.profileForm.get('operation').value).startsWith('get skiplimitfilter')">
                 <input matInput placeholder="field" formControlName="field">
             </mat-form-field>
-            <mat-form-field>
-                <input matInput placeholder="header" formControlName="header">
+        </div>
+        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+            <mat-form-field style="width: 100%;">
+                <textarea matInput placeholder="header" formControlName="header" cdkTextareaAutosize></textarea>
             </mat-form-field>
             <button color="primary" type="button" mat-raised-button (click)="gheader()">Generate Header</button>
         </div>
         <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
             <mat-form-field style="width: 100%;">
-                <textarea matInput name="body" placeholder="body" formControlName="body" cdkTextareaAutosize
-                    rows="10"></textarea>
+                <textarea matInput name="body" placeholder="body" formControlName="body" cdkTextareaAutosize></textarea>
             </mat-form-field>
         </div>
         <mat-form-field style="width: 100%;">
-            <textarea matInput name="reponse" placeholder="reponse" formControlName="reponse" cols="30"
-                rows="10"></textarea>
+            <textarea matInput name="reponse" placeholder="reponse" formControlName="reponse"
+                cdkTextareaAutosize></textarea>
         </mat-form-field>
         <button mat-raised-button type="submit" color="primary" mat-button [disabled]="!profileForm.valid">Send</button>
     </form>
 </mat-expansion-panel>
+</mat-accordion>

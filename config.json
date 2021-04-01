@@ -214,7 +214,7 @@
 					"roles": "Users"
 				}
 			],
-			"security": false,
+			"security": true,
 			"classsecurity": "RolesGuard",
 			"filesecurity": "C:/Users/luisa/cmder/prueba/src/roles/roles.guard",
 			"mastersecurity": true
@@ -271,10 +271,15 @@
 					"id": 1,
 					"type": "get",
 					"operation": "getone",
-					"path": "getone",
+					"path": "",
 					"field": "",
-					"security": false,
-					"roles": ""
+					"fields": [
+						"id",
+						"Descripcion",
+						"Total"
+					],
+					"security": true,
+					"roles": "Admin User"
 				},
 				{
 					"id": 2,
@@ -307,12 +312,183 @@
 					"field": "",
 					"security": false,
 					"roles": ""
+				},
+				{
+					"id": 5,
+					"type": "get",
+					"operation": "skiplimitbyfield",
+					"path": "",
+					"field": "Descripcion",
+					"fields": [
+						"id",
+						"Descripcion",
+						"Total"
+					],
+					"security": true,
+					"roles": "Admin Users"
 				}
 			],
 			"security": true,
 			"classsecurity": "RolesGuard",
 			"filesecurity": "C:/Users/luisa/cmder/prueba/src/roles/roles.guard",
 			"mastersecurity": false
+		},
+		{
+			"id": 3,
+			"name": "Contratos",
+			"description": "contratos pagos",
+			"imports": "",
+			"fields": "",
+			"schemastable": [
+				{
+					"id": 1,
+					"type": "number",
+					"name": "id",
+					"length": 10,
+					"keyautonumber": true,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 2,
+					"type": "date",
+					"name": "fecha",
+					"length": 0,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 3,
+					"type": "string",
+					"name": "descripcion",
+					"length": 50,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				}
+			],
+			"schemarelations": [],
+			"schemasapi": [
+				{
+					"id": 1,
+					"type": "get",
+					"operation": "getone",
+					"path": "",
+					"field": "",
+					"fields": [
+						"id",
+						"fecha",
+						"descripcion"
+					],
+					"security": true,
+					"roles": "Admin Users"
+				},
+				{
+					"id": 2,
+					"type": "post",
+					"operation": "",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User"
+				}
+			],
+			"security": true,
+			"classsecurity": "RolesGuard",
+			"filesecurity": null,
+			"mastersecurity": false
+		},
+		{
+			"id": 4,
+			"name": "Prueba",
+			"description": "prueba",
+			"imports": "",
+			"fields": "",
+			"schemastable": [
+				{
+					"id": 1,
+					"type": "number",
+					"name": "id",
+					"length": 10,
+					"keyautonumber": true,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 2,
+					"type": "string",
+					"name": "descipcion",
+					"length": 50,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				}
+			],
+			"schemarelations": [],
+			"schemasapi": [
+				{
+					"id": 1,
+					"type": "post",
+					"operation": "",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User"
+				}
+			]
+		},
+		{
+			"id": 5,
+			"name": "Pruebados",
+			"description": "fdsafdf",
+			"imports": "",
+			"fields": "",
+			"security": true,
+			"classsecurity": "RolesGuard",
+			"filesecurity": "",
+			"mastersecurity": false,
+			"schemastable": [
+				{
+					"id": 1,
+					"type": "number",
+					"name": "id",
+					"length": 10,
+					"keyautonumber": true,
+					"extraparameter": "",
+					"index": true
+				},
+				{
+					"id": 2,
+					"type": "string",
+					"name": "descripcion",
+					"length": 25,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				}
+			],
+			"schemarelations": [],
+			"schemasapi": [
+				{
+					"id": 1,
+					"type": "get",
+					"operation": "getall",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User"
+				},
+				{
+					"id": 2,
+					"type": "post",
+					"operation": "",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User"
+				}
+			]
 		}
 	],
 	"security": {
@@ -320,7 +496,9 @@
 		"login": "login",
 		"password": "password",
 		"bearertoken": "bearer",
-		"roles": "Roles"
+		"roles": "Roles",
+		"rolesclass": "RolesGuard",
+		"logger": true
 	},
 	"dbconf": {
 		"selecteddatabase": 0,

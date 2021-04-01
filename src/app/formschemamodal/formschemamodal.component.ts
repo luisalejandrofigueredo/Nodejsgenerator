@@ -47,14 +47,14 @@ export class FormschemamodalComponent implements OnInit {
     this.dialogRef.close(undefined);
   }
   onYesClick() {
-    this.data.name = this.Userdata.value.name;
-    this.data.description = this.Userdata.value.description;
-    this.data.fields = this.Userdata.value.fields;
-    this.data.imports = this.Userdata.value.imports;
-    this.data.security = this.Userdata.value.security;
-    this.data.classsecurity = this.Userdata.value.classsecurity;
-    this.data.filesecurity = this.Userdata.value.filesecurity;
-    this.data.mastersecurity= this.Userdata.value.mastersecurity;
+    this.data.name = this.Userdata.get('name').value;
+    this.data.description = this.Userdata.get('description').value;
+    this.data.fields = this.Userdata.get('fields').value;
+    this.data.imports = this.Userdata.get('imports').value;
+    this.data.security = this.Userdata.get('security').value;
+    this.data.classsecurity = this.Userdata.get('classsecurity').value;
+    this.data.filesecurity = this.Userdata.get('filesecurity').value;
+    this.data.mastersecurity= this.Userdata.get('mastersecurity').value;
     this.dialogRef.close(this.data);
   }
 }

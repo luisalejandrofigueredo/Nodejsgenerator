@@ -291,7 +291,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
               break;
             case 'getone':
               this.addgenrartinline('\tadding verb get getone');
-              this.filegenerating += `@Get('${element.path}/:id')\n`;
+              this.filegenerating += `@Get('/:id')\n`;
               this.generatesecurity(element);
               this.filegenerating += `getone(@Param() params) {\n`;
               this.filegenerating += `\t return this.service.getOne(+params.id);\n }\n`;
@@ -616,7 +616,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
           else {
             this.filegenerating += '@Column({' + fieldcolumn.extraparameter + '})\n';
           }
-          this.filegenerating += fieldcolumn.name + ':date;\n\n';
+          this.filegenerating += fieldcolumn.name + ': Date;\n\n';
           break;
         default:
           break;

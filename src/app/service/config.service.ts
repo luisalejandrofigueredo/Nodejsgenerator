@@ -206,6 +206,10 @@ export class ConfigService {
       description: SchemaHead.description,
       imports: SchemaHead.imports,
       fields: SchemaHead.fields,
+      security: SchemaHead.security,
+      classsecurity: SchemaHead.classsecurity,
+      filesecurity: SchemaHead.filesecurity,
+      mastersecurity: SchemaHead.mastersecurity,
       schemastable: [], schemarelations: [], schemasapi: []
     });
   }

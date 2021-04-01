@@ -13,7 +13,12 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
   styleUrls: ['./testapi.component.scss']
 })
 export class TestapiComponent implements OnInit {
+  port:string;
+  host:string;
+  urlpri:string;
+  url:string;
   login: string;
+  loginheader:string;
   logout: string;
   password: string;
   token: string;
@@ -29,12 +34,19 @@ export class TestapiComponent implements OnInit {
   constructor(private httpclient: HttpClient, private configservice: ConfigService) { }
 
   ngOnInit(): void {
+    this.host='127.0.0.1';
+    this.port='3000';
+    this.urlpri=`http://${this.host}:${this.port}`;
+    if (localStorage.getItem('token')!==null) {
+       this.token=localStorage.getItem('token');
+       this.rtoken=localStorage.getItem('token');
+    }
     this.schemas = this.configservice.getschema();
     this.profileForm = new FormGroup({
       Schema: new FormControl(this.schemas, Validators.required),
       operation: new FormControl('', Validators.required),
       header: new FormControl('', Validators.required),
-      getone: new FormControl(0),
+      record: new FormControl(0),
       skip: new FormControl(0),
       limit: new FormControl(0),
       order: new FormControl('ASC'),
@@ -45,7 +57,7 @@ export class TestapiComponent implements OnInit {
   }
 
   dologin() {
-    const url = 'http://127.0.0.1:3000/login';
+    this.url = this.urlpri+'/login';
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -53,8 +65,10 @@ export class TestapiComponent implements OnInit {
         'password': this.password
       })
     };
-    this.httpclient.post(url, '', httpOptions).subscribe((rep: { mensaje: string, token: string }) => {
+    this.loginheader=JSON.stringify({'Content-Type': 'application/json','login': this.login,'password': this.password},null,4);
+    this.httpclient.post(this.url, '', httpOptions).subscribe((rep: { mensaje: string, token: string }) => {
       this.rtoken = rep.token;
+      localStorage.setItem('token',rep.token);
       this.reponse = JSON.stringify(rep);
     })
   }
@@ -64,7 +78,7 @@ export class TestapiComponent implements OnInit {
   }
 
   dologout() {
-    const url = 'http://127.0.0.1:3000/login';
+    this.url = this.urlpri+'/login';
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -72,25 +86,27 @@ export class TestapiComponent implements OnInit {
         'token': this.token
       })
     };
-    this.httpclient.get(url, httpOptions).subscribe(rep => this.reponselogout = JSON.stringify(rep));
-
+    this.httpclient.get(this.url, httpOptions).subscribe(rep => this.reponselogout = JSON.stringify(rep));
   }
 
   gheader() {
-    this.profileForm.patchValue({ header: JSON.stringify({ token: this.rtoken }) })
+    this.profileForm.patchValue({ header: JSON.stringify({ 'Content-Type': 'application/json',
+      token: this.rtoken },null,4) })
   }
 
   change() {
+    this.profileForm.patchValue({body:'',reponse:''});
     this.apis = [...this.configservice.getapis(this.profileForm.get('Schema').value)];
     this.schemastring = this.configservice.getschemaname(this.profileForm.get('Schema').value);
   }
 
   changeoperation() {
-    console.log(this.profileForm.get('operation').value);
+    this.profileForm.patchValue({body:'',reponse:''});
     const typea: string[] = (this.profileForm.get('operation').value).split(' ');
     const fields: Schemaitem[] = this.configservice.getschematable(this.profileForm.get('Schema').value);
     let body = '{';
     switch (typea[0]) {
+      case 'put':
       case 'post':
         for (let index = 0; index < fields.length; index++) {
           const element = fields[index];
@@ -115,13 +131,13 @@ export class TestapiComponent implements OnInit {
         this.profileForm.patchValue({ body: JSON.stringify(jsonvar, null, 4) });
         break;
       default:
+        this.profileForm.patchValue({ body: "" });
         break;
     }
   }
 
   send() {
     let httpOptions;
-    let url: string;
     const typea: string[] = (this.profileForm.get('operation').value).split(' ');
     console.log(typea[0]);
     console.log(typea[1]);
@@ -130,13 +146,14 @@ export class TestapiComponent implements OnInit {
         switch (typea[1]) {
           case 'getone':
             httpOptions = {
-              header: new HttpHeaders({
+              headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 'token': this.rtoken
               })
             };
-            this.httpclient.get(`http://127.0.0.1:3000/${this.schemastring}/getone/${this.profileForm.get('getone').value}`, httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res,null,4) }));
+            this.url=this.urlpri+`/${this.schemastring}/${this.profileForm.get('record').value}`;
+            this.httpclient.get(this.url, httpOptions).subscribe(res =>
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
             break;
           case 'getall':
             httpOptions = {
@@ -145,8 +162,9 @@ export class TestapiComponent implements OnInit {
                 'token': this.rtoken
               })
             };
-            this.httpclient.get(`http://127.0.0.1:3000/${this.schemastring}`, httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res,null,4) }));
+            this.url=this.urlpri+`/${this.schemastring}`;
+            this.httpclient.get(this.url, httpOptions).subscribe(res =>
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
             break;
           case 'skiplimit':
             httpOptions = {
@@ -155,9 +173,9 @@ export class TestapiComponent implements OnInit {
                 'token': this.rtoken
               })
             };
-            url = `http://127.0.0.1:3000/${this.schemastring}/skiplimit/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}`
-            this.httpclient.get(url, httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res,null,4) }));
+            this.url = this.urlpri+`/${this.schemastring}/skiplimit/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}`
+            this.httpclient.get(this.url, httpOptions).subscribe(res =>
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
             break
           case 'skiplimitbyfield':
             httpOptions = {
@@ -166,20 +184,20 @@ export class TestapiComponent implements OnInit {
                 'token': this.rtoken
               })
             };
-            url = `http://127.0.0.1:3000/${this.schemastring}/skiplimitorder${typea[2]}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}`
-            this.httpclient.get(url, httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res,null,4) }));
+            this.url = this.urlpri+`/${this.schemastring}/skiplimitorder${typea[2]}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}`
+            this.httpclient.get(this.url, httpOptions).subscribe(res =>
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
             break
-            case 'skiplimitfilter':
+          case 'skiplimitfilter':
             httpOptions = {
               headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 'token': this.rtoken
               })
             };
-            url = `http://127.0.0.1:3000/${this.schemastring}/skiplimitfilter${typea[2]}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}/${this.profileForm.get('field').value}`
-            this.httpclient.get(url, httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res,null,4) }));
+            this.url = this.urlpri+`/${this.schemastring}/skiplimitfilter${typea[2]}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}/${this.profileForm.get('field').value}`
+            this.httpclient.get(this.url, httpOptions).subscribe(res =>
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
             break
           default:
             break;
@@ -192,13 +210,40 @@ export class TestapiComponent implements OnInit {
             'token': this.rtoken
           })
         };
-        this.httpclient.post(`http://127.0.0.1:3000/${this.schemastring}`, this.profileForm.get('body').value, httpOptions).
-          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res,null,4) }));
+        this.url=this.urlpri+`/${this.schemastring}`
+        this.httpclient.post(this.url, this.profileForm.get('body').value, httpOptions).
+          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }));
         break;
+      case 'put':
+        httpOptions = {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+            'token': this.rtoken
+          })
+        };
+        this.url=this.urlpri+`/${this.schemastring}`;
+        this.httpclient.put(this.url, this.profileForm.get('body').value, httpOptions).
+          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }));
+        break;
+        case 'delete':
+          httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type': 'application/json',
+              'token': this.rtoken
+            })
+          };
+          this.url=this.urlpri+`/${this.schemastring}/${this.profileForm.get('record').value}`
+          this.httpclient.delete(this.url, httpOptions).
+            subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }));
+          break;
       default:
         break;
     }
 
+  }
+
+  expand(){
+    this.url="";
   }
 
 }
