@@ -13,6 +13,8 @@ export class ConfigService {
     filePath: '',
     enableCors: false,
     dbconf:{ selecteddatabase:0,host:'',port:0,username:'',password:'',database:''},
+    enablehttps: false,
+    port:3000,
     jwtsk:'',
     logger:{ type:0,file:'info.log',maxsize:50000,typewarn:0,filewarn:'warn.log',maxsizewarn:10000,typeerror:0,fileerror:'error.log',maxsizeerror:10000},
     security: {},
@@ -21,6 +23,10 @@ export class ConfigService {
   /* schemas[id:number,name:string,description:string,schemastable[schemas],
   schemasrelations[],schemasapi[]] */
   constructor(private electron: ElectronService) { }
+
+  getschemawithid(id:number): Schemahead{
+    return this.config.schemas[id-1];
+  }
 
   getschemamastersecurity(){
     let array : Schemahead[];

@@ -13,12 +13,12 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
   styleUrls: ['./testapi.component.scss']
 })
 export class TestapiComponent implements OnInit {
-  port:string;
-  host:string;
-  urlpri:string;
-  url:string;
+  port: string;
+  host: string;
+  urlpri: string;
+  url: string;
   login: string;
-  loginheader:string;
+  loginheader: string;
   logout: string;
   password: string;
   token: string;
@@ -34,12 +34,16 @@ export class TestapiComponent implements OnInit {
   constructor(private httpclient: HttpClient, private configservice: ConfigService) { }
 
   ngOnInit(): void {
-    this.host='127.0.0.1';
-    this.port='3000';
-    this.urlpri=`http://${this.host}:${this.port}`;
-    if (localStorage.getItem('token')!==null) {
-       this.token=localStorage.getItem('token');
-       this.rtoken=localStorage.getItem('token');
+    this.host = '127.0.0.1';
+    this.port = this.configservice.config.port.toString();
+    if (this.configservice.config.enablehttps === false) {
+      this.urlpri = `http://${this.host}:${this.port}`;
+    } else {
+      this.urlpri = `https://${this.host}:${this.port}`;
+    }
+    if (localStorage.getItem('token') !== null) {
+      this.token = localStorage.getItem('token');
+      this.rtoken = localStorage.getItem('token');
     }
     this.schemas = this.configservice.getschema();
     this.profileForm = new FormGroup({
@@ -51,13 +55,23 @@ export class TestapiComponent implements OnInit {
       limit: new FormControl(0),
       order: new FormControl('ASC'),
       field: new FormControl(''),
+      login: new FormControl(''),
+      newpassword: new FormControl(''),
       body: new FormControl(''),
       reponse: new FormControl('')
     });
   }
 
+  changehost(){
+    if (this.configservice.config.enablehttps === false) {
+      this.urlpri = `http://${this.host}:${this.port}`;
+    } else {
+      this.urlpri = `https://${this.host}:${this.port}`;
+    }
+  }
+
   dologin() {
-    this.url = this.urlpri+'/login';
+    this.url = this.urlpri + '/login';
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -65,10 +79,10 @@ export class TestapiComponent implements OnInit {
         'password': this.password
       })
     };
-    this.loginheader=JSON.stringify({'Content-Type': 'application/json','login': this.login,'password': this.password},null,4);
+    this.loginheader = JSON.stringify({ 'Content-Type': 'application/json', 'login': this.login, 'password': this.password }, null, 4);
     this.httpclient.post(this.url, '', httpOptions).subscribe((rep: { mensaje: string, token: string }) => {
       this.rtoken = rep.token;
-      localStorage.setItem('token',rep.token);
+      localStorage.setItem('token', rep.token);
       this.reponse = JSON.stringify(rep);
     })
   }
@@ -78,7 +92,7 @@ export class TestapiComponent implements OnInit {
   }
 
   dologout() {
-    this.url = this.urlpri+'/login';
+    this.url = this.urlpri + '/login';
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -90,18 +104,22 @@ export class TestapiComponent implements OnInit {
   }
 
   gheader() {
-    this.profileForm.patchValue({ header: JSON.stringify({ 'Content-Type': 'application/json',
-      token: this.rtoken },null,4) })
+    this.profileForm.patchValue({
+      header: JSON.stringify({
+        'Content-Type': 'application/json',
+        token: this.rtoken
+      }, null, 4)
+    })
   }
 
   change() {
-    this.profileForm.patchValue({body:'',reponse:''});
+    this.profileForm.patchValue({ body: '', reponse: '' });
     this.apis = [...this.configservice.getapis(this.profileForm.get('Schema').value)];
     this.schemastring = this.configservice.getschemaname(this.profileForm.get('Schema').value);
   }
 
   changeoperation() {
-    this.profileForm.patchValue({body:'',reponse:''});
+    this.profileForm.patchValue({ body: '', reponse: '' });
     const typea: string[] = (this.profileForm.get('operation').value).split(' ');
     const fields: Schemaitem[] = this.configservice.getschematable(this.profileForm.get('Schema').value);
     let body = '{';
@@ -142,6 +160,16 @@ export class TestapiComponent implements OnInit {
     console.log(typea[0]);
     console.log(typea[1]);
     switch (typea[0]) {
+      case 'changepassword':
+        httpOptions = {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+            'token': this.rtoken
+          })
+        };
+        this.url= this.urlpri+`/${this.schemastring}`+`/changepassword/${encodeURI(this.profileForm.get('login').value)}/${encodeURI(this.profileForm.get('newpassword').value)}`;
+        this.httpclient.put(this.url,{},httpOptions).subscribe(res=> this.profileForm.patchValue({ reponse:JSON.stringify(res,null,4) }))
+      break;
       case 'get':
         switch (typea[1]) {
           case 'getone':
@@ -151,7 +179,7 @@ export class TestapiComponent implements OnInit {
                 'token': this.rtoken
               })
             };
-            this.url=this.urlpri+`/${this.schemastring}/${this.profileForm.get('record').value}`;
+            this.url = this.urlpri + `/${this.schemastring}/${this.profileForm.get('record').value}`;
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
               this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
             break;
@@ -162,7 +190,7 @@ export class TestapiComponent implements OnInit {
                 'token': this.rtoken
               })
             };
-            this.url=this.urlpri+`/${this.schemastring}`;
+            this.url = this.urlpri + `/${this.schemastring}`;
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
               this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
             break;
@@ -173,7 +201,7 @@ export class TestapiComponent implements OnInit {
                 'token': this.rtoken
               })
             };
-            this.url = this.urlpri+`/${this.schemastring}/skiplimit/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}`
+            this.url = this.urlpri + `/${this.schemastring}/skiplimit/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}`
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
               this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
             break
@@ -184,7 +212,7 @@ export class TestapiComponent implements OnInit {
                 'token': this.rtoken
               })
             };
-            this.url = this.urlpri+`/${this.schemastring}/skiplimitorder${typea[2]}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}`
+            this.url = this.urlpri + `/${this.schemastring}/skiplimitorder${typea[2]}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}`
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
               this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
             break
@@ -195,7 +223,7 @@ export class TestapiComponent implements OnInit {
                 'token': this.rtoken
               })
             };
-            this.url = this.urlpri+`/${this.schemastring}/skiplimitfilter${typea[2]}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}/${this.profileForm.get('field').value}`
+            this.url = this.urlpri + `/${this.schemastring}/skiplimitfilter${typea[2]}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}/${this.profileForm.get('field').value}`
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
               this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
             break
@@ -210,7 +238,7 @@ export class TestapiComponent implements OnInit {
             'token': this.rtoken
           })
         };
-        this.url=this.urlpri+`/${this.schemastring}`
+        this.url = this.urlpri + `/${this.schemastring}`
         this.httpclient.post(this.url, this.profileForm.get('body').value, httpOptions).
           subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }));
         break;
@@ -221,29 +249,29 @@ export class TestapiComponent implements OnInit {
             'token': this.rtoken
           })
         };
-        this.url=this.urlpri+`/${this.schemastring}`;
+        this.url = this.urlpri + `/${this.schemastring}`;
         this.httpclient.put(this.url, this.profileForm.get('body').value, httpOptions).
           subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }));
         break;
-        case 'delete':
-          httpOptions = {
-            headers: new HttpHeaders({
-              'Content-Type': 'application/json',
-              'token': this.rtoken
-            })
-          };
-          this.url=this.urlpri+`/${this.schemastring}/${this.profileForm.get('record').value}`
-          this.httpclient.delete(this.url, httpOptions).
-            subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }));
-          break;
+      case 'delete':
+        httpOptions = {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+            'token': this.rtoken
+          })
+        };
+        this.url = this.urlpri + `/${this.schemastring}/${this.profileForm.get('record').value}`
+        this.httpclient.delete(this.url, httpOptions).
+          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }));
+        break;
       default:
         break;
     }
 
   }
 
-  expand(){
-    this.url="";
+  expand() {
+    this.url = "";
   }
 
 }

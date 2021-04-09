@@ -212,6 +212,25 @@
 					],
 					"security": true,
 					"roles": "Users"
+				},
+				{
+					"idschema": "1",
+					"id": 10,
+					"type": "changepassword",
+					"operation": "",
+					"path": "",
+					"field": "",
+					"fields": [
+						"id",
+						"nombre",
+						"apellido",
+						"login",
+						"password",
+						"bearer",
+						"Roles"
+					],
+					"security": true,
+					"roles": "Admin Users"
 				}
 			],
 			"security": true,
@@ -519,5 +538,7 @@
 		"typeerror": 0,
 		"fileerror": "error.log",
 		"maxsizeerror": 10000
-	}
+	},
+	"enablehttps": false,
+	"port": 3500
 }

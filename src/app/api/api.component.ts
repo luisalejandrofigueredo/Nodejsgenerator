@@ -44,7 +44,7 @@ export class ApiComponent implements OnInit {
 
   openadd(){
     const matRef = this.dialog.open(ApidatamodalComponent, { width: '300px' ,
-     data: { id: 0, type: '', operation: '' , path: '', fields: this.fields, field: '' , security: false, roles: '' } as Typeoperation });
+     data: { idschema:this.id, id: 0, type: '', operation: '' , path: '', fields: this.fields, field: '' , security: false, roles: '' } as Typeoperation });
     matRef.afterClosed().subscribe(data => { if (data !== undefined){
       // tslint:disable-next-line: variable-name
       const _id = this.apis.length + 1;
@@ -77,7 +77,7 @@ export class ApiComponent implements OnInit {
   edit(_id: number){
     const reg = this.configservice.getapi(this.id, _id);
     const matRef = this.dialog.open(ApidatamodalComponent, { width: '300px' ,
-     data: { id: _id, 
+     data: { idschema:this.id ,id: _id, 
       type: reg.type,
       operation: reg.operation,
       path: reg.path,

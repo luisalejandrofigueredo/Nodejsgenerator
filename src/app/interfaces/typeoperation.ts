@@ -1,4 +1,5 @@
 export interface Typeoperation {
+    idschema:number;
     id: number;
     type: string;
     operation: string;

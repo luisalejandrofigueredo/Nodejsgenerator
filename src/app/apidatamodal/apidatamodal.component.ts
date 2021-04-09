@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Typeoperation } from '../interfaces/typeoperation';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import {ConfigService} from '../service/config.service';
+import { Schemahead } from '../interfaces/schemahead';
 interface Type {
   value: string;
   viewValue: string;
@@ -37,9 +38,16 @@ export class ApidatamodalComponent implements OnInit {
   security: boolean;
   roles: string;
   profileForm: FormGroup;
+  idschema:number;
+  schema:Schemahead;
   constructor(private configservice:ConfigService ,public dialogRef: MatDialogRef<ApidatamodalComponent>, @Inject(MAT_DIALOG_DATA) public data: Typeoperation) { }
 
   ngOnInit(): void {
+    this.idschema=this.data.idschema;
+    this.schema=this.configservice.getschemawithid(this.idschema);
+    if (this.schema.mastersecurity===true){
+      this.types.push({value:'changepassword', viewValue: 'Put change password'});
+    }
     this.fields=this.data.fields;
     console.log('fields:',this.data.fields);
     this.profileForm = new FormGroup({

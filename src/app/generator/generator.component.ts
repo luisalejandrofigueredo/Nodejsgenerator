@@ -16,127 +16,138 @@ export class GeneratorComponent implements OnInit, OnChanges {
   keyfield = '';
   @ViewChild('textgenerating', { static: false }) container: ElementRef;
   @ViewChild('fileswriting', { static: false }) containerfiles: ElementRef;
-  constructor(private configservice:ConfigService,private ngzone: NgZone, private electronservice: ElectronService) { }
+  constructor(private configservice: ConfigService, private ngzone: NgZone, private electronservice: ElectronService) { }
   config: any;
   filePath: string;
-  line:string;
+  line: string;
   filegenerating = '';
   generatingfile = '';
   fileapigenerating = '';
   reltables: string[] = [];
   editorOptions = { theme: 'vs-dark', language: 'typescript' };
-  ormj = { PrimaryGeneratedColumn: false, OneToMany: false, ManyToOne: false , Index: false };
+  ormj = { PrimaryGeneratedColumn: false, OneToMany: false, ManyToOne: false, Index: false };
   ngOnInit(): void {
   }
-  
+
   ngOnChanges(changes: SimpleChanges): void {
     this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
     this.containerfiles.nativeElement.scrollTop = this.containerfiles.nativeElement.scrollHeight;
   }
-  
+
   addingPath() {
     this.addgenrartinline('reading file path ...');
     this.filePath = this.configservice.config.filePath;
-    this.loadtemplate('roles.guard.ts','login.controller.ts');
+    this.loadtemplate('roles.guard.ts', 'login.controller.ts');
     this.generatedatabaseconfig();
     this.generateenablecors();
     this.generateschemas();
     this.generateappmodule();
     this.addgenrartinline('End generate');
   }
- generateenablecors(){
-  this.addgenrartinline('begin generating main module ...');
-   this.filegenerating='';
-   this.filegenerating+="import { NestFactory } from '@nestjs/core';\n";
-   this.filegenerating+="import { AppModule } from './app.module';\n\n";
-   this.filegenerating+="async function bootstrap() {\n";
-   this.filegenerating+="  const app = await NestFactory.create(AppModule);\n";
-   if (this.configservice.config.enableCors===true){
-     this.filegenerating+="  app.enableCors();\n"
+  generateenablecors() {
+    this.addgenrartinline('begin generating main module ...');
+    this.filegenerating = '';
+    this.filegenerating += "import { NestFactory } from '@nestjs/core';\n";
+    this.filegenerating += "import { AppModule } from './app.module';\n\n";
+    if (this.configservice.config.enablehttps === true) {
+      this.filegenerating += "const fs = require('fs');\n"
+      this.filegenerating += 'const httpsOptions = {\n'
+      this.filegenerating += " key: fs.readFileSync('./secrets/private-key.pem'),\n"
+      this.filegenerating += " cert: fs.readFileSync('./secrets/public-certificate.pem'),\n"
+      this.filegenerating += "};\n";
     }
-     this.filegenerating+="  await app.listen(3000);\n"
-     this.filegenerating+="}\n";
-     this.filegenerating+="bootstrap();\n"
-     this.addgenrartinline('end generate main module ...');
-     const args = { path: this.config.filePath, name: "main.ts", file: this.filegenerating };
-     const end = this.electronservice.ipcRenderer.sendSync('savemain', args);
-     this.addgenrartinlinefile(end);
+    this.filegenerating += "async function bootstrap() {\n";
+    if (this.configservice.config.enablehttps === false) {
+      this.filegenerating += "  const app = await NestFactory.create(AppModule);\n";
+    } else {
+      this.filegenerating += "  const app = await NestFactory.create(AppModule,{  httpsOptions });\n";
+    }
+    if (this.configservice.config.enableCors === true) {
+      this.filegenerating += "  app.enableCors();\n"
+    }
+    this.filegenerating += `  await app.listen(${this.configservice.config.port});\n`;
+    this.filegenerating += "}\n";
+    this.filegenerating += "bootstrap();\n"
+    this.addgenrartinline('end generate main module ...');
+    const args = { path: this.config.filePath, name: "main.ts", file: this.filegenerating };
+    const end = this.electronservice.ipcRenderer.sendSync('savemain', args);
+    this.addgenrartinlinefile(end);
   }
-  generateappmodule(){
+  generateappmodule() {
     this.addgenrartinline('begin generating app module ...');
-    this.filegenerating  ="import { Module } from '@nestjs/common';\n"
-    this.filegenerating +="import { TypeOrmModule } from '@nestjs/typeorm';\n"
-    this.filegenerating +="import { AppController } from './app.controller';\n";
-    this.filegenerating+="import { AppService } from './app.service';\n"
+    this.filegenerating = "import { Module } from '@nestjs/common';\n"
+    this.filegenerating += "import { TypeOrmModule } from '@nestjs/typeorm';\n"
+    this.filegenerating += "import { AppController } from './app.controller';\n";
+    this.filegenerating += "import { AppService } from './app.service';\n"
     const schemas = this.configservice.getschema();
     for (let index = 0; index < schemas.length; index++) {
       const element = schemas[index].name;
-      this.filegenerating+=`import {${element}Module} from './module/${element}.module';\n`;
+      this.filegenerating += `import {${element}Module} from './module/${element}.module';\n`;
     }
-    this.filegenerating+=`import {LoginModule} from './module/Login.module';\n`;
-    this.filegenerating+='@Module({\n';
-    this.filegenerating+='imports:[TypeOrmModule.forRoot()'
+    this.filegenerating += `import {LoginModule} from './module/Login.module';\n`;
+    this.filegenerating += '@Module({\n';
+    this.filegenerating += 'imports:[TypeOrmModule.forRoot()'
     for (let index = 0; index < schemas.length; index++) {
       const element = schemas[index].name;
-      this.filegenerating+=`,${element}Module`;
+      this.filegenerating += `,${element}Module`;
     }
-    this.filegenerating+=',LoginModule';
-    this.filegenerating+='],\n';
-    this.filegenerating+='controllers:[AppController],\n';
-    this.filegenerating+='providers: [AppService],\n';
-    this.filegenerating+='})\n';
-    this.filegenerating+='export class AppModule {}';
+    this.filegenerating += ',LoginModule';
+    this.filegenerating += '],\n';
+    this.filegenerating += 'controllers:[AppController],\n';
+    this.filegenerating += 'providers: [AppService],\n';
+    this.filegenerating += '})\n';
+    this.filegenerating += 'export class AppModule {}';
     const args = { path: this.config.filePath, name: 'app', file: this.filegenerating };
     const end = this.electronservice.ipcRenderer.sendSync('saveappmodule', args);
     this.addgenrartinlinefile(end);
     this.addgenrartinline('end  generating app module ...');
   }
 
-  generatedatabaseconfig(){
+  generatedatabaseconfig() {
     this.addgenrartinline('begin generating database config file ...');
-    const database=this.configservice.getdatabase();
-    let driver="";
-    this.filegenerating='';
+    const database = this.configservice.getdatabase();
+    let driver = "";
+    this.filegenerating = '';
     switch (database.selecteddatabase) {
       case 0:
-        driver='mysql';
+        driver = 'mysql';
         break;
       case 1:
-        driver='postgres';
+        driver = 'postgres';
         break;
       case 2:
-        driver='sqlite3';
+        driver = 'sqlite3';
         break;
       case 3:
-        driver='mssql';
+        driver = 'mssql';
         break;
       case 4:
-        driver='sql.js';
+        driver = 'sql.js';
         break;
       case 5:
-        driver='oracledb';
-        break;      
+        driver = 'oracledb';
+        break;
       default:
         break;
     }
-    const databaseconfig={
-      "type":driver,
-      "host":database.host,
-      "port":database.port,
-      "username":database.username,
-      "password":database.password,
-      "database":database.database,
+    const databaseconfig = {
+      "type": driver,
+      "host": database.host,
+      "port": database.port,
+      "username": database.username,
+      "password": database.password,
+      "database": database.database,
       "entities": ["dist/**/*.entity.js"],
       "synchronize": true
     }
     this.addgenrartinline('end generating database config file.');
-    this.filegenerating =JSON.stringify(databaseconfig);
+    this.filegenerating = JSON.stringify(databaseconfig);
     const args = { path: this.config.filePath, name: "ormconfig.json", file: this.filegenerating };
     const end = this.electronservice.ipcRenderer.sendSync('saveormconfig', args);
     this.addgenrartinlinefile(end);
   }
-  
- 
+
+
   generateschemas() {
     this.addgenrartinline('begin generating schemas ...');
     const schemas = this.configservice.getschema();
@@ -147,30 +158,30 @@ export class GeneratorComponent implements OnInit, OnChanges {
       this.ormj = { PrimaryGeneratedColumn: false, OneToMany: false, ManyToOne: false, Index: false };
       this.reltables = [];
       this.entitygenerator(index);
-      this.apigenerator(index, schemas[index].name,schemas[index].mastersecurity);
-      this.generatemodules(index, schemas[index].name,schemas[index].mastersecurity);
+      this.apigenerator(index, schemas[index].name, schemas[index].mastersecurity);
+      this.generatemodules(index, schemas[index].name, schemas[index].mastersecurity);
     }
     this.generateloginmodule()
     this.addgenrartinline('end generating schemas ...');
   }
 
-  generateloginmodule():boolean {
+  generateloginmodule(): boolean {
     this.addgenrartinline('begin generating login module ...');
-    let mastersec:any;
-    mastersec=  this.configservice.getschemamastersecurity();
+    let mastersec: any;
+    mastersec = this.configservice.getschemamastersecurity();
     if (mastersec === undefined) {
       this.addgenrartinline(`No schema master security fail in login module.`);
-      return false;  
+      return false;
     }
     this.addgenrartinline(`begin generating module login for ${mastersec.name} ...`);
     this.filegenerating = "import { Module } from '@nestjs/common';\n"
-    this.filegenerating +="import { JwtModule } from '@nestjs/jwt';\n"
-    this.filegenerating +="import { TypeOrmModule } from '@nestjs/typeorm';\n"
-    this.filegenerating +="import * as winston from 'winston';\n"
-    this.filegenerating+="import { WinstonModule } from 'nest-winston';\n"
-    this.filegenerating +=`import { ${mastersec.name}Service } from '../service/${mastersec.name}.service';\n`;
-    this.filegenerating +=`import { ${mastersec.name} } from '../entitys/${mastersec.name}.entity';\n`;
-    this.filegenerating+=`import { LoginController } from '../controller/Login.controller';\n`;
+    this.filegenerating += "import { JwtModule } from '@nestjs/jwt';\n"
+    this.filegenerating += "import { TypeOrmModule } from '@nestjs/typeorm';\n"
+    this.filegenerating += "import * as winston from 'winston';\n"
+    this.filegenerating += "import { WinstonModule } from 'nest-winston';\n"
+    this.filegenerating += `import { ${mastersec.name}Service } from '../service/${mastersec.name}.service';\n`;
+    this.filegenerating += `import { ${mastersec.name} } from '../entitys/${mastersec.name}.entity';\n`;
+    this.filegenerating += `import { LoginController } from '../controller/Login.controller';\n`;
     this.filegenerating += "@Module({\n";
     this.filegenerating += `imports: [TypeOrmModule.forFeature([${mastersec.name}]),\n`;
     this.filegenerating += `JwtModule.register({  secret: '${this.configservice.config.jwtsk}' }),\n`;
@@ -185,79 +196,79 @@ export class GeneratorComponent implements OnInit, OnChanges {
     return true;
   }
 
-  generatemodules(index:number,schema:string,mastersecurity:boolean):boolean{
-    console.log('master security',mastersecurity);
-    let mastersec:any;
+  generatemodules(index: number, schema: string, mastersecurity: boolean): boolean {
+    console.log('master security', mastersecurity);
+    let mastersec: any;
     this.addgenrartinline(`begin generating module ${schema} ...`);
-    mastersec=  this.configservice.getschemamastersecurity();
+    mastersec = this.configservice.getschemamastersecurity();
     if (mastersec === undefined) {
-        this.addgenrartinline(`No schema master security.`);
-        return false;  
+      this.addgenrartinline(`No schema master security.`);
+      return false;
     }
-    this.filegenerating="import { Module } from '@nestjs/common';\n";
-    this.filegenerating+="import { JwtModule } from '@nestjs/jwt';\n";
-    this.filegenerating+="import { TypeOrmModule } from '@nestjs/typeorm';\n";
-    this.filegenerating+="import * as winston from 'winston';\n";
-    this.filegenerating+="import { WinstonModule } from 'nest-winston';\n";
-    this.filegenerating+=`import { ${schema}Service } from '../service/${schema}.service'\n`;
-    this.filegenerating+=`import { ${schema}Controller } from '../controller/${schema}.controller';\n`;
-    this.filegenerating+=`import { ${schema} } from '../entitys/${schema}.entity';\n`;
-    if (mastersecurity===false){
-      this.filegenerating+=`import { ${mastersec.name}Service } from '../service/${mastersec.name}.service'\n`;
-      this.filegenerating+=`import { ${mastersec.name}Controller } from '../controller/${mastersec.name}.controller';\n`;
-      this.filegenerating+=`import { ${mastersec.name} } from '../entitys/${mastersec.name}.entity';\n`;
+    this.filegenerating = "import { Module } from '@nestjs/common';\n";
+    this.filegenerating += "import { JwtModule } from '@nestjs/jwt';\n";
+    this.filegenerating += "import { TypeOrmModule } from '@nestjs/typeorm';\n";
+    this.filegenerating += "import * as winston from 'winston';\n";
+    this.filegenerating += "import { WinstonModule } from 'nest-winston';\n";
+    this.filegenerating += `import { ${schema}Service } from '../service/${schema}.service'\n`;
+    this.filegenerating += `import { ${schema}Controller } from '../controller/${schema}.controller';\n`;
+    this.filegenerating += `import { ${schema} } from '../entitys/${schema}.entity';\n`;
+    if (mastersecurity === false) {
+      this.filegenerating += `import { ${mastersec.name}Service } from '../service/${mastersec.name}.service'\n`;
+      this.filegenerating += `import { ${mastersec.name}Controller } from '../controller/${mastersec.name}.controller';\n`;
+      this.filegenerating += `import { ${mastersec.name} } from '../entitys/${mastersec.name}.entity';\n`;
     }
-    this.filegenerating+='@Module({\n';
-    this.filegenerating+=`imports:[TypeOrmModule.forFeature([${schema}`;
-    if (mastersecurity===false){
-      this.filegenerating+=`,${mastersec.name}`;
+    this.filegenerating += '@Module({\n';
+    this.filegenerating += `imports:[TypeOrmModule.forFeature([${schema}`;
+    if (mastersecurity === false) {
+      this.filegenerating += `,${mastersec.name}`;
     }
-    this.filegenerating+=`]),\n`;
-    this.filegenerating+=`JwtModule.register({  secret: '${this.configservice.config.jwtsk}' }),\n`;
+    this.filegenerating += `]),\n`;
+    this.filegenerating += `JwtModule.register({  secret: '${this.configservice.config.jwtsk}' }),\n`;
     this.generatewinston();
-    this.filegenerating+='providers:';
-    this.filegenerating+=`[${schema}Service`;
-    if (mastersecurity===false){
-      this.filegenerating+=`,${mastersec.name}Service`;
+    this.filegenerating += 'providers:';
+    this.filegenerating += `[${schema}Service`;
+    if (mastersecurity === false) {
+      this.filegenerating += `,${mastersec.name}Service`;
     }
-    this.filegenerating+=`],\n`;
-    this.filegenerating+='controllers:'
-    this.filegenerating+=`[${schema}Controller`;
-    if (mastersecurity===false){
-      this.filegenerating+=`,${mastersec.name}Controller`;
+    this.filegenerating += `],\n`;
+    this.filegenerating += 'controllers:'
+    this.filegenerating += `[${schema}Controller`;
+    if (mastersecurity === false) {
+      this.filegenerating += `,${mastersec.name}Controller`;
     }
-    this.filegenerating+='],\n})\n';
-    this.filegenerating+=`export class ${schema}Module{}`;
+    this.filegenerating += '],\n})\n';
+    this.filegenerating += `export class ${schema}Module{}`;
     const args = { path: this.config.filePath, name: schema, file: this.filegenerating };
     const end = this.electronservice.ipcRenderer.sendSync('savemodule', args);
     this.addgenrartinlinefile(end);
     this.addgenrartinline('end generating module ...');
-    return(true);
-   }
-
-   generatewinston() {
-     const sec=this.configservice.config.logger;
-     this.filegenerating+='WinstonModule.forRoot({transports: [\n';
-     if (sec.type===0 || sec.type===2){
-       this.filegenerating+=`new winston.transports.File({ format:winston.format.simple(), level: 'info', filename:'${sec.file}', maxsize:${sec.maxsize}}),\n`;
-    }
-    if (sec.type===1 || sec.type===2){
-      this.filegenerating+=`new winston.transports.Console({format: winston.format.combine(winston.format.colorize({all:true}),winston.format.simple()), level:'info' }),\n`;
-    }
-    if (sec.typewarn===0 || sec.typewarn===2){
-      this.filegenerating+=`new winston.transports.File({ format:winston.format.simple(), level: 'warn', filename:'${sec.filewarn}', maxsize:${sec.maxsizewarn}}),\n`;
-   }
-   if (sec.typewarn===1 || sec.typewarn===2){
-     this.filegenerating+=`new winston.transports.Console({format: winston.format.combine(winston.format.colorize({all:true}),winston.format.simple()), level:'warn' }),\n`;
-   }
-   if (sec.typeerror===0 || sec.typeerror===2){
-    this.filegenerating+=`new winston.transports.File({ format:winston.format.simple(), level: 'error', filename:'${sec.fileerror}', maxsize:${sec.maxsizeerror}}),\n`;
-   }
-  if (sec.typeerror===1 || sec.typeerror===2){
-   this.filegenerating+=`new winston.transports.Console({format: winston.format.combine(winston.format.colorize({all:true}),winston.format.simple()), level:'error' })\n`;
+    return (true);
   }
-  this.filegenerating+=`]})],\n`;
- }
+
+  generatewinston() {
+    const sec = this.configservice.config.logger;
+    this.filegenerating += 'WinstonModule.forRoot({transports: [\n';
+    if (sec.type === 0 || sec.type === 2) {
+      this.filegenerating += `new winston.transports.File({ format:winston.format.simple(), level: 'info', filename:'${sec.file}', maxsize:${sec.maxsize}}),\n`;
+    }
+    if (sec.type === 1 || sec.type === 2) {
+      this.filegenerating += `new winston.transports.Console({format: winston.format.combine(winston.format.colorize({all:true}),winston.format.simple()), level:'info' }),\n`;
+    }
+    if (sec.typewarn === 0 || sec.typewarn === 2) {
+      this.filegenerating += `new winston.transports.File({ format:winston.format.simple(), level: 'warn', filename:'${sec.filewarn}', maxsize:${sec.maxsizewarn}}),\n`;
+    }
+    if (sec.typewarn === 1 || sec.typewarn === 2) {
+      this.filegenerating += `new winston.transports.Console({format: winston.format.combine(winston.format.colorize({all:true}),winston.format.simple()), level:'warn' }),\n`;
+    }
+    if (sec.typeerror === 0 || sec.typeerror === 2) {
+      this.filegenerating += `new winston.transports.File({ format:winston.format.simple(), level: 'error', filename:'${sec.fileerror}', maxsize:${sec.maxsizeerror}}),\n`;
+    }
+    if (sec.typeerror === 1 || sec.typeerror === 2) {
+      this.filegenerating += `new winston.transports.Console({format: winston.format.combine(winston.format.colorize({all:true}),winston.format.simple()), level:'error' })\n`;
+    }
+    this.filegenerating += `]})],\n`;
+  }
   // generando api
   apigenerator(index: number, schema: string, mastersecurity: boolean) {
     const schemalower = schema.toLowerCase();
@@ -272,7 +283,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating += `import { ${this.config.schemas[index].name}Service } from '../service/${this.config.schemas[index].name}.service';\n`;
     this.filegenerating += `@Controller('${this.config.schemas[index].name}')\n`;
     if (this.config.schemas[index].security === true) {
-        this.filegenerating += `@UseGuards(${this.config.schemas[index].classsecurity})\n`;
+      this.filegenerating += `@UseGuards(${this.config.schemas[index].classsecurity})\n`;
     }
     this.filegenerating += `export class ${this.config.schemas[index].name}Controller {\n`;
     this.filegenerating += `constructor(private service: ${this.config.schemas[index].name}Service){}\n`;
@@ -280,6 +291,14 @@ export class GeneratorComponent implements OnInit, OnChanges {
     for (let ind = 0; ind < this.config.schemas[index].schemasapi.length; ind++) {
       const element = this.config.schemas[index].schemasapi[ind];
       switch (element.type) {
+        case 'changepassword':
+          this.addgenrartinline('\tadding put changepassword');
+          this.filegenerating += `@Put('changepassword/:login/:password')\n`;
+          this.generatesecurity(element);
+          this.filegenerating += `changepassword(@Param() params) {\n`;
+          this.filegenerating += `\t return this.service.changepassword(decodeURI(params.login),decodeURI(params.password));\n`;
+          this.filegenerating += `}\n`;
+        break;
         case 'get':
           switch (element.operation) {
             case 'getall':
@@ -299,29 +318,29 @@ export class GeneratorComponent implements OnInit, OnChanges {
             case 'skiplimit':
               this.addgenrartinline('\tadding verb get skiplimit by key');
               this.filegenerating += `@Get('skiplimit/:skip/:limit/:order')\n`;
-              this.generatesecurity(element); 
+              this.generatesecurity(element);
               this.filegenerating += `getskiplimitorder (@Param('skip') skip:number,@Param('limit') limit:number,@Param('order') order:string)`;
               this.filegenerating += '{\n';
               this.filegenerating += '\t return this.service.skiplimit(skip,limit,order);\n';
               this.filegenerating += '}\n';
               break;
             case 'skiplimitbyfield':
-                this.addgenrartinline('\tadding verb get skiplimit by field');
-                this.filegenerating += `@Get('skiplimitorder${element.field}/:skip/:limit/:order')\n`;
-                this.generatesecurity(element);
-                this.filegenerating += `getskiplimitorder${element.field} (@Param('skip') skip:number,@Param('limit') limit:number,@Param('order') order:string)`;
-                this.filegenerating += '{\n';
-                this.filegenerating += `\t return this.service.skiplimit${element.field}(skip,limit,order);\n`;
-                this.filegenerating += '}\n';
-                break;
+              this.addgenrartinline('\tadding verb get skiplimit by field');
+              this.filegenerating += `@Get('skiplimitorder${element.field}/:skip/:limit/:order')\n`;
+              this.generatesecurity(element);
+              this.filegenerating += `getskiplimitorder${element.field} (@Param('skip') skip:number,@Param('limit') limit:number,@Param('order') order:string)`;
+              this.filegenerating += '{\n';
+              this.filegenerating += `\t return this.service.skiplimit${element.field}(skip,limit,order);\n`;
+              this.filegenerating += '}\n';
+              break;
             case 'skiplimitfilter':
-                this.addgenrartinline('\tadding verb get skiplimit by filter');
-                this.filegenerating += `@Get('skiplimitfilter${element.field}/:skip/:limit/:order/:${element.field}')\n`;
-                this.generatesecurity(element);
-                this.filegenerating += `skiplimitfilter${element.field} (@Param('skip') skip:number,@Param('limit') limit:number,@Param('order') order:string,@Param('${element.field}') ${element.field}:string ) {\n`;
-                this.filegenerating += `\t return this.service.skiplimitfilter${element.field}(skip,limit,order,${element.field});\n`;
-                this.filegenerating += '}\n';
-                break;
+              this.addgenrartinline('\tadding verb get skiplimit by filter');
+              this.filegenerating += `@Get('skiplimitfilter${element.field}/:skip/:limit/:order/:${element.field}')\n`;
+              this.generatesecurity(element);
+              this.filegenerating += `skiplimitfilter${element.field} (@Param('skip') skip:number,@Param('limit') limit:number,@Param('order') order:string,@Param('${element.field}') ${element.field}:string ) {\n`;
+              this.filegenerating += `\t return this.service.skiplimitfilter${element.field}(skip,limit,order,${element.field});\n`;
+              this.filegenerating += '}\n';
+              break;
             default:
               break;
           }
@@ -359,14 +378,14 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.addgenrartinlinefile(end);
     this.addgenrartinline('End generate controller... ');
     this.addgenrartinline('Begin generate service... ');
-    this.servicegenerator(index, schema,mastersecurity);
+    this.servicegenerator(index, schema, mastersecurity);
     this.addgenrartinline('End generate service... ');
     this.addgenrartinline('End generate Api ... ');
   }
 
   // generando seguridad
-  generatesecurity(element: any){
-    if (element.security !== undefined && element.security !== false){
+  generatesecurity(element: any) {
+    if (element.security !== undefined && element.security !== false) {
       const array = element.roles.split(' ');
       const strarray = JSON.stringify(array);
       this.filegenerating += `@SetMetadata('roles', ${strarray})\n`;
@@ -375,9 +394,9 @@ export class GeneratorComponent implements OnInit, OnChanges {
   }
 
   //generando servicio
-  servicegenerator(index: number, schema: string,mastersecurity: boolean) {
+  servicegenerator(index: number, schema: string, mastersecurity: boolean) {
     const schemalower = schema.toLowerCase();
-    const sec=this.configservice.getsecurity();
+    const sec = this.configservice.getsecurity();
     this.filegenerating = '';
     this.filegenerating += `import { Injectable, Inject, UseGuards } from '@nestjs/common';\n`;
     this.filegenerating += `import { InjectRepository } from '@nestjs/typeorm';\n`;
@@ -388,20 +407,32 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating += `export class ${schema}Service {\n`;
     this.filegenerating += `constructor(@InjectRepository(${schema}) private ${schema}Repository: Repository<${schema}>) { }\n`;
     // tslint:disable-next-line: prefer-for-of
-    if (mastersecurity === true){
-      this.filegenerating +='// get for security\n';
+    if (mastersecurity === true) {
+      this.filegenerating += '// get for security\n';
       this.addgenrartinline('\tadding predicate in service for security');
-      const sec=this.configservice.getsecurity();
       this.filegenerating += `async getlogin(${sec.login}: string): Promise<${schema}> {\n`;
       this.filegenerating += `\t return await this.${schema}Repository.findOne({`;
       this.filegenerating += `where: [{ "${sec.login}": ${sec.login} }]`;
       this.filegenerating += `});\n`;
       this.filegenerating += `}\n`;
-      this.addgenrartinline('\tend predicate for security');
+      this.filegenerating += '// get for security\n';
     }
     for (let ind = 0; ind < this.config.schemas[index].schemasapi.length; ind++) {
       const element = this.config.schemas[index].schemasapi[ind];
       switch (element.type) {
+        case 'changepassword':
+          this.addgenrartinline('\tadding service change password');
+          this.filegenerating += `async changepassword(${sec.login}: string, newpassword:string): Promise<${schema}> {\n`;
+          this.filegenerating +=  `let reponse: Promise<${schema}>;\n`;
+          this.filegenerating += `\t await this.${schema}Repository.findOne({`;
+          this.filegenerating += `where: [{ "${sec.login}": ${sec.login} }]`;
+          this.filegenerating += `}).then(rep =>{ rep.${sec.password}=bcrypt.hashSync(newpassword,5);\n`;
+          this.filegenerating += `reponse=this.${schema}Repository.save(rep);\n`
+          this.filegenerating += `});\n`;
+          this.filegenerating += 'return reponse;\n';
+          this.filegenerating += `}\n`;
+          this.addgenrartinline('\tend service to change password');
+          break;
         case 'get':
           switch (element.operation) {
             case 'getall':
@@ -410,7 +441,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
               this.filegenerating += `\treturn await this.${schema}Repository.find();\n`;
               this.filegenerating += `}\n`;
               break;
-              case 'getone':
+            case 'getone':
               this.addgenrartinline('\tadding service get getone');
               this.filegenerating += `async getOne(_id: number): Promise<${schema}> {\n`;
               this.filegenerating += `\t return await this.${schema}Repository.findOne({`;
@@ -418,7 +449,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
               this.filegenerating += `});\n`;
               this.filegenerating += `}\n`;
               break;
-              case 'skiplimit':
+            case 'skiplimit':
               this.addgenrartinline('\tadding service get skiplimit');
               this.filegenerating += `async skiplimit(skip: number, limit: number, order: string): Promise<${schema}[]> {\n`;
               this.filegenerating += `if (order === 'ASC') {\n`;
@@ -427,7 +458,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
               this.filegenerating += `\treturn await this.${schema}Repository.createQueryBuilder("${schema}").orderBy('${this.keyfield}', 'DESC').offset(skip).limit(limit).getMany();\n`;
               this.filegenerating += `}\n}\n`;
               break;
-              case 'skiplimitbyfield':
+            case 'skiplimitbyfield':
               this.addgenrartinline('\tadding service get skiplimit');
               // tslint:disable-next-line: max-line-length
               this.filegenerating += `async skiplimit${element.field}(skip: number, limit: number, order: string): Promise<${schema}[]> {\n`;
@@ -437,16 +468,16 @@ export class GeneratorComponent implements OnInit, OnChanges {
               this.filegenerating += `\treturn await this.${schema}Repository.createQueryBuilder("${schema}").orderBy('${element.field}', 'DESC').offset(skip).limit(limit).getMany();\n`;
               this.filegenerating += `}\n}\n`;
               break;
-              case 'skiplimitfilter':
+            case 'skiplimitfilter':
               this.addgenrartinline('\tadding service get skiplimit filter');
               this.filegenerating += `async skiplimitfilter${element.field}(skip: number, limit: number, order: string, ${element.field}:string): Promise<${schema}[]> {\n`;
               this.filegenerating += `if (order === "ASC") {\n`;
-              this.filegenerating +=  `\treturn await this.${schema}Repository.createQueryBuilder("${schema}").orderBy('${element.field}', 'ASC').offset(skip).limit(limit).where("${schema}.${element.field} like :${element.field}",{ ${element.field}: ${element.field}+'%'}).getMany();\n`;
+              this.filegenerating += `\treturn await this.${schema}Repository.createQueryBuilder("${schema}").orderBy('${element.field}', 'ASC').offset(skip).limit(limit).where("${schema}.${element.field} like :${element.field}",{ ${element.field}: ${element.field}+'%'}).getMany();\n`;
               this.filegenerating += `} else {\n`;
-              this.filegenerating +=  `\treturn await this.${schema}Repository.createQueryBuilder("${schema}").orderBy('${element.field}', 'DESC').offset(skip).limit(limit).where("${schema}.${element.field} like :${element.field}",{ ${element.field}: ${element.field}+'%'}).getMany();\n`;
+              this.filegenerating += `\treturn await this.${schema}Repository.createQueryBuilder("${schema}").orderBy('${element.field}', 'DESC').offset(skip).limit(limit).where("${schema}.${element.field} like :${element.field}",{ ${element.field}: ${element.field}+'%'}).getMany();\n`;
               this.filegenerating += `}\n}\n`;
               break;
-              case 'count':
+            case 'count':
               this.addgenrartinline('\tadding service get count');
               this.filegenerating += `async get${schema}Count(): Promise<number> {\n`;
               this.filegenerating += `\t return await this.${schema}Repository.count();\n`;
@@ -465,20 +496,19 @@ export class GeneratorComponent implements OnInit, OnChanges {
         case 'post':
           this.addgenrartinline('\tadding post service');
           this.filegenerating += `async create(${schemalower}: ${schema} ): Promise<${schema}> {\n`;
-          if (mastersecurity===true)
-          {
-            this.filegenerating +=`${schemalower}.${sec.password}=bcrypt.hashSync(${schemalower}.${sec.password},5);\n`;
+          if (mastersecurity === true) {
+            this.filegenerating += `${schemalower}.${sec.password}=bcrypt.hashSync(${schemalower}.${sec.password},5);\n`;
           }
           this.filegenerating += `\t return await this.${schema}Repository.save(${schemalower});\n`;
           this.filegenerating += `}\n`;
           break;
-          case 'delete':
-            this.addgenrartinline('\tadding delete service');
-            this.filegenerating += `async delete(_id: number) {\n`;
-            this.filegenerating += `\t const ${schemalower}: ${schema} = await this.${schema}Repository.findOne({where: [{ "id": _id }]});\n`;
-            this.filegenerating += `\t return await this.${schema}Repository.delete(${schemalower});\n`;
-            this.filegenerating += `}\n`;
-            break;
+        case 'delete':
+          this.addgenrartinline('\tadding delete service');
+          this.filegenerating += `async delete(_id: number) {\n`;
+          this.filegenerating += `\t const ${schemalower}: ${schema} = await this.${schema}Repository.findOne({where: [{ "id": _id }]});\n`;
+          this.filegenerating += `\t return await this.${schema}Repository.delete(${schemalower});\n`;
+          this.filegenerating += `}\n`;
+          break;
         default:
           break;
       }
@@ -580,7 +610,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     } else {
       switch (fieldcolumn.type) {
         case 'string':
-          if (fieldcolumn.index === true){
+          if (fieldcolumn.index === true) {
             this.ormj.Index = true;
             this.filegenerating += '@Index()\n';
           }
@@ -627,7 +657,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
 
   addgenrartinline(message: string) {
     this.ngzone.runOutsideAngular(x => {
-      this.line=message;
+      this.line = message;
       this.generatingline += message + '\n';
       this.container.nativeElement.value = this.generatingline;
       this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;
@@ -642,10 +672,10 @@ export class GeneratorComponent implements OnInit, OnChanges {
     });
   }
 
-  loadtemplate(filetemplate:string,loginfiletemplate:string){
+  loadtemplate(filetemplate: string, loginfiletemplate: string) {
     this.addgenrartinline('load templates for can activate...');
     let template = this.electronservice.ipcRenderer.sendSync('loadtemplate', `./templates/${filetemplate}`);
-    template=this.replacetemplate(template);
+    template = this.replacetemplate(template);
     this.addgenrartinline('end generate templates can activate...');
     this.addgenrartinline('begin save  can activate..');
     let args = { path: this.configservice.config.filePath, name: 'roles', file: template };
@@ -656,21 +686,21 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.addgenrartinline('load templates for login..');
     template = this.electronservice.ipcRenderer.sendSync('loadtemplate', `./templates/${loginfiletemplate}`);
     this.addgenrartinline('end load templates for login');
-    template=this.replacetemplate(template);
+    template = this.replacetemplate(template);
     args = { path: this.configservice.config.filePath, name: 'Login', file: template };
-    end = this.electronservice.ipcRenderer.sendSync('saveController', args); 
-    this.addgenrartinlinefile(end); 
+    end = this.electronservice.ipcRenderer.sendSync('saveController', args);
+    this.addgenrartinlinefile(end);
   }
 
-  replacetemplate(template:string):string{
-    const sec= this.configservice.getsecurity();
+  replacetemplate(template: string): string {
+    const sec = this.configservice.getsecurity();
     template = template.replace(/\/\*tablelower\*\//g, `${sec.table.toLowerCase()}`);
     template = template.replace(/\/\*table\*\//g, `${sec.table}`);
     template = template.replace(/\/\*roles\*\//g, `${sec.roles}`);
     template = template.replace(/\/\*login\*\//g, `${sec.login}`);
     template = template.replace(/\/\*bearertoken\*\//g, `${sec.bearertoken}`);
     template = template.replace(/\/\*password\*\//g, `${sec.password}`);
-    return(template);
+    return (template);
   }
 
   generate(event: Event) {

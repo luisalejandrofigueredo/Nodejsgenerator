@@ -1,3 +1,6 @@
+<mat-form-field>
+    <input matInput placeholder="host"  (change)="changehost()"  class="teminal" [(ngModel)]="host">
+</mat-form-field>
 <mat-accordion>
 <mat-expansion-panel (afterExpand)="expand()">
     <mat-expansion-panel-header>
@@ -6,6 +9,7 @@
     <p class="title">Login</p>
     <p>URL:<span class="terminal">{{url}}</span></p>
     <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+        <p>Post</p>
         <mat-form-field>
             <input matInput placeholder="Login" [(ngModel)]="login">
         </mat-form-field>
@@ -28,6 +32,7 @@
     </div>
     <p class="title">Logout</p>
     <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+        <p>Get</p>
         <mat-form-field>
             <input matInput placeholder="Login" [(ngModel)]="logout">
         </mat-form-field>
@@ -78,6 +83,12 @@
             </mat-form-field>
             <mat-form-field *ngIf="(this.profileForm.get('operation').value).startsWith('get skiplimitfilter')">
                 <input matInput placeholder="field" formControlName="field">
+            </mat-form-field>
+            <mat-form-field *ngIf="(this.profileForm.get('operation').value).startsWith('changepassword')">
+                <input matInput placeholder="Login" formControlName="login">
+            </mat-form-field>
+            <mat-form-field *ngIf="(this.profileForm.get('operation').value).startsWith('changepassword')">
+                <input matInput placeholder="New Password" formControlName="newpassword">
             </mat-form-field>
         </div>
         <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
