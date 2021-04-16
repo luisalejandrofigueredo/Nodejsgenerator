@@ -31,12 +31,20 @@ export class LoginController {
         const /*tablelower*/: /*table*/  = (await this.userservice.getlogin(header.login));
         const date = new Date(Date.now());
         const hour= date.toLocaleTimeString();
+        let token='';
         if (/*tablelower*/ === undefined || /*tablelower*/ === null) {
             this.logger.warn(`undefined user unexist user :${date} ${hour}`);
             return { mensaje:'error'};
         }
-        if (/*tablelower*/./*bearertoken*/ !== header.token) {
-            console.log(header.token);
+        if (header.authorization.startsWith("Bearer ")) {
+            token = header.authorization.substring(7, header.authorization.length);
+          } else {
+            const date = new Date();
+            this.logger.warn(`Bearer error desde la ip ${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);
+            return false;
+          }
+        if (/*tablelower*/./*bearertoken*/ !== token) {
+            console.log(token);
             console.log(/*tablelower*/./*bearertoken*/);
             this.logger.warn(`hacker false bearer token from  ip ${ip} ${date} ${hour}`);
             return { mensaje:'error'}

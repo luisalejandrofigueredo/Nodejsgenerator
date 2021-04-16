@@ -97,7 +97,7 @@ export class TestapiComponent implements OnInit {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         'login': this.logout,
-        'token': this.token
+        'authorization': 'Bearer '+this.rtoken
       })
     };
     this.httpclient.get(this.url, httpOptions).subscribe(rep => this.reponselogout = JSON.stringify(rep));
@@ -107,7 +107,7 @@ export class TestapiComponent implements OnInit {
     this.profileForm.patchValue({
       header: JSON.stringify({
         'Content-Type': 'application/json',
-        token: this.rtoken
+        'authorization': 'Bearer '+this.token
       }, null, 4)
     })
   }
@@ -164,7 +164,7 @@ export class TestapiComponent implements OnInit {
         httpOptions = {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',
-            'token': this.rtoken
+            'authorization': 'Bearer '+this.rtoken
           })
         };
         this.url= this.urlpri+`/${this.schemastring}`+`/changepassword/${encodeURI(this.profileForm.get('login').value)}/${encodeURI(this.profileForm.get('newpassword').value)}`;
@@ -176,7 +176,7 @@ export class TestapiComponent implements OnInit {
             httpOptions = {
               headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                'token': this.rtoken
+                'authorization': 'Bearer '+this.rtoken
               })
             };
             this.url = this.urlpri + `/${this.schemastring}/${this.profileForm.get('record').value}`;
@@ -187,7 +187,7 @@ export class TestapiComponent implements OnInit {
             httpOptions = {
               headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                'token': this.rtoken
+                'authorization': 'Bearer '+this.rtoken
               })
             };
             this.url = this.urlpri + `/${this.schemastring}`;
@@ -198,7 +198,7 @@ export class TestapiComponent implements OnInit {
             httpOptions = {
               headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                'token': this.rtoken
+                'authorization': 'Bearer '+this.rtoken
               })
             };
             this.url = this.urlpri + `/${this.schemastring}/skiplimit/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}`
@@ -209,7 +209,7 @@ export class TestapiComponent implements OnInit {
             httpOptions = {
               headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                'token': this.rtoken
+                'authorization': 'Bearer '+this.rtoken
               })
             };
             this.url = this.urlpri + `/${this.schemastring}/skiplimitorder${typea[2]}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}`
@@ -220,7 +220,7 @@ export class TestapiComponent implements OnInit {
             httpOptions = {
               headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                'token': this.rtoken
+                'authorization': 'Bearer '+this.rtoken
               })
             };
             this.url = this.urlpri + `/${this.schemastring}/skiplimitfilter${typea[2]}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}/${this.profileForm.get('field').value}`
@@ -235,7 +235,7 @@ export class TestapiComponent implements OnInit {
         httpOptions = {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',
-            'token': this.rtoken
+            'authorization': 'Bearer '+this.rtoken
           })
         };
         this.url = this.urlpri + `/${this.schemastring}`
@@ -246,7 +246,7 @@ export class TestapiComponent implements OnInit {
         httpOptions = {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',
-            'token': this.rtoken
+            'authorization': 'Bearer '+this.rtoken
           })
         };
         this.url = this.urlpri + `/${this.schemastring}`;
@@ -257,7 +257,7 @@ export class TestapiComponent implements OnInit {
         httpOptions = {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',
-            'token': this.rtoken
+            'authorization': 'Bearer '+this.rtoken
           })
         };
         this.url = this.urlpri + `/${this.schemastring}/${this.profileForm.get('record').value}`
