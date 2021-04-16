@@ -17,34 +17,33 @@ export class RolesGuard implements CanActivate {
     let /*tablelower*/:/*table*/;
     if (request.headers.authorization === undefined) {
       const date = new Date();
-      console.log(request.headers);
-      this.logger.warn(`Ataque hacker desde la ip ${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);
+      this.logger.warn(`hacker from  ip ${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);
       return false;
     }
     if (request.headers.authorization.startsWith("Bearer ")) {
       token = request.headers.authorization.substring(7, request.headers.authorization.length);
     } else {
       const date = new Date();
-      this.logger.warn(`Bearer error desde la ip ${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);
+      this.logger.warn(`Bearer error from ip ${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);
       return false;
     }
     const username = this.jwtService.decode(token as string) as { login: string | null } | null;
     if (username === null || username === undefined) { this.logger.warn('hacker'); return false; };
     await this.userservice.getlogin(username.login).then(usuario => /*tablelower*/ = usuario);
     if (/*tablelower*/ === undefined || /*tablelower*/ === null) {
-      this.logger.warn(`Usuario indefinido hacker ip:${ip}`);
+      this.logger.warn(`Undefined user hacker ip:${ip}`);
       return false
     };
     if (this.autroles(roles, /*tablelower*/./*roles*/) === false) {
-      this.logger.warn(`Intento de acceso sin privilegios de: ${/*tablelower*/./*login*/}`);
-      this.logger.warn(`desde la ip ${ip} a la api ${request.url} metodo ${request.method}`);
+      this.logger.warn(`roles error: ${/*tablelower*/./*login*/}`);
+      this.logger.warn(`from ip ${ip}  api ${request.url}  ${request.method}`);
       return false;
     };
     if (/*tablelower*/./*bearertoken*/ === token) {
       return true;
     } else {
       const date = new Date();
-      this.logger.warn(`No logeado token falso hacker desde ip: ${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);
+      this.logger.warn(`false bearer token from ip: ${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);
       return false
     }
   }
