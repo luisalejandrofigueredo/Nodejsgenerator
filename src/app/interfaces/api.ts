@@ -6,4 +6,5 @@ export interface Api {
     field: string;
     security: boolean;
     roles: string;
+    extfiles:string;
 }

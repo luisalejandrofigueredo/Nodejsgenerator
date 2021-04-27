@@ -75,10 +75,13 @@ export class GeneratorComponent implements OnInit, OnChanges {
   }
   generateappmodule() {
     this.addgenrartinline('begin generating app module ...');
-    this.filegenerating = "import { Module } from '@nestjs/common';\n"
-    this.filegenerating += "import { TypeOrmModule } from '@nestjs/typeorm';\n"
+    this.filegenerating = "import { Module } from '@nestjs/common';\n";
+    this.filegenerating += "import { TypeOrmModule } from '@nestjs/typeorm';\n";
     this.filegenerating += "import { AppController } from './app.controller';\n";
-    this.filegenerating += "import { AppService } from './app.service';\n"
+    this.filegenerating += "import { AppService } from './app.service';\n";
+    if (this.configservice.config.enableuploadfiles === true){
+       this.filegenerating+="import { MulterModule } from '@nestjs/platform-express';\n";
+    }
     const schemas = this.configservice.getschema();
     for (let index = 0; index < schemas.length; index++) {
       const element = schemas[index].name;
@@ -86,7 +89,10 @@ export class GeneratorComponent implements OnInit, OnChanges {
     }
     this.filegenerating += `import {LoginModule} from './module/Login.module';\n`;
     this.filegenerating += '@Module({\n';
-    this.filegenerating += 'imports:[TypeOrmModule.forRoot()'
+    this.filegenerating += 'imports:[TypeOrmModule.forRoot()';
+    if (this.configservice.config.enableuploadfiles === true){
+      this.filegenerating+=",MulterModule.register({\n dest: './uploads',\n})\n";
+    }
     for (let index = 0; index < schemas.length; index++) {
       const element = schemas[index].name;
       this.filegenerating += `,${element}Module`;
@@ -158,8 +164,8 @@ export class GeneratorComponent implements OnInit, OnChanges {
       this.ormj = { PrimaryGeneratedColumn: false, OneToMany: false, ManyToOne: false, Index: false };
       this.reltables = [];
       this.entitygenerator(index);
-      this.apigenerator(index, schemas[index].name, schemas[index].mastersecurity);
-      this.generatemodules(index, schemas[index].name, schemas[index].mastersecurity);
+      this.apigenerator(index, schemas[index].name, schemas[index].mastersecurity,schemas[index].filesupload);
+      this.generatemodules(index, schemas[index].name, schemas[index].mastersecurity,schemas[index].filesupload);
     }
     this.generateloginmodule()
     this.addgenrartinline('end generating schemas ...');
@@ -196,7 +202,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     return true;
   }
 
-  generatemodules(index: number, schema: string, mastersecurity: boolean): boolean {
+  generatemodules(index: number, schema: string, mastersecurity: boolean,filesupload:boolean): boolean {
     console.log('master security', mastersecurity);
     let mastersec: any;
     this.addgenrartinline(`begin generating module ${schema} ...`);
@@ -270,11 +276,64 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating += `]})],\n`;
   }
   // generando api
-  apigenerator(index: number, schema: string, mastersecurity: boolean) {
+  multerutilgenerator(index:number,elementpath:string,extfiles:string){
+    this.addgenrartinline('Begin generate multer util ... ');
+    console.log('ext files',extfiles);
+    const filename='file-upload'+elementpath;
+    let filegenerating="import { extname } from 'path';\n";
+    filegenerating+="import { HttpException, HttpStatus } from '@nestjs/common';";
+    filegenerating+=`export const FileFilter${elementpath} = (req, file, callback) => {\n`;
+    let exfilest=extfiles.trim();
+    exfilest=exfilest.replace(/ /g,"|");
+    filegenerating+=`if (!file.originalname.match(/\.(${exfilest})$/)) {\n`;
+    filegenerating+='return callback(\n';
+    filegenerating+='new HttpException(\n';
+    filegenerating+=` 'Only type ${extfiles} files are allowed!',\n`;
+    filegenerating+='HttpStatus.BAD_REQUEST,\n';
+    filegenerating+='),\n';
+    filegenerating+='false,\n';
+    filegenerating+=');\n';
+    filegenerating+='}\n';
+    filegenerating+='callback(null, true);\n';
+    filegenerating+=`};\n`;
+    filegenerating+=`export const editFileName${elementpath} = (req, file, callback) => {\n`;
+    filegenerating+=`const name = file.originalname.split('.')[0];\n`;
+    filegenerating+=`const fileExtName = extname(file.originalname);\n`;
+    filegenerating+='const randomName = Array(4)\n';
+    filegenerating+='.fill(null)\n';
+    filegenerating+='.map(() => Math.round(Math.random() * 10).toString(10))\n';
+    filegenerating+=`.join('');\n`;
+    filegenerating+='callback(null, `${name}${randomName}${fileExtName}`);';
+    filegenerating+='};\n'
+    const args = { path: this.config.filePath, name: filename, file: filegenerating };
+    const end = this.electronservice.ipcRenderer.sendSync('saveutilmuter', args);
+    this.addgenrartinlinefile(end);
+    this.addgenrartinline('End generate multer util... ');
+  }
+  apigenerator(index: number, schema: string, mastersecurity: boolean,filesupload:boolean) {
     const schemalower = schema.toLowerCase();
     this.addgenrartinline('Begin generate Api... ');
     this.addgenrartinline('Begin generate controller... ');
-    this.filegenerating = 'import { Controller, Inject,Post, Body, Get, Put, Delete,Param,UseGuards,Headers, SetMetadata,Query} from "@nestjs/common";\n';
+    this.filegenerating = "import { Controller, Inject,Post, Body, Get, Put, Delete,Param,UseGuards,Headers, SetMetadata,Query";
+    if (filesupload===true){
+      this.filegenerating+=', UseInterceptors, UploadedFile, UploadedFiles, Res, HttpStatus';
+    }
+    this.filegenerating+=' } from "@nestjs/common";\n';
+    if (filesupload===true){
+      this.filegenerating+="import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';\n";
+      this.filegenerating+="import { diskStorage } from 'multer';\n";
+      for (let ind = 0; ind < this.config.schemas[index].schemasapi.length; ind++) {
+        const element = this.config.schemas[index].schemasapi[ind];
+        if (element.type==='uploadfile'){
+          this.filegenerating+=`import { editFileName${element.path}, FileFilter${element.path} } from '../controller/file-upload${element.path}.utils';`
+          this.multerutilgenerator(index,element.path,element.extfiles)
+        }
+        if (element.type==='uploadfiles'){
+          this.filegenerating+=`import { editFileName${element.path}, FileFilter${element.path} } from '../controller/file-upload${element.path}.utils';`
+          this.multerutilgenerator(index,element.path,element.extfiles)
+        }
+      }
+    }
     this.filegenerating += `import { ${this.config.schemas[index].name} } from '../entitys/${this.config.schemas[index].name}.entity';\n`;
     if (this.config.schemas[index].security === true) {
       this.filegenerating += `import {${this.config.schemas[index].classsecurity} } from '../roles/roles.guard';\n`;
@@ -291,6 +350,72 @@ export class GeneratorComponent implements OnInit, OnChanges {
     for (let ind = 0; ind < this.config.schemas[index].schemasapi.length; ind++) {
       const element = this.config.schemas[index].schemasapi[ind];
       switch (element.type) {
+        case 'getfile':
+          this.addgenrartinline('\tadding getfile file');
+          this.filegenerating+=`@Get('${element.path}/:filename')\n`;
+          this.generatesecurity(element);
+          this.filegenerating+=`getImage(@Param('filename') image, @Res() res) {\n`;
+          this.filegenerating+=`const response = res.sendFile(image, { root: './uploads' });\n`;
+          this.filegenerating+='return {\n';
+          this.filegenerating+='status: HttpStatus.OK,\n';
+          this.filegenerating+='data: response,\n';
+          this.filegenerating+='};\n';
+          this.filegenerating+='}\n';
+          break;
+        case 'uploadfile':
+          this.addgenrartinline('\tadding upload file');
+          this.filegenerating+=`@Post('${element.path}')\n`;
+          this.generatesecurity(element);
+          this.filegenerating+=` @UseInterceptors(\n`;
+          this.filegenerating+=`FileInterceptor('file', {\n`;
+          this.filegenerating+=`storage: diskStorage({\n`;
+          this.filegenerating+=`destination: './uploads',\n`;
+          this.filegenerating+=`filename: editFileName${element.path},\n`;
+          this.filegenerating+='}),\n';
+          this.filegenerating+=`fileFilter: FileFilter${element.path},\n`;
+          this.filegenerating+='}),\n';
+          this.filegenerating+=')\n';
+          this.filegenerating+=`async uploadedFile${element.path}(@UploadedFile() file) {\n`;
+          this.filegenerating+=`  const response = {\n`;
+          this.filegenerating+=`    originalname: file.originalname,\n`;
+          this.filegenerating+=`    filename: file.filename,\n`;
+          this.filegenerating+=`};\n`;
+          this.filegenerating+=`return {\n`;
+          this.filegenerating+=' status: HttpStatus.OK,\n';
+          this.filegenerating+=" message: 'File uploaded successfully!',\n";
+          this.filegenerating+=' data: response,\n';
+          this.filegenerating+='};\n';
+          this.filegenerating+="}\n"
+        break;
+        case 'uploadfiles':
+          this.addgenrartinline('\tadding upload files');
+          this.filegenerating+=`@Post('${element.path}')\n`;
+          this.generatesecurity(element);
+          this.filegenerating+=' @UseInterceptors(\n';
+          this.filegenerating+="FilesInterceptor('files', 10, {\n";
+          this.filegenerating+='storage: diskStorage({\n',
+          this.filegenerating+="destination: './uploads',\n";
+          this.filegenerating+=`filename: editFileName${element.path},\n`;
+          this.filegenerating+='}),\n';
+          this.filegenerating+=`fileFilter: FileFilter${element.path},`;
+          this.filegenerating+='}),\n';
+          this.filegenerating+=')\n';
+          this.filegenerating+='async uploadMultipleFiles(@UploadedFiles() files) {\n';
+          this.filegenerating+='const response = [];\n';
+          this.filegenerating+='files.forEach(file => {\n';
+          this.filegenerating+='const fileReponse = {\n';
+          this.filegenerating+='originalname: file.originalname,\n';
+          this.filegenerating+='filename: file.filename,\n';
+          this.filegenerating+='};\n';
+          this.filegenerating+='response.push(fileReponse);\n';
+          this.filegenerating+='});\n';
+          this.filegenerating+='return {\n';
+          this.filegenerating+='status: HttpStatus.OK,\n';
+          this.filegenerating+="message: 'Files uploaded successfully!',\n";
+          this.filegenerating+='data: response,\n';
+          this.filegenerating+=`};\n`;
+          this.filegenerating+='}\n';
+          break;
         case 'changepassword':
           this.addgenrartinline('\tadding put changepassword');
           this.filegenerating += `@Put('changepassword/:login/:password')\n`;

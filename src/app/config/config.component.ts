@@ -13,6 +13,7 @@ export class ConfigComponent implements OnInit {
   filePath: string;
   enableCors = false;
   enablehttps = false;
+  uploadfiles= false;
   dbconf: any;
   jwtsk: string;
   hide = true;
@@ -31,6 +32,12 @@ export class ConfigComponent implements OnInit {
   ngOnInit(): void {
     this.enableCors = this.configservice.config.enableCors;
     this.filePath = this.configservice.config.filePath;
+    this.uploadfiles = this.configservice.config.enableuploadfiles;
+    if (this.configservice.config.enableuploadfiles === undefined) { //for compa delete las version
+      this.configservice.config.enableuploadfiles = false;
+    } else {
+      this.uploadfiles = this.configservice.config.enableuploadfiles;
+    }
     if (this.configservice.config.port === undefined) { //for compa delete las version
       this.configservice.config.port = 3000;
     } else {
@@ -73,6 +80,9 @@ export class ConfigComponent implements OnInit {
     this.dbconf.password = this.profileForm.get('password').value;
     this.dbconf.database = this.profileForm.get('database').value;
     this.configservice.setdatabase(this.dbconf);
+  }
+  changeuploadfiles(){
+    this.configservice.config.enableuploadfiles=this.uploadfiles;
   }
 
   changeport(){

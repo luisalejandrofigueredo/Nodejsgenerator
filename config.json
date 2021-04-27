@@ -236,7 +236,8 @@
 			"security": true,
 			"classsecurity": "RolesGuard",
 			"filesecurity": "C:/Users/luisa/cmder/prueba/src/roles/roles.guard",
-			"mastersecurity": true
+			"mastersecurity": true,
+			"filesupload": null
 		},
 		{
 			"id": 2,
@@ -287,6 +288,7 @@
 			],
 			"schemasapi": [
 				{
+					"idschema": "2",
 					"id": 1,
 					"type": "get",
 					"operation": "getone",
@@ -298,9 +300,11 @@
 						"Total"
 					],
 					"security": true,
-					"roles": "Admin User"
+					"roles": "Admin User",
+					"extfiles": null
 				},
 				{
+					"idschema": "2",
 					"id": 2,
 					"type": "post",
 					"operation": "",
@@ -312,27 +316,43 @@
 						"Total"
 					],
 					"security": true,
-					"roles": "Admin User"
+					"roles": "Admin User",
+					"extfiles": null
 				},
 				{
+					"idschema": "2",
 					"id": 3,
 					"type": "put",
 					"operation": "",
 					"path": "",
 					"field": "",
+					"fields": [
+						"id",
+						"Descripcion",
+						"Total"
+					],
 					"security": false,
-					"roles": ""
+					"roles": "",
+					"extfiles": null
 				},
 				{
+					"idschema": "2",
 					"id": 4,
 					"type": "delete",
 					"operation": "",
 					"path": "",
 					"field": "",
+					"fields": [
+						"id",
+						"Descripcion",
+						"Total"
+					],
 					"security": false,
-					"roles": ""
+					"roles": "",
+					"extfiles": null
 				},
 				{
+					"idschema": "2",
 					"id": 5,
 					"type": "get",
 					"operation": "skiplimitbyfield",
@@ -344,13 +364,57 @@
 						"Total"
 					],
 					"security": true,
-					"roles": "Admin Users"
+					"roles": "Admin Users",
+					"extfiles": null
+				},
+				{
+					"idschema": "2",
+					"id": 6,
+					"type": "uploadfile",
+					"operation": "",
+					"path": "upload",
+					"field": "jpg jpeg gif  png",
+					"fields": [
+						"id",
+						"Descripcion",
+						"Total"
+					],
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "jpg jpeg gif png"
+				},
+				{
+					"idschema": "2",
+					"id": 7,
+					"type": "uploadfiles",
+					"operation": "",
+					"path": "uploadfiles",
+					"field": "",
+					"fields": [
+						"id",
+						"Descripcion",
+						"Total"
+					],
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "png gif jpg jpeg"
+				},
+				{
+					"id": 8,
+					"type": "getfile",
+					"operation": "",
+					"path": "getfile",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
 				}
 			],
 			"security": true,
 			"classsecurity": "RolesGuard",
 			"filesecurity": "C:/Users/luisa/cmder/prueba/src/roles/roles.guard",
-			"mastersecurity": false
+			"mastersecurity": false,
+			"filesupload": true
 		},
 		{
 			"id": 3,
@@ -416,7 +480,8 @@
 			"security": true,
 			"classsecurity": "RolesGuard",
 			"filesecurity": null,
-			"mastersecurity": false
+			"mastersecurity": false,
+			"filesupload": null
 		},
 		{
 			"id": 4,
@@ -455,7 +520,12 @@
 					"security": true,
 					"roles": "Admin User"
 				}
-			]
+			],
+			"security": null,
+			"classsecurity": null,
+			"filesecurity": null,
+			"mastersecurity": null,
+			"filesupload": null
 		},
 		{
 			"id": 5,
@@ -507,7 +577,8 @@
 					"security": true,
 					"roles": "Admin User"
 				}
-			]
+			],
+			"filesupload": null
 		}
 	],
 	"security": {
@@ -540,5 +611,6 @@
 		"maxsizeerror": 10000
 	},
 	"enablehttps": false,
-	"port": 3500
+	"port": 3500,
+	"enableuploadfiles": true
 }

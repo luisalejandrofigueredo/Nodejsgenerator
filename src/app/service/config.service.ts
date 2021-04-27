@@ -14,6 +14,7 @@ export class ConfigService {
     enableCors: false,
     dbconf:{ selecteddatabase:0,host:'',port:0,username:'',password:'',database:''},
     enablehttps: false,
+    enableuploadfiles:false,
     port:3000,
     jwtsk:'',
     logger:{ type:0,file:'info.log',maxsize:50000,typewarn:0,filewarn:'warn.log',maxsizewarn:10000,typeerror:0,fileerror:'error.log',maxsizeerror:10000},
@@ -216,6 +217,7 @@ export class ConfigService {
       classsecurity: SchemaHead.classsecurity,
       filesecurity: SchemaHead.filesecurity,
       mastersecurity: SchemaHead.mastersecurity,
+      filesupload: SchemaHead.filesupload,
       schemastable: [], schemarelations: [], schemasapi: []
     });
   }

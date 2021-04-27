@@ -8,4 +8,5 @@ export interface Typeoperation {
     field?: string;
     security: boolean;
     roles: string;
+    extfiles?:string;
 }

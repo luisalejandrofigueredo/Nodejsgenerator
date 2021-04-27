@@ -48,14 +48,23 @@ export class ApidatamodalComponent implements OnInit {
     if (this.schema.mastersecurity===true){
       this.types.push({value:'changepassword', viewValue: 'Put change password'});
     }
+    if (this.schema.filesupload==true){
+      this.types.push({value:'uploadfile', viewValue: 'Up load file'});
+    }
+    if (this.schema.filesupload==true){
+      this.types.push({value:'uploadfiles', viewValue: 'Up load multiple files'});
+    }
+    if (this.schema.filesupload==true){
+      this.types.push({value:'getfile', viewValue: 'Get file'});
+    }
     this.fields=this.data.fields;
-    console.log('fields:',this.data.fields);
     this.profileForm = new FormGroup({
       selectedValue: new FormControl(this.data.type, Validators.required),
       selectedOperation: new FormControl(this.data.operation, Validators.required),
       path : new FormControl(this.data.path, Validators.required),
       selectedfield: new FormControl(this.data.field, Validators.required),
       security: new FormControl(this.data.security, Validators.required),
+      extfiles: new FormControl(this.data.extfiles, Validators.required),
       roles: new FormControl(this.data.roles, Validators.required),
     });
   }
@@ -71,6 +80,7 @@ export class ApidatamodalComponent implements OnInit {
     this.data.field = this.profileForm.get('selectedfield').value;
     this.data.security = this.profileForm.get('security').value;
     this.data.roles = this.profileForm.get('roles').value;
+    this.data.extfiles= this.profileForm.get('extfiles').value,
     this.dialogRef.close(this.data);
   }
 }
