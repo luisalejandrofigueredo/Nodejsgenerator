@@ -58,38 +58,41 @@
                     {{item.name}}
                 </mat-option>
             </mat-select>
-            <mat-select placeholder="Operation" (selectionChange)="changeoperation()" formControlName="operation"
+            <mat-select placeholder="Operation" (selectionChange)="changeoperation($event)" formControlName="operation"
                 name="operation">
                 <mat-option *ngFor="let item of apis"
-                    [value]="(item.field===undefined)?item.type+' '+item.operation:item.type+' '+item.operation+' '+item.field">
-                    {{item.type}} {{item.operation}} {{item.field}}
+                    [value]="item.id">
+                    <span *ngIf='item.type==="uploadfile"||item.type==="uploadfiles"'>{{item.type}} {{item.operation}} {{item.extfiles}}</span>
+                    <span *ngIf='!(item.type==="uploadfile"||item.type==="uploadfiles")'>{{item.type}} {{item.operation}} {{item.field}}</span>
                 </mat-option>
             </mat-select>
             <mat-form-field
-                *ngIf="(this.profileForm.get('operation').value).startsWith('get getone') || (this.profileForm.get('operation').value).startsWith('delete')">
+                *ngIf="(api.type==='get' && api.operation==='getone') || (api.type==='delete')">
                 <input matInput type="number" placeholder="record id" formControlName="record">
             </mat-form-field>
             <mat-form-field
-                *ngIf="this.profileForm.get('operation').value==='get skiplimit' || (this.profileForm.get('operation').value).startsWith('get skiplimitbyfield')">
+                *ngIf="(api.type==='get' && api.operation==='skiplimit') || (api.type==='get' && api.operation==='skiplimitbyfield')">
                 <input matInput type="number" placeholder="skip" formControlName="skip">
             </mat-form-field>
             <mat-form-field
-                *ngIf="this.profileForm.get('operation').value==='get skiplimit' || (this.profileForm.get('operation').value).startsWith('get skiplimitbyfield')">
+                *ngIf="(api.type==='get' && api.operation==='skiplimit' ) || (api.type==='get' && api.operation==='skiplimitbyfield')">
                 <input matInput type="number" placeholder="limit" formControlName="limit">
             </mat-form-field>
             <mat-form-field
-                *ngIf="this.profileForm.get('operation').value==='get skiplimit' || (this.profileForm.get('operation').value).startsWith('get skiplimitbyfield')">
+                *ngIf="(api.type==='get' && api.operation==='skiplimit' ) || (api.type==='get' && api.operation==='skiplimitbyfield')">
                 <input matInput type="text" maxlength="4" placeholder="order" formControlName="order">
             </mat-form-field>
-            <mat-form-field *ngIf="(this.profileForm.get('operation').value).startsWith('get skiplimitfilter')">
+            <mat-form-field *ngIf="(api.type==='get' && api.operation==='skiplimitfilter')">
                 <input matInput placeholder="field" formControlName="field">
             </mat-form-field>
-            <mat-form-field *ngIf="(this.profileForm.get('operation').value).startsWith('changepassword')">
+            <mat-form-field *ngIf="(api.type==='changepassword')">
                 <input matInput placeholder="Login" formControlName="login">
             </mat-form-field>
-            <mat-form-field *ngIf="(this.profileForm.get('operation').value).startsWith('changepassword')">
+            <mat-form-field *ngIf="(api.type==='changepassword')">
                 <input matInput placeholder="New Password" formControlName="newpassword">
             </mat-form-field>
+            <input *ngIf="(api.type==='uploadfile')" type="file"(change)="onFileSelected($event)" placeholder="File" formControlName="file">
+            <input *ngIf="(api.type==='uploadfiles')" type="file" (change)="onFilesSelected($event)" placeholder="Files" formControlName="files" multiple>
         </div>
         <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
             <mat-form-field style="width: 100%;">

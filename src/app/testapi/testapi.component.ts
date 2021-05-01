@@ -6,6 +6,8 @@ import { Schemahead } from '../interfaces/schemahead';
 import { Api } from "../interfaces/api";
 import { Schemaitem } from '../interfaces/schema'
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { type } from 'os';
+import { FILE } from 'dns';
 
 @Component({
   selector: 'app-testapi',
@@ -28,12 +30,15 @@ export class TestapiComponent implements OnInit {
   Schema: number;
   schemastring: string;
   apis: Api[];
+  api:Api;
   operation: string;
   rtoken: string;
   profileForm: FormGroup;
+  form=new FormData();
   constructor(private httpclient: HttpClient, private configservice: ConfigService) { }
 
   ngOnInit(): void {
+    this.api={id:0,field:'',path:'',extfiles:'',type:'',roles:'',security:false,operation:'',};
     this.host = '127.0.0.1';
     this.port = this.configservice.config.port.toString();
     if (this.configservice.config.enablehttps === false) {
@@ -48,13 +53,15 @@ export class TestapiComponent implements OnInit {
     this.schemas = this.configservice.getschema();
     this.profileForm = new FormGroup({
       Schema: new FormControl(this.schemas, Validators.required),
-      operation: new FormControl('', Validators.required),
+      operation: new FormControl(0, Validators.required),
       header: new FormControl('', Validators.required),
       record: new FormControl(0),
       skip: new FormControl(0),
       limit: new FormControl(0),
       order: new FormControl('ASC'),
       field: new FormControl(''),
+      file: new FormControl(['']),
+      files: new FormControl(null),
       login: new FormControl(''),
       newpassword: new FormControl(''),
       body: new FormControl(''),
@@ -62,7 +69,25 @@ export class TestapiComponent implements OnInit {
     });
   }
 
-  changehost(){
+  onFileSelected(event) {
+    this.form.getAll("file").forEach(element => {this.form.delete("file")});
+    this.form.getAll("files").forEach(element => {this.form.delete("files")});
+    const file:File = (event.target as HTMLInputElement).files[0];
+    if (file) {
+        console.log('file selected',file)
+        this.form.set("file",file,file.name);
+    }
+  }
+  onFilesSelected(event) {
+    const files: FileList=event.target.files;
+    console.log('files',files);
+    this.form.getAll("file").forEach(element => {this.form.delete("file")});
+    this.form.getAll("files").forEach(element => {this.form.delete("files")});
+    Array.from(files).forEach(element => {
+      this.form.append("files",element,element.name);
+    });   
+  }
+  changehost() {
     if (this.configservice.config.enablehttps === false) {
       this.urlpri = `http://${this.host}:${this.port}`;
     } else {
@@ -97,19 +122,29 @@ export class TestapiComponent implements OnInit {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         'login': this.logout,
-        'authorization': 'Bearer '+this.rtoken
+        'authorization': 'Bearer ' + this.rtoken
       })
     };
     this.httpclient.get(this.url, httpOptions).subscribe(rep => this.reponselogout = JSON.stringify(rep));
   }
 
   gheader() {
-    this.profileForm.patchValue({
-      header: JSON.stringify({
-        'Content-Type': 'application/json',
-        'authorization': 'Bearer '+this.token
-      }, null, 4)
-    })
+    if (this.api.type !== 'uploadfile' && this.api.type !== 'uploadfiles') {
+      this.profileForm.patchValue({
+        header: JSON.stringify({
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer ' + this.token
+        }, null, 4)
+      })
+    }
+    else {
+      this.profileForm.patchValue({
+        header: 'if you use Angular not set Content-type\n'+JSON.stringify({
+          'Content-Type': 'multipart/form-data',
+          'authorization': 'Bearer ' + this.token
+        }, null, 4)
+      })
+    }
   }
 
   change() {
@@ -118,12 +153,19 @@ export class TestapiComponent implements OnInit {
     this.schemastring = this.configservice.getschemaname(this.profileForm.get('Schema').value);
   }
 
-  changeoperation() {
+  changeoperation(event) {
+    let typea: Array<string>=[];
+    const apinumber=event.value;
     this.profileForm.patchValue({ body: '', reponse: '' });
-    const typea: string[] = (this.profileForm.get('operation').value).split(' ');
     const fields: Schemaitem[] = this.configservice.getschematable(this.profileForm.get('Schema').value);
+    this.api=this.configservice.getapi(this.profileForm.get('Schema').value,apinumber);
+    typea=[this.api.type,this.api.operation];
     let body = '{';
     switch (typea[0]) {
+      case 'uploadfile':
+        break;
+      case 'uploadfiles':
+        break;
       case 'put':
       case 'post':
         for (let index = 0; index < fields.length; index++) {
@@ -156,27 +198,46 @@ export class TestapiComponent implements OnInit {
 
   send() {
     let httpOptions;
-    const typea: string[] = (this.profileForm.get('operation').value).split(' ');
+    let typea:string[];
+    typea=[this.api.type,this.api.operation];
     console.log(typea[0]);
     console.log(typea[1]);
     switch (typea[0]) {
+      case 'uploadfile':
+        httpOptions = {
+          headers: new HttpHeaders({
+            'authorization': 'Bearer ' + this.token,
+          })
+        };
+        this.url = this.urlpri + `/${this.schemastring}/${this.api.path}`;
+        this.httpclient.post(this.url,this.form,httpOptions).subscribe(res=>this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4)}));
+        break;
+      case 'uploadfiles':
+        httpOptions = {
+          headers: new HttpHeaders({
+            'authorization': 'Bearer ' + this.token
+          })
+        };
+        this.url = this.urlpri + `/${this.schemastring}/${this.api.path}`;
+        this.httpclient.post(this.url,this.form,httpOptions).subscribe(res=>this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4)}));
+        break;
       case 'changepassword':
         httpOptions = {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',
-            'authorization': 'Bearer '+this.rtoken
+            'authorization': 'Bearer ' + this.rtoken
           })
         };
-        this.url= this.urlpri+`/${this.schemastring}`+`/changepassword/${encodeURI(this.profileForm.get('login').value)}/${encodeURI(this.profileForm.get('newpassword').value)}`;
-        this.httpclient.put(this.url,{},httpOptions).subscribe(res=> this.profileForm.patchValue({ reponse:JSON.stringify(res,null,4) }))
-      break;
+        this.url = this.urlpri + `/${this.schemastring}` + `/changepassword/${encodeURI(this.profileForm.get('login').value)}/${encodeURI(this.profileForm.get('newpassword').value)}`;
+        this.httpclient.put(this.url, {}, httpOptions).subscribe(res => this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }))
+        break;
       case 'get':
         switch (typea[1]) {
           case 'getone':
             httpOptions = {
               headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                'authorization': 'Bearer '+this.rtoken
+                'authorization': 'Bearer ' + this.rtoken
               })
             };
             this.url = this.urlpri + `/${this.schemastring}/${this.profileForm.get('record').value}`;
@@ -187,7 +248,7 @@ export class TestapiComponent implements OnInit {
             httpOptions = {
               headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                'authorization': 'Bearer '+this.rtoken
+                'authorization': 'Bearer ' + this.rtoken
               })
             };
             this.url = this.urlpri + `/${this.schemastring}`;
@@ -198,7 +259,7 @@ export class TestapiComponent implements OnInit {
             httpOptions = {
               headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                'authorization': 'Bearer '+this.rtoken
+                'authorization': 'Bearer ' + this.rtoken
               })
             };
             this.url = this.urlpri + `/${this.schemastring}/skiplimit/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}`
@@ -209,7 +270,7 @@ export class TestapiComponent implements OnInit {
             httpOptions = {
               headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                'authorization': 'Bearer '+this.rtoken
+                'authorization': 'Bearer ' + this.rtoken
               })
             };
             this.url = this.urlpri + `/${this.schemastring}/skiplimitorder${typea[2]}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}`
@@ -220,7 +281,7 @@ export class TestapiComponent implements OnInit {
             httpOptions = {
               headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                'authorization': 'Bearer '+this.rtoken
+                'authorization': 'Bearer ' + this.rtoken
               })
             };
             this.url = this.urlpri + `/${this.schemastring}/skiplimitfilter${typea[2]}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}/${this.profileForm.get('field').value}`
@@ -235,7 +296,7 @@ export class TestapiComponent implements OnInit {
         httpOptions = {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',
-            'authorization': 'Bearer '+this.rtoken
+            'authorization': 'Bearer ' + this.rtoken
           })
         };
         this.url = this.urlpri + `/${this.schemastring}`
@@ -246,7 +307,7 @@ export class TestapiComponent implements OnInit {
         httpOptions = {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',
-            'authorization': 'Bearer '+this.rtoken
+            'authorization': 'Bearer ' + this.rtoken
           })
         };
         this.url = this.urlpri + `/${this.schemastring}`;
@@ -257,7 +318,7 @@ export class TestapiComponent implements OnInit {
         httpOptions = {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',
-            'authorization': 'Bearer '+this.rtoken
+            'authorization': 'Bearer ' + this.rtoken
           })
         };
         this.url = this.urlpri + `/${this.schemastring}/${this.profileForm.get('record').value}`
