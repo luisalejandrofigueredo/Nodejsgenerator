@@ -49,6 +49,7 @@ import { ConfigprincipalComponent } from './help/helpconfig/configprincipal/conf
 import { ConfigloggerComponent } from './help/helpconfig/configlogger/configlogger.component';
 import { ConfigdatabaseComponent } from './help/helpconfig/configdatabase/configdatabase.component';
 import { TestapiComponent } from './testapi/testapi.component';
+import { AuthpipePipe } from './authpipe.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -74,6 +75,7 @@ import { TestapiComponent } from './testapi/testapi.component';
     ConfigloggerComponent,
     ConfigdatabaseComponent,
     TestapiComponent,
+    AuthpipePipe,
   ],
   imports: [ 
     BrowserModule, 

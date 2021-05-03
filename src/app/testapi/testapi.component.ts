@@ -63,6 +63,7 @@ export class TestapiComponent implements OnInit {
       file: new FormControl(['']),
       files: new FormControl(null),
       login: new FormControl(''),
+      test: new FormControl(false),
       newpassword: new FormControl(''),
       body: new FormControl(''),
       reponse: new FormControl('')
@@ -139,7 +140,7 @@ export class TestapiComponent implements OnInit {
     }
     else {
       this.profileForm.patchValue({
-        header: 'if you use Angular not set Content-type\n'+JSON.stringify({
+        header: 'if you use Angular HttpClient not set Content-type\n'+JSON.stringify({
           'Content-Type': 'multipart/form-data',
           'authorization': 'Bearer ' + this.token
         }, null, 4)
