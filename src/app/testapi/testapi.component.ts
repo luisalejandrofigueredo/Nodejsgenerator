@@ -130,21 +130,28 @@ export class TestapiComponent implements OnInit {
   }
 
   gheader() {
-    if (this.api.type !== 'uploadfile' && this.api.type !== 'uploadfiles') {
-      this.profileForm.patchValue({
-        header: JSON.stringify({
-          'Content-Type': 'application/json',
-          'authorization': 'Bearer ' + this.token
-        }, null, 4)
-      })
-    }
+    if (this.api.type === 'getfile') {
+      this.profileForm.patchValue({ header:`
+      Please set reponse type to blob in Agular HttpCLient add in options parameter
+      'authorization': 'Bearer '${this.token}` });
+     }
     else {
-      this.profileForm.patchValue({
-        header: 'if you use Angular HttpClient not set Content-type\n' + JSON.stringify({
-          'Content-Type': 'multipart/form-data',
-          'authorization': 'Bearer ' + this.token
-        }, null, 4)
-      })
+      if (this.api.type !== 'uploadfile' && this.api.type !== 'uploadfiles') {
+        this.profileForm.patchValue({
+          header: JSON.stringify({
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer ' + this.token
+          }, null, 4)
+        })
+      }
+      else {
+        this.profileForm.patchValue({
+          header: 'if you use Angular HttpClient not set Content-type\n' + JSON.stringify({
+            'Content-Type': 'multipart/form-data',
+            'authorization': 'Bearer ' + this.token
+          }, null, 4)
+        })
+      }
     }
   }
 
@@ -196,7 +203,7 @@ export class TestapiComponent implements OnInit {
     }
   }
 
-  changefile(){
+  changefile() {
     this.url = this.urlpri + `/${this.schemastring}/getfile/${this.profileForm.get('field').value}`;
   }
 
@@ -210,15 +217,15 @@ export class TestapiComponent implements OnInit {
       case 'getfile':
         {
           if (this.profileForm.get('test').value !== true) {
-            const headers=new HttpHeaders({'authorization': 'Bearer ' + this.token});
+            const headers = new HttpHeaders({ 'authorization': 'Bearer ' + this.token });
             this.url = this.urlpri + `/${this.schemastring}/getfile/${this.profileForm.get('field').value}`;
-            const blob=await this.httpclient.get(this.url, { headers, responseType: 'blob' }).toPromise();
+            const blob = await this.httpclient.get(this.url, { headers, responseType: 'blob' }).toPromise();
             const reader = new FileReader();
-            reader.onloadend = () => this.profileForm.patchValue({reponse: reader.result as string});
+            reader.onloadend = () => this.profileForm.patchValue({ reponse: reader.result as string });
             reader.readAsDataURL(blob);
           }
         }
-      break;
+        break;
       case 'uploadfile':
         httpOptions = {
           headers: new HttpHeaders({
