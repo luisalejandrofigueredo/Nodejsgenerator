@@ -30,15 +30,15 @@ export class TestapiComponent implements OnInit {
   Schema: number;
   schemastring: string;
   apis: Api[];
-  api:Api;
+  api: Api;
   operation: string;
   rtoken: string;
   profileForm: FormGroup;
-  form=new FormData();
+  form = new FormData();
   constructor(private httpclient: HttpClient, private configservice: ConfigService) { }
 
   ngOnInit(): void {
-    this.api={id:0,field:'',path:'',extfiles:'',type:'',roles:'',security:false,operation:'',};
+    this.api = { id: 0, field: '', path: '', extfiles: '', type: '', roles: '', security: false, operation: '', };
     this.host = '127.0.0.1';
     this.port = this.configservice.config.port.toString();
     if (this.configservice.config.enablehttps === false) {
@@ -71,22 +71,22 @@ export class TestapiComponent implements OnInit {
   }
 
   onFileSelected(event) {
-    this.form.getAll("file").forEach(element => {this.form.delete("file")});
-    this.form.getAll("files").forEach(element => {this.form.delete("files")});
-    const file:File = (event.target as HTMLInputElement).files[0];
+    this.form.getAll("file").forEach(element => { this.form.delete("file") });
+    this.form.getAll("files").forEach(element => { this.form.delete("files") });
+    const file: File = (event.target as HTMLInputElement).files[0];
     if (file) {
-        console.log('file selected',file)
-        this.form.set("file",file,file.name);
+      console.log('file selected', file)
+      this.form.set("file", file, file.name);
     }
   }
   onFilesSelected(event) {
-    const files: FileList=event.target.files;
-    console.log('files',files);
-    this.form.getAll("file").forEach(element => {this.form.delete("file")});
-    this.form.getAll("files").forEach(element => {this.form.delete("files")});
+    const files: FileList = event.target.files;
+    console.log('files', files);
+    this.form.getAll("file").forEach(element => { this.form.delete("file") });
+    this.form.getAll("files").forEach(element => { this.form.delete("files") });
     Array.from(files).forEach(element => {
-      this.form.append("files",element,element.name);
-    });   
+      this.form.append("files", element, element.name);
+    });
   }
   changehost() {
     if (this.configservice.config.enablehttps === false) {
@@ -140,7 +140,7 @@ export class TestapiComponent implements OnInit {
     }
     else {
       this.profileForm.patchValue({
-        header: 'if you use Angular HttpClient not set Content-type\n'+JSON.stringify({
+        header: 'if you use Angular HttpClient not set Content-type\n' + JSON.stringify({
           'Content-Type': 'multipart/form-data',
           'authorization': 'Bearer ' + this.token
         }, null, 4)
@@ -155,12 +155,12 @@ export class TestapiComponent implements OnInit {
   }
 
   changeoperation(event) {
-    let typea: Array<string>=[];
-    const apinumber=event.value;
-    this.profileForm.patchValue({ body: '', reponse: '' });
+    let typea: Array<string> = [];
+    const apinumber = event.value;
+    this.profileForm.patchValue({ body: '', reponse: '', test: false });
     const fields: Schemaitem[] = this.configservice.getschematable(this.profileForm.get('Schema').value);
-    this.api=this.configservice.getapi(this.profileForm.get('Schema').value,apinumber);
-    typea=[this.api.type,this.api.operation];
+    this.api = this.configservice.getapi(this.profileForm.get('Schema').value, apinumber);
+    typea = [this.api.type, this.api.operation];
     let body = '{';
     switch (typea[0]) {
       case 'uploadfile':
@@ -187,7 +187,6 @@ export class TestapiComponent implements OnInit {
         }
         body = body.substr(0, body.length - 1);
         body += body = '}';
-        console.log(body);
         const jsonvar = JSON.parse(body)
         this.profileForm.patchValue({ body: JSON.stringify(jsonvar, null, 4) });
         break;
@@ -197,13 +196,29 @@ export class TestapiComponent implements OnInit {
     }
   }
 
-  send() {
+  changefile(){
+    this.url = this.urlpri + `/${this.schemastring}/getfile/${this.profileForm.get('field').value}`;
+  }
+
+  async send() {
     let httpOptions;
-    let typea:string[];
-    typea=[this.api.type,this.api.operation];
+    let typea: string[];
+    typea = [this.api.type, this.api.operation];
     console.log(typea[0]);
     console.log(typea[1]);
     switch (typea[0]) {
+      case 'getfile':
+        {
+          if (this.profileForm.get('test').value !== true) {
+            const headers=new HttpHeaders({'authorization': 'Bearer ' + this.token});
+            this.url = this.urlpri + `/${this.schemastring}/getfile/${this.profileForm.get('field').value}`;
+            const blob=await this.httpclient.get(this.url, { headers, responseType: 'blob' }).toPromise();
+            const reader = new FileReader();
+            reader.onloadend = () => this.profileForm.patchValue({reponse: reader.result as string});
+            reader.readAsDataURL(blob);
+          }
+        }
+      break;
       case 'uploadfile':
         httpOptions = {
           headers: new HttpHeaders({
@@ -211,7 +226,7 @@ export class TestapiComponent implements OnInit {
           })
         };
         this.url = this.urlpri + `/${this.schemastring}/${this.api.path}`;
-        this.httpclient.post(this.url,this.form,httpOptions).subscribe(res=>this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4)}));
+        this.httpclient.post(this.url, this.form, httpOptions).subscribe(res => this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
         break;
       case 'uploadfiles':
         httpOptions = {
@@ -220,7 +235,7 @@ export class TestapiComponent implements OnInit {
           })
         };
         this.url = this.urlpri + `/${this.schemastring}/${this.api.path}`;
-        this.httpclient.post(this.url,this.form,httpOptions).subscribe(res=>this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4)}));
+        this.httpclient.post(this.url, this.form, httpOptions).subscribe(res => this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
         break;
       case 'changepassword':
         httpOptions = {

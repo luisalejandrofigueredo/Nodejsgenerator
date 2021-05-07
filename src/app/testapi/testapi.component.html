@@ -94,27 +94,27 @@
             <input *ngIf="(api.type==='uploadfile')" type="file"(change)="onFileSelected($event)" placeholder="File" formControlName="file">
             <input *ngIf="(api.type==='uploadfiles')" type="file" (change)="onFilesSelected($event)" placeholder="Files" formControlName="files" multiple>
             <mat-form-field *ngIf="api.type==='getfile'">
-                <input matInput placeholder="File" formControlName="field">
+                <input matInput (change)="changefile()" placeholder="File" formControlName="field">
             </mat-form-field>
             <mat-checkbox *ngIf="(api.type==='getfile')" formControlName="test">Test with image</mat-checkbox>
         </div>
         <div  fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-            <img *ngIf="this.profileForm.get('test').value===true && api.type==='getfile'" [src]="this.urlpri +'/'+this.schemastring+'/getfile/'+this.profileForm.get('field').value | authpipe | async" alt="">
-            <mat-form-field *ngIf="(api.type!=='getfile')" style="width: 100%;">
+            <img *ngIf="this.profileForm.get('test').value===true && api.type==='getfile' && this.profileForm.get('field').value!==''" [src]="this.urlpri +'/'+this.schemastring+'/getfile/'+this.profileForm.get('field').value | authpipe | async" alt="">
+            <mat-form-field  style="width: 100%;">
                 <textarea matInput placeholder="header" formControlName="header" cdkTextareaAutosize></textarea>
             </mat-form-field>
-            <button *ngIf="(api.type!=='getfile')" color="primary" type="button" mat-raised-button (click)="gheader()">Generate Header</button>
+            <button  color="primary" type="button" mat-raised-button (click)="gheader()">Generate Header</button>
         </div>
-        <div *ngIf="(api.type!=='getfile')" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+        <div  fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
             <mat-form-field style="width: 100%;">
                 <textarea matInput name="body" placeholder="body" formControlName="body" cdkTextareaAutosize></textarea>
             </mat-form-field>
         </div>
-        <mat-form-field *ngIf="(api.type!=='getfile')" style="width: 100%;">
-            <textarea *ngIf="(api.type!=='getfile')" matInput name="reponse" placeholder="reponse" formControlName="reponse"
+        <mat-form-field *ngIf="(this.profileForm.get('test').value===false)" style="width: 100%;">
+            <textarea  matInput name="reponse" placeholder="reponse" formControlName="reponse"
                 cdkTextareaAutosize></textarea>
         </mat-form-field>
-        <button *ngIf="(api.type!=='getfile')" mat-raised-button type="submit" color="primary" mat-button [disabled]="!profileForm.valid">Send</button>
+        <button  mat-raised-button type="submit" color="primary" mat-button [disabled]="!profileForm.valid">Send</button>
     </form>
 </mat-expansion-panel>
 </mat-accordion>
