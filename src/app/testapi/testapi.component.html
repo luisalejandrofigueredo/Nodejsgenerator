@@ -99,12 +99,12 @@
             <mat-checkbox *ngIf="(api.type==='getfile')" formControlName="test">Test with image</mat-checkbox>
         </div>
         <div  fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-            <img *ngIf="this.profileForm.get('test').value===true && api.type==='getfile' && this.profileForm.get('field').value!==''" [src]="this.urlpri +'/'+this.schemastring+'/getfile/'+this.profileForm.get('field').value | authpipe | async" alt="">
             <mat-form-field  style="width: 100%;">
                 <textarea matInput placeholder="header" formControlName="header" cdkTextareaAutosize></textarea>
             </mat-form-field>
             <button  color="primary" type="button" mat-raised-button (click)="gheader()">Generate Header</button>
         </div>
+        <img *ngIf="this.profileForm.get('test').value===true && api.type==='getfile' && this.profileForm.get('field').value!==''" [src]="this.urlpri +'/'+this.schemastring+'/getfile/'+this.profileForm.get('field').value | authpipe | async" alt="">
         <div  fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
             <mat-form-field style="width: 100%;">
                 <textarea matInput name="body" placeholder="body" formControlName="body" cdkTextareaAutosize></textarea>
