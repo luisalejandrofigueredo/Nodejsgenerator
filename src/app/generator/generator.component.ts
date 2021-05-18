@@ -314,7 +314,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     const schemalower = schema.toLowerCase();
     this.addgenrartinline('Begin generate Api... ');
     this.addgenrartinline('Begin generate controller... ');
-    this.filegenerating = "import { Controller, Inject,Post, Body, Get, Put, Delete,Param,UseGuards,Headers, SetMetadata,Query";
+    this.filegenerating = "import { Controller, Inject,Post, Body, Get, Put, Delete,Param,UseGuards,Headers, SetMetadata,Query,Patch";
     if (filesupload===true){
       this.filegenerating+=', UseInterceptors, UploadedFile, UploadedFiles, Res, HttpStatus';
     }
@@ -492,6 +492,13 @@ export class GeneratorComponent implements OnInit, OnChanges {
           this.generatesecurity(element);
           this.filegenerating += `delete(@Param() params) {\n\t return this.service.delete(+params.id);\n}\n`;
           break;
+         case 'patch':
+          this.addgenrartinline('\tadding patch');
+          this.filegenerating += `@Patch('/:id')\n`;
+          this.generatesecurity(element);
+          this.filegenerating+= `patch(@Param() params,@Body() patchbody:any)`;
+          this.filegenerating+= `{\n\t return this.service.patch(+params.id,patchbody);\n}\n`;
+         break; 
         default:
           break;
       }
@@ -633,6 +640,12 @@ export class GeneratorComponent implements OnInit, OnChanges {
           this.filegenerating += `\t const ${schemalower}: ${schema} = await this.${schema}Repository.findOne({where: [{ "id": _id }]});\n`;
           this.filegenerating += `\t return await this.${schema}Repository.delete(${schemalower});\n`;
           this.filegenerating += `}\n`;
+          break;
+          case 'patch':
+            this.addgenrartinline('\tadding patch service');
+            this.filegenerating += `async patch(_id: number,patchbody:any) {\n`;
+            this.filegenerating +=`return await this.${schema}Repository.createQueryBuilder().update(${schema}).set(patchbody).where("id = :id", { id:_id }).execute();`;
+            this.filegenerating +='}\n';
           break;
         default:
           break;

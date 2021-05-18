@@ -18,7 +18,8 @@ export class ApidatamodalComponent implements OnInit {
     { value: 'get', viewValue: 'Get' },
     { value: 'put', viewValue: 'Put' },
     { value: 'post', viewValue: 'Post' },
-    { value: 'delete', viewValue: 'Delete'}
+    { value: 'delete', viewValue: 'Delete'},
+    { value: 'patch', viewValue: 'Patch'}
   ];
 
   operation: Type[] = [

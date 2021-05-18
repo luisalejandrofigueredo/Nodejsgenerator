@@ -231,6 +231,16 @@
 					],
 					"security": true,
 					"roles": "Admin Users"
+				},
+				{
+					"id": 11,
+					"type": "patch",
+					"operation": "",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
 				}
 			],
 			"security": true,

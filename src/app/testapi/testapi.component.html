@@ -67,7 +67,7 @@
                 </mat-option>
             </mat-select>
             <mat-form-field
-                *ngIf="(api.type==='get' && api.operation==='getone') || (api.type==='delete')">
+                *ngIf="(api.type==='get' && api.operation==='getone') || (api.type==='delete') || (api.type==='patch')">
                 <input matInput type="number" placeholder="record id" formControlName="record">
             </mat-form-field>
             <mat-form-field
