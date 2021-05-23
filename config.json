@@ -1,616 +1,21 @@
 {
-	"version": 0.1,
-	"filePath": "C:\\Users\\luisa\\cmder\\prueba",
+	"version": 0.3,
+	"filePath": "C:\\Users\\luisa\\cmder\\costumersproject",
 	"enableCors": true,
-	"schemas": [
-		{
-			"id": 1,
-			"name": "Clientes",
-			"description": "Archivo principal ",
-			"imports": "",
-			"fields": "",
-			"schemastable": [
-				{
-					"id": 1,
-					"type": "number",
-					"name": "id",
-					"length": 0,
-					"keyautonumber": true,
-					"extraparameter": "",
-					"index": false
-				},
-				{
-					"id": 2,
-					"name": "nombre",
-					"type": "string",
-					"length": 20,
-					"keyautonumber": false,
-					"extraparameter": "",
-					"index": true,
-					"security": true,
-					"roles": "Usuario"
-				},
-				{
-					"id": 3,
-					"name": "apellido",
-					"type": "string",
-					"length": 0,
-					"keyautonumber": false,
-					"extraparameter": "",
-					"index": true
-				},
-				{
-					"id": 4,
-					"type": "string",
-					"name": "login",
-					"length": 0,
-					"keyautonumber": false,
-					"extraparameter": "",
-					"index": false
-				},
-				{
-					"id": 5,
-					"type": "string",
-					"name": "password",
-					"length": 0,
-					"keyautonumber": false,
-					"extraparameter": "",
-					"index": false
-				},
-				{
-					"id": 6,
-					"type": "string",
-					"name": "bearer",
-					"length": 0,
-					"keyautonumber": false,
-					"extraparameter": "",
-					"index": false
-				},
-				{
-					"id": 7,
-					"type": "string",
-					"name": "Roles",
-					"length": 50,
-					"keyautonumber": false,
-					"extraparameter": "",
-					"index": false
-				}
-			],
-			"schemarelations": [
-				{
-					"id": 1,
-					"idtable": "1",
-					"tablename": "Facturas",
-					"type": "onetomany",
-					"field": "id",
-					"table": 2,
-					"fieldc": "factura",
-					"fieldr": "facturas"
-				}
-			],
-			"schemasapi": [
-				{
-					"id": 1,
-					"type": "put",
-					"operation": "",
-					"path": "",
-					"fields": [
-						"id",
-						"nombre",
-						"apellido"
-					],
-					"security": true,
-					"roles": "Admin"
-				},
-				{
-					"id": 2,
-					"type": "post",
-					"operation": "",
-					"path": "",
-					"fields": [
-						"id",
-						"nombre",
-						"apellido"
-					],
-					"security": true,
-					"roles": "Admin,User"
-				},
-				{
-					"id": 3,
-					"type": "delete",
-					"operation": "",
-					"path": "",
-					"fields": [
-						"id",
-						"nombre",
-						"apellido"
-					],
-					"security": true,
-					"roles": "Admin User"
-				},
-				{
-					"id": 4,
-					"type": "get",
-					"operation": "skiplimit",
-					"path": "skiplimit",
-					"fields": [
-						"id",
-						"nombre",
-						"apellido"
-					],
-					"security": true,
-					"roles": "Admin"
-				},
-				{
-					"id": 5,
-					"type": "get",
-					"operation": "skiplimitbyfield",
-					"path": "nombre",
-					"field": "nombre",
-					"fields": [
-						"id",
-						"nombre",
-						"apellido",
-						"login",
-						"password",
-						"bearer",
-						"Roles"
-					],
-					"security": true,
-					"roles": "Users"
-				},
-				{
-					"id": 6,
-					"type": "get",
-					"operation": "getall",
-					"path": "getall",
-					"fields": [
-						"id",
-						"nombre",
-						"apellido"
-					],
-					"security": true,
-					"roles": "Admin User"
-				},
-				{
-					"id": 7,
-					"type": "get",
-					"operation": "getone",
-					"path": "getone",
-					"fields": [
-						"id",
-						"nombre",
-						"apellido"
-					],
-					"security": true,
-					"roles": "Users"
-				},
-				{
-					"id": 8,
-					"type": "get",
-					"operation": "skiplimitbyfield",
-					"path": "",
-					"field": "apellido",
-					"fields": [
-						"id",
-						"nombre",
-						"apellido"
-					],
-					"security": true,
-					"roles": "Users"
-				},
-				{
-					"id": 9,
-					"type": "get",
-					"operation": "skiplimitfilter",
-					"path": "filterapellido",
-					"field": "apellido",
-					"fields": [
-						"id",
-						"nombre",
-						"apellido"
-					],
-					"security": true,
-					"roles": "Users"
-				},
-				{
-					"idschema": "1",
-					"id": 10,
-					"type": "changepassword",
-					"operation": "",
-					"path": "",
-					"field": "",
-					"fields": [
-						"id",
-						"nombre",
-						"apellido",
-						"login",
-						"password",
-						"bearer",
-						"Roles"
-					],
-					"security": true,
-					"roles": "Admin Users"
-				},
-				{
-					"id": 11,
-					"type": "patch",
-					"operation": "",
-					"path": "",
-					"field": "",
-					"security": true,
-					"roles": "Admin User",
-					"extfiles": ""
-				}
-			],
-			"security": true,
-			"classsecurity": "RolesGuard",
-			"filesecurity": "C:/Users/luisa/cmder/prueba/src/roles/roles.guard",
-			"mastersecurity": true,
-			"filesupload": null
-		},
-		{
-			"id": 2,
-			"name": "Facturas",
-			"description": "Archivo de Facturas",
-			"imports": "",
-			"fields": "",
-			"schemastable": [
-				{
-					"id": 1,
-					"type": "number",
-					"name": "id",
-					"length": 0,
-					"keyautonumber": true,
-					"extraparameter": "",
-					"index": false
-				},
-				{
-					"id": 2,
-					"type": "string",
-					"name": "Descripcion",
-					"length": 20,
-					"keyautonumber": false,
-					"extraparameter": "",
-					"index": false
-				},
-				{
-					"id": 3,
-					"type": "number",
-					"name": "Total",
-					"length": 0,
-					"keyautonumber": false,
-					"extraparameter": "",
-					"index": false
-				}
-			],
-			"schemarelations": [
-				{
-					"id": 1,
-					"idtable": 1,
-					"tablename": "Clientes",
-					"type": "manytoone",
-					"field": "",
-					"table": 1,
-					"fieldc": "Facturas",
-					"fieldr": "facturas"
-				}
-			],
-			"schemasapi": [
-				{
-					"idschema": "2",
-					"id": 1,
-					"type": "get",
-					"operation": "getone",
-					"path": "",
-					"field": "",
-					"fields": [
-						"id",
-						"Descripcion",
-						"Total"
-					],
-					"security": true,
-					"roles": "Admin User",
-					"extfiles": null
-				},
-				{
-					"idschema": "2",
-					"id": 2,
-					"type": "post",
-					"operation": "",
-					"path": "",
-					"field": "",
-					"fields": [
-						"id",
-						"Descripcion",
-						"Total"
-					],
-					"security": true,
-					"roles": "Admin User",
-					"extfiles": null
-				},
-				{
-					"idschema": "2",
-					"id": 3,
-					"type": "put",
-					"operation": "",
-					"path": "",
-					"field": "",
-					"fields": [
-						"id",
-						"Descripcion",
-						"Total"
-					],
-					"security": false,
-					"roles": "",
-					"extfiles": null
-				},
-				{
-					"idschema": "2",
-					"id": 4,
-					"type": "delete",
-					"operation": "",
-					"path": "",
-					"field": "",
-					"fields": [
-						"id",
-						"Descripcion",
-						"Total"
-					],
-					"security": false,
-					"roles": "",
-					"extfiles": null
-				},
-				{
-					"idschema": "2",
-					"id": 5,
-					"type": "get",
-					"operation": "skiplimitbyfield",
-					"path": "",
-					"field": "Descripcion",
-					"fields": [
-						"id",
-						"Descripcion",
-						"Total"
-					],
-					"security": true,
-					"roles": "Admin Users",
-					"extfiles": null
-				},
-				{
-					"idschema": "2",
-					"id": 6,
-					"type": "uploadfile",
-					"operation": "",
-					"path": "upload",
-					"field": "jpg jpeg gif  png",
-					"fields": [
-						"id",
-						"Descripcion",
-						"Total"
-					],
-					"security": true,
-					"roles": "Admin User",
-					"extfiles": "jpg jpeg gif png"
-				},
-				{
-					"idschema": "2",
-					"id": 7,
-					"type": "uploadfiles",
-					"operation": "",
-					"path": "uploadfiles",
-					"field": "",
-					"fields": [
-						"id",
-						"Descripcion",
-						"Total"
-					],
-					"security": true,
-					"roles": "Admin User",
-					"extfiles": "png gif jpg jpeg"
-				},
-				{
-					"id": 8,
-					"type": "getfile",
-					"operation": "",
-					"path": "getfile",
-					"field": "",
-					"security": true,
-					"roles": "Admin User",
-					"extfiles": ""
-				}
-			],
-			"security": true,
-			"classsecurity": "RolesGuard",
-			"filesecurity": "C:/Users/luisa/cmder/prueba/src/roles/roles.guard",
-			"mastersecurity": false,
-			"filesupload": true
-		},
-		{
-			"id": 3,
-			"name": "Contratos",
-			"description": "contratos pagos",
-			"imports": "",
-			"fields": "",
-			"schemastable": [
-				{
-					"id": 1,
-					"type": "number",
-					"name": "id",
-					"length": 10,
-					"keyautonumber": true,
-					"extraparameter": "",
-					"index": false
-				},
-				{
-					"id": 2,
-					"type": "date",
-					"name": "fecha",
-					"length": 0,
-					"keyautonumber": false,
-					"extraparameter": "",
-					"index": false
-				},
-				{
-					"id": 3,
-					"type": "string",
-					"name": "descripcion",
-					"length": 50,
-					"keyautonumber": false,
-					"extraparameter": "",
-					"index": false
-				}
-			],
-			"schemarelations": [],
-			"schemasapi": [
-				{
-					"id": 1,
-					"type": "get",
-					"operation": "getone",
-					"path": "",
-					"field": "",
-					"fields": [
-						"id",
-						"fecha",
-						"descripcion"
-					],
-					"security": true,
-					"roles": "Admin Users"
-				},
-				{
-					"id": 2,
-					"type": "post",
-					"operation": "",
-					"path": "",
-					"field": "",
-					"security": true,
-					"roles": "Admin User"
-				}
-			],
-			"security": true,
-			"classsecurity": "RolesGuard",
-			"filesecurity": null,
-			"mastersecurity": false,
-			"filesupload": null
-		},
-		{
-			"id": 4,
-			"name": "Prueba",
-			"description": "prueba",
-			"imports": "",
-			"fields": "",
-			"schemastable": [
-				{
-					"id": 1,
-					"type": "number",
-					"name": "id",
-					"length": 10,
-					"keyautonumber": true,
-					"extraparameter": "",
-					"index": false
-				},
-				{
-					"id": 2,
-					"type": "string",
-					"name": "descipcion",
-					"length": 50,
-					"keyautonumber": false,
-					"extraparameter": "",
-					"index": false
-				}
-			],
-			"schemarelations": [],
-			"schemasapi": [
-				{
-					"id": 1,
-					"type": "post",
-					"operation": "",
-					"path": "",
-					"field": "",
-					"security": true,
-					"roles": "Admin User"
-				}
-			],
-			"security": null,
-			"classsecurity": null,
-			"filesecurity": null,
-			"mastersecurity": null,
-			"filesupload": null
-		},
-		{
-			"id": 5,
-			"name": "Pruebados",
-			"description": "fdsafdf",
-			"imports": "",
-			"fields": "",
-			"security": true,
-			"classsecurity": "RolesGuard",
-			"filesecurity": "",
-			"mastersecurity": false,
-			"schemastable": [
-				{
-					"id": 1,
-					"type": "number",
-					"name": "id",
-					"length": 10,
-					"keyautonumber": true,
-					"extraparameter": "",
-					"index": true
-				},
-				{
-					"id": 2,
-					"type": "string",
-					"name": "descripcion",
-					"length": 25,
-					"keyautonumber": false,
-					"extraparameter": "",
-					"index": false
-				}
-			],
-			"schemarelations": [],
-			"schemasapi": [
-				{
-					"id": 1,
-					"type": "get",
-					"operation": "getall",
-					"path": "",
-					"field": "",
-					"security": true,
-					"roles": "Admin User"
-				},
-				{
-					"id": 2,
-					"type": "post",
-					"operation": "",
-					"path": "",
-					"field": "",
-					"security": true,
-					"roles": "Admin User"
-				}
-			],
-			"filesupload": null
-		}
-	],
-	"security": {
-		"table": "Clientes",
-		"login": "login",
-		"password": "password",
-		"bearertoken": "bearer",
-		"roles": "Roles",
-		"rolesclass": "RolesGuard",
-		"logger": true
-	},
 	"dbconf": {
 		"selecteddatabase": 0,
-		"host": "localhost",
+		"host": "root",
 		"port": 3306,
 		"username": "root",
 		"password": "root",
-		"database": "cazaor_project"
+		"database": "projectcostumers"
 	},
-	"jwtsk": "jwtsecretkey",
+	"enablehttps": false,
+	"enableuploadfiles": false,
+	"port": 3000,
+	"jwtsk": "",
 	"logger": {
-		"type": 2,
+		"type": 0,
 		"file": "info.log",
 		"maxsize": 50000,
 		"typewarn": 0,
@@ -620,7 +25,116 @@
 		"fileerror": "error.log",
 		"maxsizeerror": 10000
 	},
-	"enablehttps": false,
-	"port": 3500,
-	"enableuploadfiles": true
+	"security": {
+		"table": "Costumers",
+		"login": "login",
+		"password": "password",
+		"bearertoken": "bearer",
+		"roles": "roles",
+		"rolesclass": "RolesGuard",
+		"logger": true
+	},
+	"schemas": [
+		{
+			"id": 1,
+			"name": "Costumers",
+			"description": "Costumers",
+			"imports": "",
+			"fields": "",
+			"security": false,
+			"classsecurity": "RolesGuard",
+			"filesecurity": "",
+			"mastersecurity": true,
+			"filesupload": false,
+			"schemastable": [
+				{
+					"id": 1,
+					"type": "number",
+					"name": "id",
+					"length": 10,
+					"keyautonumber": true,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 2,
+					"type": "string",
+					"name": "Name",
+					"length": 50,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 3,
+					"type": "string",
+					"name": "login",
+					"length": 25,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 4,
+					"type": "string",
+					"name": "password",
+					"length": 10,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 5,
+					"type": "string",
+					"name": "roles",
+					"length": 255,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 6,
+					"type": "string",
+					"name": "bearer",
+					"length": 255,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				}
+			],
+			"schemarelations": [],
+			"schemasapi": [
+				{
+					"id": 1,
+					"type": "get",
+					"operation": "getone",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 2,
+					"type": "put",
+					"operation": "",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 3,
+					"type": "post",
+					"operation": "",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				}
+			]
+		}
+	]
 }
