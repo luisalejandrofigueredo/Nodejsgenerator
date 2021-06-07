@@ -237,8 +237,6 @@ export class TestapiComponent implements OnInit {
     let httpOptions;
     let typea: string[];
     typea = [this.api.type, this.api.operation];
-    console.log(typea[0]);
-    console.log(typea[1]);
     switch (typea[0]) {
       case 'getfile':
         {
@@ -329,13 +327,14 @@ export class TestapiComponent implements OnInit {
               this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
             break
           case 'skiplimitbyfield':
+            console.log('api',this.api);
             httpOptions = {
               headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 'authorization': 'Bearer ' + this.rtoken
               })
             };
-            this.url = this.urlpri + `/${this.schemastring}/skiplimitorder${typea[2]}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}`
+            this.url = this.urlpri + `/${this.schemastring}/skiplimitorder${this.api.field}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}`
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
               this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
             break
@@ -346,7 +345,7 @@ export class TestapiComponent implements OnInit {
                 'authorization': 'Bearer ' + this.rtoken
               })
             };
-            this.url = this.urlpri + `/${this.schemastring}/skiplimitfilter${typea[2]}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}/${this.profileForm.get('field').value}`
+            this.url = this.urlpri + `/${this.schemastring}/skiplimitfilter${this.api.field}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}/${this.profileForm.get('field').value}`
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
               this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
             break

@@ -4,16 +4,16 @@
 	"enableCors": true,
 	"dbconf": {
 		"selecteddatabase": 0,
-		"host": "root",
+		"host": "127.0.0.1",
 		"port": 3306,
 		"username": "root",
 		"password": "root",
 		"database": "projectcostumers"
 	},
 	"enablehttps": false,
-	"enableuploadfiles": false,
+	"enableuploadfiles": true,
 	"port": 3000,
-	"jwtsk": "",
+	"jwtsk": "hoalmundo",
 	"logger": {
 		"type": 0,
 		"file": "info.log",
@@ -41,11 +41,11 @@
 			"description": "Costumers",
 			"imports": "",
 			"fields": "",
-			"security": false,
+			"security": true,
 			"classsecurity": "RolesGuard",
 			"filesecurity": "",
 			"mastersecurity": true,
-			"filesupload": false,
+			"filesupload": true,
 			"schemastable": [
 				{
 					"id": 1,
@@ -106,16 +106,6 @@
 			"schemasapi": [
 				{
 					"id": 1,
-					"type": "get",
-					"operation": "getone",
-					"path": "",
-					"field": "",
-					"security": true,
-					"roles": "Admin User",
-					"extfiles": ""
-				},
-				{
-					"id": 2,
 					"type": "put",
 					"operation": "",
 					"path": "",
@@ -125,11 +115,100 @@
 					"extfiles": ""
 				},
 				{
-					"id": 3,
+					"id": 2,
 					"type": "post",
 					"operation": "",
 					"path": "",
 					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"idschema": "1",
+					"id": 3,
+					"type": "uploadfile",
+					"operation": "",
+					"path": "uploadfile",
+					"field": "",
+					"fields": [
+						"id",
+						"Name",
+						"login",
+						"password",
+						"roles",
+						"bearer"
+					],
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "jpg jpeg gif"
+				},
+				{
+					"id": 4,
+					"type": "uploadfiles",
+					"operation": "",
+					"path": "multiplefiles",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "jpg jpeg gif"
+				},
+				{
+					"id": 5,
+					"type": "getfile",
+					"operation": "",
+					"path": "getfile",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 6,
+					"type": "get",
+					"operation": "getall",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 7,
+					"type": "get",
+					"operation": "getone",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 8,
+					"type": "get",
+					"operation": "skiplimit",
+					"path": "getskiplimit",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 9,
+					"type": "get",
+					"operation": "skiplimitbyfield",
+					"path": "getskiplimitbyname",
+					"field": "Name",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 10,
+					"type": "get",
+					"operation": "skiplimitfilter",
+					"path": "getskiplimitfilter",
+					"field": "Name",
 					"security": true,
 					"roles": "Admin User",
 					"extfiles": ""
