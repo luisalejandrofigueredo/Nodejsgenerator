@@ -4,6 +4,11 @@ use npm run the script you nead for run or compile a executable only tested in w
     
     "start:electron": "ng build --base-href ./ && electron . ",
     "dist": "electron-builder"
+    
+# Help
+
+Web page:https://nestjsgenerator.wordpress.com/
+Youtube channel:https://www.youtube.com/channel/UCibwGdR3kUrHeVpXjqRT_Jg
 
 # Generador
 
