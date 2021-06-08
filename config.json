@@ -204,11 +204,49 @@
 					"extfiles": ""
 				},
 				{
+					"idschema": "1",
 					"id": 10,
 					"type": "get",
 					"operation": "skiplimitfilter",
 					"path": "getskiplimitfilter",
 					"field": "Name",
+					"fields": [
+						"id",
+						"Name",
+						"login",
+						"password",
+						"roles",
+						"bearer"
+					],
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 11,
+					"type": "changepassword",
+					"operation": "",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"idschema": "1",
+					"id": 12,
+					"type": "patch",
+					"operation": "",
+					"path": "",
+					"field": "",
+					"fields": [
+						"id",
+						"Name",
+						"login",
+						"password",
+						"roles",
+						"bearer"
+					],
 					"security": true,
 					"roles": "Admin User",
 					"extfiles": ""

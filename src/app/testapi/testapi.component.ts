@@ -177,6 +177,28 @@ export class TestapiComponent implements OnInit {
       case 'uploadfiles':
         break;
       case 'put':
+        {
+        for (let index = 0; index < fields.length; index++) {
+          const element = fields[index];
+          switch (element.type) {
+            case 'number':
+              body += `"${element.name}"` + ':0,';
+              break;
+            case 'string':
+              body += `"${element.name}"` + ':"",';
+              break;
+            case 'date':
+              body += `"${element.name}"` + ':"2012-04-23T18:25:43.511Z",'
+              break;
+            default:
+              break;
+          }
+        }
+        body = body.substr(0, body.length - 1);
+        body += body = '}';
+        const jsonvar = JSON.parse(body)
+        this.profileForm.patchValue({ body: JSON.stringify(jsonvar, null, 4) });
+      }
         break;
       case 'patch':
         {
@@ -201,6 +223,7 @@ export class TestapiComponent implements OnInit {
           const jsonvar = JSON.parse(body)
           this.profileForm.patchValue({ body: JSON.stringify(jsonvar, null, 4) });
         }
+        break;
       case 'post':
         for (let index = 0; index < fields.length; index++) {
           const element = fields[index];
