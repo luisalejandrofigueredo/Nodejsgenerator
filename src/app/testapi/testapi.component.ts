@@ -316,6 +316,17 @@ export class TestapiComponent implements OnInit {
        break; 
       case 'get':
         switch (typea[1]) {
+          case 'count':
+            httpOptions = {
+              headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                'authorization': 'Bearer ' + this.rtoken
+              })
+            };
+            this.url = this.urlpri + `/${this.schemastring}/count`;
+            this.httpclient.get(this.url, httpOptions).subscribe(res =>
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+          break;
           case 'getone':
             httpOptions = {
               headers: new HttpHeaders({
@@ -323,7 +334,7 @@ export class TestapiComponent implements OnInit {
                 'authorization': 'Bearer ' + this.rtoken
               })
             };
-            this.url = this.urlpri + `/${this.schemastring}/${this.profileForm.get('record').value}`;
+            this.url = this.urlpri + `/${this.schemastring}/getone/${this.profileForm.get('record').value}`;
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
               this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
             break;

@@ -250,6 +250,16 @@
 					"security": true,
 					"roles": "Admin User",
 					"extfiles": ""
+				},
+				{
+					"id": 13,
+					"type": "get",
+					"operation": "count",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
 				}
 			]
 		}

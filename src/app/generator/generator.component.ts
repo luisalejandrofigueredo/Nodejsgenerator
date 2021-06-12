@@ -435,7 +435,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
               break;
             case 'getone':
               this.addgenrartinline('\tadding verb get getone');
-              this.filegenerating += `@Get('/:id')\n`;
+              this.filegenerating += `@Get('getone/:id')\n`;
               this.generatesecurity(element);
               this.filegenerating += `getone(@Param() params) {\n`;
               this.filegenerating += `\t return this.service.getOne(+params.id);\n }\n`;
@@ -466,6 +466,14 @@ export class GeneratorComponent implements OnInit, OnChanges {
               this.filegenerating += `\t return this.service.skiplimitfilter${element.field}(skip,limit,order,${element.field});\n`;
               this.filegenerating += '}\n';
               break;
+              case 'count':
+                this.addgenrartinline('\tadding count');
+                this.filegenerating += `@Get('count')\n`;
+                this.generatesecurity(element);
+                this.filegenerating +='count(){\n';
+                this.filegenerating +='\t return this.service.getCount();\n'
+                this.filegenerating +='}\n';
+                break;
             default:
               break;
           }
@@ -611,7 +619,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
               break;
             case 'count':
               this.addgenrartinline('\tadding service get count');
-              this.filegenerating += `async get${schema}Count(): Promise<number> {\n`;
+              this.filegenerating += `async getCount(): Promise<number> {\n`;
               this.filegenerating += `\t return await this.${schema}Repository.count();\n`;
               this.filegenerating += '}\n';
               break;
