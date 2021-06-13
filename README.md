@@ -9,6 +9,7 @@ use npm run the script you nead for run or compile a executable only tested in w
 
 Web page:https://nestjsgenerator.wordpress.com/
 Youtube channel:https://www.youtube.com/channel/UCibwGdR3kUrHeVpXjqRT_Jg
+Executable file Sourceforge:https://sourceforge.net/projects/nestjsgenerator/
 
 # Generador
 
