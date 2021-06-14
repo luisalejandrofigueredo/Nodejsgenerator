@@ -1,6 +1,6 @@
 {
   "name": "generator",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Luis Alejandro Figueredo Casadei",
   "description": "Generator for Nestjs",
   "main": "main.js",

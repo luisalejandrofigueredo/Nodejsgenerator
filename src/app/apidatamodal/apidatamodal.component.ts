@@ -28,7 +28,9 @@ export class ApidatamodalComponent implements OnInit {
     { value: 'skiplimit', viewValue: 'Get skiplimit by key' },
     { value: 'skiplimitbyfield' , viewValue: 'Get skiplimit by field' },
     { value: 'skiplimitfilter', viewValue: 'Get limit filter'},
-    { value: 'count', viewValue: 'Count'}
+    { value: 'count', viewValue: 'Count'},
+    { value: 'findandcount', viewValue:'Find and Count'},
+    { value: 'findandcountwithoptions' , viewValue:'Find and Count with options'}
   ];
 
   fields: string[];

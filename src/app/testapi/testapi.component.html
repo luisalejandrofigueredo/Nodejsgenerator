@@ -1,5 +1,5 @@
 <mat-form-field>
-    <input matInput placeholder="host"  (change)="changehost()"  class="teminal" [(ngModel)]="host">
+    <input matInput placeholder="host"  (change)="changehost()"  class="terminal" [(ngModel)]="host">
 </mat-form-field>
 <mat-accordion>
 <mat-expansion-panel (afterExpand)="expand()">
@@ -106,8 +106,11 @@
         </div>
         <img *ngIf="this.profileForm.get('test').value===true && api.type==='getfile' && this.profileForm.get('field').value!==''" [src]="this.urlpri +'/'+this.schemastring+'/getfile/'+this.profileForm.get('field').value | authpipe | async" alt="">
         <div  fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-            <mat-form-field style="width: 100%;">
+            <mat-form-field *ngIf="api.type!=='get'" style="width: 100%;">
                 <textarea matInput name="body" placeholder="body" formControlName="body" cdkTextareaAutosize></textarea>
+            </mat-form-field>
+            <mat-form-field *ngIf="api.type==='get' && api.operation==='findandcountwithoptions'" style="width: 100%;">
+                <textarea matInput name="body" placeholder="options parameter" formControlName="body" cdkTextareaAutosize></textarea>
             </mat-form-field>
         </div>
         <mat-form-field *ngIf="(this.profileForm.get('test').value===false)" style="width: 100%;">

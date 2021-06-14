@@ -260,6 +260,26 @@
 					"security": true,
 					"roles": "Admin User",
 					"extfiles": ""
+				},
+				{
+					"id": 14,
+					"type": "get",
+					"operation": "findandcount",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 15,
+					"type": "get",
+					"operation": "findandcountwithoptions",
+					"path": "options",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
 				}
 			]
 		}

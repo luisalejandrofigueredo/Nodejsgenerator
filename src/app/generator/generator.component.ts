@@ -474,6 +474,23 @@ export class GeneratorComponent implements OnInit, OnChanges {
                 this.filegenerating +='\t return this.service.getCount();\n'
                 this.filegenerating +='}\n';
                 break;
+                case 'findandcount':
+                this.addgenrartinline('\tadding findandcount');
+                this.filegenerating += `@Get('findandcount')\n`;
+                this.generatesecurity(element);
+                this.filegenerating +='findandcount(){\n';
+                this.filegenerating +='\t return this.service.getfindandcount();\n'
+                this.filegenerating +='}\n';
+                break;
+                case 'findandcountwithoptions':
+                this.addgenrartinline('\tadding findandcountwithoptions');
+                this.filegenerating += `@Get('findandcountwithoptions${element.path}/:options')\n`;
+                this.generatesecurity(element);
+                this.filegenerating +=`findandcountwithoptions${element.path}(@Param('options') options:string){\n`;
+                this.filegenerating +=`\t return this.service.getfindandcountwithoptions${element.path}(options);\n`
+                this.filegenerating +='}\n';
+                break;
+                
             default:
               break;
           }
@@ -575,6 +592,18 @@ export class GeneratorComponent implements OnInit, OnChanges {
           break;
         case 'get':
           switch (element.operation) {
+            case 'findandcountwithoptions':
+              this.addgenrartinline('\tadding find and count with options');
+              this.filegenerating += `async getfindandcountwithoptions${element.path}(options:string): Promise<[any,number]> {\n`;
+              this.filegenerating += `\treturn await this.${schema}Repository.findAndCount(JSON.parse(decodeURI(options)));\n`;
+              this.filegenerating += `}\n`;
+              break;
+            case 'findandcount':
+              this.addgenrartinline('\tadding find and count');
+              this.filegenerating += `async getfindandcount(): Promise<[${schema}[],number]> {\n`;
+              this.filegenerating += `\treturn await this.${schema}Repository.findAndCount();\n`;
+              this.filegenerating += `}\n`;
+              break;
             case 'getall':
               this.addgenrartinline('\tadding service get getall');
               this.filegenerating += `async getall(): Promise<${schema}[]> {\n`;
