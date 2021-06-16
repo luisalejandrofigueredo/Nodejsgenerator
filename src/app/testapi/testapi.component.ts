@@ -173,6 +173,9 @@ export class TestapiComponent implements OnInit {
     let body = '{';
     switch (typea[0]) {
       case 'get':
+        if (typea[1]='findwithoptions') {
+          this.profileForm.patchValue({ body:'{ "where": {"id": 1},"order": {"id": "ASC"},"skip": 0,"take": 10,"cache": true }' });
+         }
         if (typea[1]='findandcountwithoptions') {
          this.profileForm.patchValue({ body:'{ "where": {"id": 1},"order": {"id": "ASC"},"skip": 0,"take": 10,"cache": true }' });
         }
@@ -321,6 +324,17 @@ export class TestapiComponent implements OnInit {
        break; 
       case 'get':
         switch (typea[1]) {
+          case 'findwithoptions':
+            httpOptions = {
+              headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                'authorization': 'Bearer ' + this.rtoken
+              })
+            };
+            this.url = this.urlpri + `/${this.schemastring}/findwithoptions${this.api.path}/${encodeURIComponent(this.profileForm.get('body').value)}`;
+            this.httpclient.get(this.url, httpOptions).subscribe(res =>
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+            break;
           case 'findandcountwithoptions':
             httpOptions = {
               headers: new HttpHeaders({

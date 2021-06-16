@@ -109,7 +109,7 @@
             <mat-form-field *ngIf="api.type!=='get'" style="width: 100%;">
                 <textarea matInput name="body" placeholder="body" formControlName="body" cdkTextareaAutosize></textarea>
             </mat-form-field>
-            <mat-form-field *ngIf="api.type==='get' && api.operation==='findandcountwithoptions'" style="width: 100%;">
+            <mat-form-field *ngIf="(api.type==='get' && api.operation==='findandcountwithoptions') || (api.type==='get' && api.operation==='findwithoptions')" style="width: 100%;">
                 <textarea matInput name="body" placeholder="options parameter" formControlName="body" cdkTextareaAutosize></textarea>
             </mat-form-field>
         </div>

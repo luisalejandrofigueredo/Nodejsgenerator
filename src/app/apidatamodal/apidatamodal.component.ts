@@ -30,7 +30,8 @@ export class ApidatamodalComponent implements OnInit {
     { value: 'skiplimitfilter', viewValue: 'Get limit filter'},
     { value: 'count', viewValue: 'Count'},
     { value: 'findandcount', viewValue:'Find and Count'},
-    { value: 'findandcountwithoptions' , viewValue:'Find and Count with options'}
+    { value: 'findandcountwithoptions' , viewValue:'Find and Count with options'},
+    { value: 'findwithoptions' , viewValue:'Find with options'}
   ];
 
   fields: string[];

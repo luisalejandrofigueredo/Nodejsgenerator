@@ -483,11 +483,19 @@ export class GeneratorComponent implements OnInit, OnChanges {
                 this.filegenerating +='}\n';
                 break;
                 case 'findandcountwithoptions':
-                this.addgenrartinline('\tadding findandcountwithoptions');
+                this.addgenrartinline('\tadding find and count with options');
                 this.filegenerating += `@Get('findandcountwithoptions${element.path}/:options')\n`;
                 this.generatesecurity(element);
                 this.filegenerating +=`findandcountwithoptions${element.path}(@Param('options') options:string){\n`;
                 this.filegenerating +=`\t return this.service.getfindandcountwithoptions${element.path}(options);\n`
+                this.filegenerating +='}\n';
+                break;
+                case 'findwithoptions':
+                this.addgenrartinline('\tadding find with options');
+                this.filegenerating += `@Get('findwithoptions${element.path}/:options')\n`;
+                this.generatesecurity(element);
+                this.filegenerating +=`findwithoptions${element.path}(@Param('options') options:string){\n`;
+                this.filegenerating +=`\t return this.service.getfindwithoptions${element.path}(options);\n`
                 this.filegenerating +='}\n';
                 break;
                 
@@ -592,6 +600,12 @@ export class GeneratorComponent implements OnInit, OnChanges {
           break;
         case 'get':
           switch (element.operation) {
+            case 'findwithoptions':
+              this.addgenrartinline('\tadding find  with options');
+              this.filegenerating += `async getfindwithoptions${element.path}(options:string): Promise<any[]> {\n`;
+              this.filegenerating += `\treturn await this.${schema}Repository.find(JSON.parse(decodeURI(options)));\n`;
+              this.filegenerating += `}\n`;
+              break;
             case 'findandcountwithoptions':
               this.addgenrartinline('\tadding find and count with options');
               this.filegenerating += `async getfindandcountwithoptions${element.path}(options:string): Promise<[any,number]> {\n`;
