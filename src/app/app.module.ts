@@ -50,6 +50,7 @@ import { ConfigloggerComponent } from './help/helpconfig/configlogger/configlogg
 import { ConfigdatabaseComponent } from './help/helpconfig/configdatabase/configdatabase.component';
 import { TestapiComponent } from './testapi/testapi.component';
 import { AuthpipePipe } from './authpipe.pipe';
+import { GenoptionsComponent } from './genoptions/genoptions.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -76,6 +77,7 @@ import { AuthpipePipe } from './authpipe.pipe';
     ConfigdatabaseComponent,
     TestapiComponent,
     AuthpipePipe,
+    GenoptionsComponent,
   ],
   imports: [ 
     BrowserModule, 
@@ -112,6 +114,6 @@ import { AuthpipePipe } from './authpipe.pipe';
   }],
   bootstrap: [AppComponent],
   // tslint:disable-next-line: max-line-length
-  entryComponents: [DatamodalComponent, FormschemamodalComponent, ApidatamodalComponent, RelationdatamodalComponent, RelationdatamodalonetomanyComponent]
+  entryComponents: [DatamodalComponent, FormschemamodalComponent, ApidatamodalComponent, RelationdatamodalComponent, RelationdatamodalonetomanyComponent,GenoptionsComponent]
 })
 export class AppModule { }

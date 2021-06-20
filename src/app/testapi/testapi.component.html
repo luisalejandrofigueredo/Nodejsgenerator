@@ -112,12 +112,13 @@
             <mat-form-field *ngIf="(api.type==='get' && api.operation==='findandcountwithoptions') || (api.type==='get' && api.operation==='findwithoptions')" style="width: 100%;">
                 <textarea matInput name="body" placeholder="options parameter" formControlName="body" cdkTextareaAutosize></textarea>
             </mat-form-field>
+            <button mat-icon-button type="button" (click)="opengenoption()" *ngIf="(api.type==='get' && api.operation==='findandcountwithoptions') || (api.type==='get' && api.operation==='findwithoptions')"><mat-icon>code</mat-icon></button>
         </div>
         <mat-form-field *ngIf="(this.profileForm.get('test').value===false)" style="width: 100%;">
             <textarea  matInput name="reponse" placeholder="reponse" formControlName="reponse"
                 cdkTextareaAutosize></textarea>
         </mat-form-field>
-        <button  mat-raised-button type="submit" color="primary" mat-button [disabled]="!profileForm.valid">Send</button>
+        <button mat-raised-button type="submit" color="primary" mat-button [disabled]="!profileForm.valid">Send</button>
     </form>
 </mat-expansion-panel>
 </mat-accordion>

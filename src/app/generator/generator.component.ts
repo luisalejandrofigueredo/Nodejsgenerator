@@ -565,7 +565,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating = '';
     this.filegenerating += `import { Injectable, Inject, UseGuards } from '@nestjs/common';\n`;
     this.filegenerating += `import { InjectRepository } from '@nestjs/typeorm';\n`;
-    this.filegenerating += `import { Repository } from 'typeorm';\n`;
+    this.filegenerating += `import { Repository, Not, MoreThanOrEqual, Equal, Like, ILike, Between, In, Any, IsNull, Raw } from 'typeorm';\n`;
     this.filegenerating += `import * as bcrypt from 'bcrypt';\n`;
     this.filegenerating += `import { ${this.config.schemas[index].name} } from '../entitys/${this.config.schemas[index].name}.entity';\n`;
     this.filegenerating += `@Injectable()\n`;

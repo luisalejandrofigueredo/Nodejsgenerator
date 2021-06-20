@@ -78,7 +78,7 @@ export class ConfigService {
     let fields = [];
     const columns = this.getschematable(_id);
     for (const iterator of columns) {
-      fields.push({ id: iterator.id, name: iterator.name });
+      fields.push({ id: iterator.id,type:iterator.type,name: iterator.name });
     }
     return fields;
   }

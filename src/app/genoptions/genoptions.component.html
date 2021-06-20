@@ -1,0 +1,93 @@
+<p mat-dialog-title>Generate options</p>
+<mat-accordion #matacordion="matAccordion" multi>
+    <mat-expansion-panel #matExpansionPanelSelect>
+        <mat-expansion-panel-header>
+            <P>Select</P>
+        </mat-expansion-panel-header>
+        <form [formGroup]="profileForm" (ngSubmit)="genselect()">
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                <mat-select placeholder="Field" (selectionChange)="change()" formControlName="field">
+                    <mat-option *ngFor="let item of fields" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+                <button mat-icon-button (click)="addfield()" type="button">
+                    <mat-icon>add</mat-icon>
+                </button>
+                <button mat-icon-button (click)="removefield()" type="button">
+                    <mat-icon>remove</mat-icon>
+                </button>
+            </div>
+            <mat-form-field style="width: 100%;">
+                <textarea matInput placeholder="Text select" formControlName="textselect"
+                    cdkTextareaAutosize></textarea>
+            </mat-form-field>
+            <button mat-raised-button type="submit" color="primary" mat-button
+                [disabled]="!profileForm.valid">Ready</button>
+        </form>
+    </mat-expansion-panel>
+    <mat-expansion-panel #matExpansionPanelWhere>
+        <mat-expansion-panel-header>
+            Where
+        </mat-expansion-panel-header>
+        <form [formGroup]="profileFormWhere" (ngSubmit)="genWhere()">
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                <mat-select placeholder="Where" (selectionChange)="changeorder()" formControlName="field">
+                    <mat-option *ngFor="let item of fields" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+                <mat-form-field>
+                    <input matInput formControlName="value" placeholder="Value">
+                </mat-form-field>
+                <button mat-icon-button (click)="addfieldwhere()" type="button">
+                    <mat-icon>add</mat-icon>
+                </button>
+                <button mat-icon-button (click)="removefieldwhere()" type="button">
+                    <mat-icon>remove</mat-icon>
+                </button>
+            </div>
+            <mat-form-field style="width: 100%;">
+                <textarea matInput placeholder="Text select" formControlName="textselect"
+                    cdkTextareaAutosize></textarea>
+            </mat-form-field>
+            <button mat-raised-button type="submit" color="primary" mat-button
+                [disabled]="!profileFormWhere.valid">Ready</button>
+        </form>
+    </mat-expansion-panel>
+    <mat-expansion-panel #matExpansionPanelOrder>
+        <mat-expansion-panel-header>
+            Order
+        </mat-expansion-panel-header>
+        <form [formGroup]="profileFormOrder" (ngSubmit)="genOrder()">
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                <mat-select placeholder="Field" (selectionChange)="changeorder()" formControlName="field">
+                    <mat-option *ngFor="let item of fields" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+                <mat-select placeholder="Order" formControlName="order">
+                    <mat-option value="ASC">
+                        ASC
+                    </mat-option>
+                    <mat-option value="DESC">
+                        DESC
+                    </mat-option>
+                </mat-select>
+                <button mat-icon-button (click)="addfieldorder()" type="button">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+            <mat-form-field style="width: 100%;">
+                <textarea matInput placeholder="Text select" formControlName="textselect"
+                    cdkTextareaAutosize></textarea>
+            </mat-form-field>
+            <button mat-raised-button type="submit" color="primary" mat-button
+                [disabled]="!profileFormOrder.valid">Ready</button>
+        </form>
+    </mat-expansion-panel>
+</mat-accordion>
+<div mat-dialog-actions style="justify-content: flex-end;">
+    <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>Cancel</button>
+    <button mat-raised-button color="primary" mat-button (click)="onYesClick()">Close and copy</button>
+</div>

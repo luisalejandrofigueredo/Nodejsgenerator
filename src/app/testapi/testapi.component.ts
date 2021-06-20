@@ -6,8 +6,9 @@ import { Schemahead } from '../interfaces/schemahead';
 import { Api } from "../interfaces/api";
 import { Schemaitem } from '../interfaces/schema'
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { type } from 'os';
-import { FILE } from 'dns';
+import { MatDialog } from '@angular/material/dialog';
+import { GenoptionsComponent } from '../genoptions/genoptions.component';
+import { Overlay } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-testapi',
@@ -35,7 +36,7 @@ export class TestapiComponent implements OnInit {
   rtoken: string;
   profileForm: FormGroup;
   form = new FormData();
-  constructor(private httpclient: HttpClient, private configservice: ConfigService) { }
+  constructor(private httpclient: HttpClient,private genoption:MatDialog, private configservice: ConfigService,private overlay: Overlay) { }
 
   ngOnInit(): void {
     this.api = { id: 0, field: '', path: '', extfiles: '', type: '', roles: '', security: false, operation: '', };
@@ -155,6 +156,16 @@ export class TestapiComponent implements OnInit {
         })
       }
     }
+  }
+
+  opengenoption(){
+    const dialogRef = this.genoption.open(GenoptionsComponent, {
+      width: '500px',
+      autoFocus:false,
+      scrollStrategy: this.overlay.scrollStrategies.noop(),
+      disableClose: false,
+      data: { fields: this.configservice.getfieldschemaswithid(this.profileForm.get('Schema').value) }});
+      dialogRef.afterClosed().subscribe(ret=>{ if (ret!==undefined) {this.profileForm.patchValue({'body':ret})}})
   }
 
   change() {
