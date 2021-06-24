@@ -333,6 +333,48 @@
 							"type": "string"
 						}
 					]
+				},
+				{
+					"id": 19,
+					"type": "get",
+					"operation": "findandcountgenerated",
+					"path": "prueba",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "",
+					"options": "{select:[\"Name\",\"login\"],where:{\"Name\":`${name}`,\"login\":`${login}`},\"order\":{\"Name\":\"ASC\"},skip:0,take:10}",
+					"parameters": [
+						{
+							"name": "name",
+							"type": "string"
+						},
+						{
+							"name": "login",
+							"type": "string"
+						}
+					]
+				},
+				{
+					"id": 20,
+					"type": "get",
+					"operation": "findgenerated",
+					"path": "prueba2",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "",
+					"options": "{select:[\"Name\",\"login\"],where:{\"Name\":`${name}`,\"login\":`${login}`},\"order\":{\"Name\":\"ASC\"},skip:0,take:10}",
+					"parameters": [
+						{
+							"name": "name",
+							"type": "string"
+						},
+						{
+							"name": "login",
+							"type": "string"
+						}
+					]
 				}
 			]
 		}

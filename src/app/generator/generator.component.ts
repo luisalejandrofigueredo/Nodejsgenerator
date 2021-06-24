@@ -513,11 +513,11 @@ export class GeneratorComponent implements OnInit, OnChanges {
                   if (index === 0) {
                     this.filegenerating += `@Param('${elempar.name}') `;
                     this.filegenerating += ` ${elempar.name}`;
-                    this.filegenerating+=(elempar.type === "string" || elempar.type === 'date') ? ':string' : ':number';
+                    this.filegenerating += (elempar.type === "string" || elempar.type === 'date') ? ':string' : ':number';
                   } else {
-                    this.filegenerating +=`,@Param('${elempar.name}')`;
+                    this.filegenerating += `,@Param('${elempar.name}')`;
                     this.filegenerating += ` ${elempar.name}`;
-                    this.filegenerating+= (elempar.type === "string" || elempar.type === 'date') ? ':string' : ':number';
+                    this.filegenerating += (elempar.type === "string" || elempar.type === 'date') ? ':string' : ':number';
                   }
                 });
                 this.filegenerating += ` ){\n`;
@@ -533,7 +533,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
                 this.filegenerating += ');\n';
                 this.filegenerating += '}\n';
               }
-            break;
+              break;
             case 'findandcountgenerated':
               {
                 this.addgenrartinline(`adding find and count generated ${element.path}`);
@@ -548,11 +548,11 @@ export class GeneratorComponent implements OnInit, OnChanges {
                   if (index === 0) {
                     this.filegenerating += `@Param('${elempar.name}') `;
                     this.filegenerating += ` ${elempar.name}`;
-                    this.filegenerating+=(elempar.type === "string" || elempar.type === 'date') ? ':string' : ':number';
+                    this.filegenerating += (elempar.type === "string" || elempar.type === 'date') ? ':string' : ':number';
                   } else {
-                    this.filegenerating +=`,@Param('${elempar.name}')`;
+                    this.filegenerating += `,@Param('${elempar.name}')`;
                     this.filegenerating += ` ${elempar.name}`;
-                    this.filegenerating+= (elempar.type === "string" || elempar.type === 'date') ? ':string' : ':number';
+                    this.filegenerating += (elempar.type === "string" || elempar.type === 'date') ? ':string' : ':number';
                   }
                 });
                 this.filegenerating += ` ){\n`;
@@ -568,7 +568,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
                 this.filegenerating += ');\n';
                 this.filegenerating += '}\n';
               }
-            break;
+              break;
             default:
               break;
           }
@@ -673,9 +673,14 @@ export class GeneratorComponent implements OnInit, OnChanges {
             case 'findandcountgenerated':
               this.addgenrartinline('\tadding find and count generated');
               this.filegenerating += `async getfindandcountgenerated${element.path}( `
-              element.parameters.forEach(elementpar => {
-                this.filegenerating += elementpar.name;
-                this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date') ? ':string' : ':number';
+              element.parameters.forEach((elementpar, index) => {
+                if (index === 0) {
+                  this.filegenerating += elementpar.name;
+                  this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date') ? ':string' : ':number';
+                } else {
+                  this.filegenerating += ', ' + elementpar.name;
+                  this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date') ? ':string' : ':number';
+                }
               });
               this.filegenerating += `):Promise<any[]> {\n`;
               this.filegenerating += `\treturn await this.${schema}Repository.findAndCount(${element.options});\n`;
@@ -684,9 +689,14 @@ export class GeneratorComponent implements OnInit, OnChanges {
             case 'findgenerated':
               this.addgenrartinline('\tadding find generated');
               this.filegenerating += `async getfindgenerated${element.path}( `
-              element.parameters.forEach(elementpar => {
-                this.filegenerating += elementpar.name;
-                this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date') ? ':string' : ':number';
+              element.parameters.forEach((elementpar, index) => {
+                if (index === 0) {
+                  this.filegenerating += elementpar.name;
+                  this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date') ? ':string' : ':number';
+                } else {
+                  this.filegenerating += ', ' + elementpar.name;
+                  this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date') ? ':string' : ':number';
+                }
               });
               this.filegenerating += `):Promise<any[]> {\n`;
               this.filegenerating += `\treturn await this.${schema}Repository.find(${element.options});\n`;
