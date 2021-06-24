@@ -9,4 +9,6 @@ export interface Typeoperation {
     security: boolean;
     roles: string;
     extfiles?:string;
+    options?:string;
+    parameters:{name:string;type:string}[];
 }

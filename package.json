@@ -44,9 +44,7 @@
     "@angular/router": "~10.0.2",
     "@materia-ui/ngx-monaco-editor": "^4.0.2",
     "electron-builder-squirrel-windows": "^22.10.5",
-    "monaco-editor": "^0.18.1",
     "ngx-electron": "^2.2.0",
-    "ngx-monaco-editor": "^9.0.0",
     "rxjs": "~6.5.4",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"

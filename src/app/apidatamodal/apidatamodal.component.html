@@ -6,11 +6,24 @@
                 {{item.viewValue}}
             </mat-option>
         </mat-select>
-        <mat-select *ngIf="profileForm.get('selectedValue').value==='get'" placeholder="get operation" formControlName="selectedOperation" name="operation">
+        <mat-select (selectionChange)="operationchange()" *ngIf="profileForm.get('selectedValue').value==='get'" placeholder="get operation" formControlName="selectedOperation" name="operation">
             <mat-option *ngFor="let item of operation" [value]="item.value">
                 {{item.viewValue}}
             </mat-option>
         </mat-select>
+        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+            <mat-form-field *ngIf="profileForm.get('selectedOperation').value==='findgenerated' || profileForm.get('selectedOperation').value==='findandcountgenerated'">
+                <input  matInput name="parameters" placeholder="Parameters" formControlName="parameters">
+            </mat-form-field>
+            <button mat-icon-button *ngIf="profileForm.get('selectedOperation').value==='findgenerated' || profileForm.get('selectedOperation').value==='findandcountgenerated'" (click)="generateparameters()"><mat-icon>add</mat-icon></button>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+            <mat-form-field *ngIf="profileForm.get('selectedOperation').value==='findgenerated' || profileForm.get('selectedOperation').value==='findandcountgenerated'">
+                <textarea  matInput name="options" placeholder="Options" formControlName="options"
+                    cdkTextareaAutosize></textarea>
+            </mat-form-field>
+            <button mat-icon-button *ngIf="profileForm.get('selectedOperation').value==='findgenerated' || profileForm.get('selectedOperation').value==='findandcountgenerated'" (click)="generatecode()"><mat-icon>code</mat-icon></button>
+        </div>
         <mat-select *ngIf="profileForm.get('selectedOperation').value==='skiplimitbyfield' || profileForm.get('selectedOperation').value==='skiplimitfilter'"
             placeholder="Select field" formControlName="selectedfield" name="selectfield">
             <mat-option *ngFor="let items of fields" [value]="items">

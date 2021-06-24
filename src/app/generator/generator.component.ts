@@ -3,6 +3,7 @@ import { ElectronService } from 'ngx-electron';
 import { Schemaitem } from '../interfaces/schema';
 import { Relations } from '../interfaces/relations';
 import { ConfigService } from '../service/config.service';
+import { Api } from '../interfaces/api';
 
 
 @Component({
@@ -79,8 +80,8 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating += "import { TypeOrmModule } from '@nestjs/typeorm';\n";
     this.filegenerating += "import { AppController } from './app.controller';\n";
     this.filegenerating += "import { AppService } from './app.service';\n";
-    if (this.configservice.config.enableuploadfiles === true){
-       this.filegenerating+="import { MulterModule } from '@nestjs/platform-express';\n";
+    if (this.configservice.config.enableuploadfiles === true) {
+      this.filegenerating += "import { MulterModule } from '@nestjs/platform-express';\n";
     }
     const schemas = this.configservice.getschema();
     for (let index = 0; index < schemas.length; index++) {
@@ -90,8 +91,8 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating += `import {LoginModule} from './module/Login.module';\n`;
     this.filegenerating += '@Module({\n';
     this.filegenerating += 'imports:[TypeOrmModule.forRoot()';
-    if (this.configservice.config.enableuploadfiles === true){
-      this.filegenerating+=",MulterModule.register({\n dest: './uploads',\n})\n";
+    if (this.configservice.config.enableuploadfiles === true) {
+      this.filegenerating += ",MulterModule.register({\n dest: './uploads',\n})\n";
     }
     for (let index = 0; index < schemas.length; index++) {
       const element = schemas[index].name;
@@ -164,8 +165,8 @@ export class GeneratorComponent implements OnInit, OnChanges {
       this.ormj = { PrimaryGeneratedColumn: false, OneToMany: false, ManyToOne: false, Index: false };
       this.reltables = [];
       this.entitygenerator(index);
-      this.apigenerator(index, schemas[index].name, schemas[index].mastersecurity,schemas[index].filesupload);
-      this.generatemodules(index, schemas[index].name, schemas[index].mastersecurity,schemas[index].filesupload);
+      this.apigenerator(index, schemas[index].name, schemas[index].mastersecurity, schemas[index].filesupload);
+      this.generatemodules(index, schemas[index].name, schemas[index].mastersecurity, schemas[index].filesupload);
     }
     this.generateloginmodule()
     this.addgenrartinline('end generating schemas ...');
@@ -202,7 +203,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     return true;
   }
 
-  generatemodules(index: number, schema: string, mastersecurity: boolean,filesupload:boolean): boolean {
+  generatemodules(index: number, schema: string, mastersecurity: boolean, filesupload: boolean): boolean {
     console.log('master security', mastersecurity);
     let mastersec: any;
     this.addgenrartinline(`begin generating module ${schema} ...`);
@@ -276,61 +277,61 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating += `]})],\n`;
   }
   // generando api
-  multerutilgenerator(index:number,elementpath:string,extfiles:string){
+  multerutilgenerator(index: number, elementpath: string, extfiles: string) {
     this.addgenrartinline('Begin generate multer util ... ');
-    console.log('ext files',extfiles);
-    const filename='file-upload'+elementpath;
-    let filegenerating="import { extname } from 'path';\n";
-    filegenerating+="import { HttpException, HttpStatus } from '@nestjs/common';";
-    filegenerating+=`export const FileFilter${elementpath} = (req, file, callback) => {\n`;
-    let exfilest=extfiles.trim();
-    exfilest=exfilest.replace(/ /g,"|");
-    filegenerating+=`if (!file.originalname.match(/\.(${exfilest})$/)) {\n`;
-    filegenerating+='return callback(\n';
-    filegenerating+='new HttpException(\n';
-    filegenerating+=` 'Only type ${extfiles} files are allowed!',\n`;
-    filegenerating+='HttpStatus.BAD_REQUEST,\n';
-    filegenerating+='),\n';
-    filegenerating+='false,\n';
-    filegenerating+=');\n';
-    filegenerating+='}\n';
-    filegenerating+='callback(null, true);\n';
-    filegenerating+=`};\n`;
-    filegenerating+=`export const editFileName${elementpath} = (req, file, callback) => {\n`;
-    filegenerating+=`const name = file.originalname.split('.')[0];\n`;
-    filegenerating+=`const fileExtName = extname(file.originalname);\n`;
-    filegenerating+='const randomName = Array(4)\n';
-    filegenerating+='.fill(null)\n';
-    filegenerating+='.map(() => Math.round(Math.random() * 10).toString(10))\n';
-    filegenerating+=`.join('');\n`;
-    filegenerating+='callback(null, `${name}${randomName}${fileExtName}`);';
-    filegenerating+='};\n'
+    console.log('ext files', extfiles);
+    const filename = 'file-upload' + elementpath;
+    let filegenerating = "import { extname } from 'path';\n";
+    filegenerating += "import { HttpException, HttpStatus } from '@nestjs/common';";
+    filegenerating += `export const FileFilter${elementpath} = (req, file, callback) => {\n`;
+    let exfilest = extfiles.trim();
+    exfilest = exfilest.replace(/ /g, "|");
+    filegenerating += `if (!file.originalname.match(/\.(${exfilest})$/)) {\n`;
+    filegenerating += 'return callback(\n';
+    filegenerating += 'new HttpException(\n';
+    filegenerating += ` 'Only type ${extfiles} files are allowed!',\n`;
+    filegenerating += 'HttpStatus.BAD_REQUEST,\n';
+    filegenerating += '),\n';
+    filegenerating += 'false,\n';
+    filegenerating += ');\n';
+    filegenerating += '}\n';
+    filegenerating += 'callback(null, true);\n';
+    filegenerating += `};\n`;
+    filegenerating += `export const editFileName${elementpath} = (req, file, callback) => {\n`;
+    filegenerating += `const name = file.originalname.split('.')[0];\n`;
+    filegenerating += `const fileExtName = extname(file.originalname);\n`;
+    filegenerating += 'const randomName = Array(4)\n';
+    filegenerating += '.fill(null)\n';
+    filegenerating += '.map(() => Math.round(Math.random() * 10).toString(10))\n';
+    filegenerating += `.join('');\n`;
+    filegenerating += 'callback(null, `${name}${randomName}${fileExtName}`);';
+    filegenerating += '};\n'
     const args = { path: this.config.filePath, name: filename, file: filegenerating };
     const end = this.electronservice.ipcRenderer.sendSync('saveutilmuter', args);
     this.addgenrartinlinefile(end);
     this.addgenrartinline('End generate multer util... ');
   }
-  apigenerator(index: number, schema: string, mastersecurity: boolean,filesupload:boolean) {
+  apigenerator(index: number, schema: string, mastersecurity: boolean, filesupload: boolean) {
     const schemalower = schema.toLowerCase();
     this.addgenrartinline('Begin generate Api... ');
     this.addgenrartinline('Begin generate controller... ');
     this.filegenerating = "import { Controller, Inject,Post, Body, Get, Put, Delete,Param,UseGuards,Headers, SetMetadata,Query,Patch";
-    if (filesupload===true){
-      this.filegenerating+=', UseInterceptors, UploadedFile, UploadedFiles, Res, HttpStatus';
+    if (filesupload === true) {
+      this.filegenerating += ', UseInterceptors, UploadedFile, UploadedFiles, Res, HttpStatus';
     }
-    this.filegenerating+=' } from "@nestjs/common";\n';
-    if (filesupload===true){
-      this.filegenerating+="import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';\n";
-      this.filegenerating+="import { diskStorage } from 'multer';\n";
+    this.filegenerating += ' } from "@nestjs/common";\n';
+    if (filesupload === true) {
+      this.filegenerating += "import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';\n";
+      this.filegenerating += "import { diskStorage } from 'multer';\n";
       for (let ind = 0; ind < this.config.schemas[index].schemasapi.length; ind++) {
         const element = this.config.schemas[index].schemasapi[ind];
-        if (element.type==='uploadfile'){
-          this.filegenerating+=`import { editFileName${element.path}, FileFilter${element.path} } from '../controller/file-upload${element.path}.utils';`
-          this.multerutilgenerator(index,element.path,element.extfiles)
+        if (element.type === 'uploadfile') {
+          this.filegenerating += `import { editFileName${element.path}, FileFilter${element.path} } from '../controller/file-upload${element.path}.utils';`
+          this.multerutilgenerator(index, element.path, element.extfiles)
         }
-        if (element.type==='uploadfiles'){
-          this.filegenerating+=`import { editFileName${element.path}, FileFilter${element.path} } from '../controller/file-upload${element.path}.utils';`
-          this.multerutilgenerator(index,element.path,element.extfiles)
+        if (element.type === 'uploadfiles') {
+          this.filegenerating += `import { editFileName${element.path}, FileFilter${element.path} } from '../controller/file-upload${element.path}.utils';`
+          this.multerutilgenerator(index, element.path, element.extfiles)
         }
       }
     }
@@ -348,73 +349,73 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating += `constructor(private service: ${this.config.schemas[index].name}Service){}\n`;
     // tslint:disable-next-line: prefer-for-of
     for (let ind = 0; ind < this.config.schemas[index].schemasapi.length; ind++) {
-      const element = this.config.schemas[index].schemasapi[ind];
+      const element: Api = this.config.schemas[index].schemasapi[ind];
       switch (element.type) {
         case 'getfile':
           this.addgenrartinline('\tadding getfile file');
-          this.filegenerating+=`@Get('${element.path}/:filename')\n`;
+          this.filegenerating += `@Get('${element.path}/:filename')\n`;
           this.generatesecurity(element);
-          this.filegenerating+=`getImage(@Param('filename') image, @Res() res) {\n`;
-          this.filegenerating+=`const response = res.sendFile(image, { root: './uploads' });\n`;
-          this.filegenerating+='return {\n';
-          this.filegenerating+='status: HttpStatus.OK,\n';
-          this.filegenerating+='data: response,\n';
-          this.filegenerating+='};\n';
-          this.filegenerating+='}\n';
+          this.filegenerating += `getImage(@Param('filename') image, @Res() res) {\n`;
+          this.filegenerating += `const response = res.sendFile(image, { root: './uploads' });\n`;
+          this.filegenerating += 'return {\n';
+          this.filegenerating += 'status: HttpStatus.OK,\n';
+          this.filegenerating += 'data: response,\n';
+          this.filegenerating += '};\n';
+          this.filegenerating += '}\n';
           break;
         case 'uploadfile':
           this.addgenrartinline('\tadding upload file');
-          this.filegenerating+=`@Post('${element.path}')\n`;
+          this.filegenerating += `@Post('${element.path}')\n`;
           this.generatesecurity(element);
-          this.filegenerating+=` @UseInterceptors(\n`;
-          this.filegenerating+=`FileInterceptor('file', {\n`;
-          this.filegenerating+=`storage: diskStorage({\n`;
-          this.filegenerating+=`destination: './uploads',\n`;
-          this.filegenerating+=`filename: editFileName${element.path},\n`;
-          this.filegenerating+='}),\n';
-          this.filegenerating+=`fileFilter: FileFilter${element.path},\n`;
-          this.filegenerating+='}),\n';
-          this.filegenerating+=')\n';
-          this.filegenerating+=`async uploadedFile${element.path}(@UploadedFile() file) {\n`;
-          this.filegenerating+=`  const response = {\n`;
-          this.filegenerating+=`    originalname: file.originalname,\n`;
-          this.filegenerating+=`    filename: file.filename,\n`;
-          this.filegenerating+=`};\n`;
-          this.filegenerating+=`return {\n`;
-          this.filegenerating+=' status: HttpStatus.OK,\n';
-          this.filegenerating+=" message: 'File uploaded successfully!',\n";
-          this.filegenerating+=' data: response,\n';
-          this.filegenerating+='};\n';
-          this.filegenerating+="}\n"
-        break;
+          this.filegenerating += ` @UseInterceptors(\n`;
+          this.filegenerating += `FileInterceptor('file', {\n`;
+          this.filegenerating += `storage: diskStorage({\n`;
+          this.filegenerating += `destination: './uploads',\n`;
+          this.filegenerating += `filename: editFileName${element.path},\n`;
+          this.filegenerating += '}),\n';
+          this.filegenerating += `fileFilter: FileFilter${element.path},\n`;
+          this.filegenerating += '}),\n';
+          this.filegenerating += ')\n';
+          this.filegenerating += `async uploadedFile${element.path}(@UploadedFile() file) {\n`;
+          this.filegenerating += `  const response = {\n`;
+          this.filegenerating += `    originalname: file.originalname,\n`;
+          this.filegenerating += `    filename: file.filename,\n`;
+          this.filegenerating += `};\n`;
+          this.filegenerating += `return {\n`;
+          this.filegenerating += ' status: HttpStatus.OK,\n';
+          this.filegenerating += " message: 'File uploaded successfully!',\n";
+          this.filegenerating += ' data: response,\n';
+          this.filegenerating += '};\n';
+          this.filegenerating += "}\n"
+          break;
         case 'uploadfiles':
           this.addgenrartinline('\tadding upload files');
-          this.filegenerating+=`@Post('${element.path}')\n`;
+          this.filegenerating += `@Post('${element.path}')\n`;
           this.generatesecurity(element);
-          this.filegenerating+=' @UseInterceptors(\n';
-          this.filegenerating+="FilesInterceptor('files', 10, {\n";
-          this.filegenerating+='storage: diskStorage({\n',
-          this.filegenerating+="destination: './uploads',\n";
-          this.filegenerating+=`filename: editFileName${element.path},\n`;
-          this.filegenerating+='}),\n';
-          this.filegenerating+=`fileFilter: FileFilter${element.path},`;
-          this.filegenerating+='}),\n';
-          this.filegenerating+=')\n';
-          this.filegenerating+='async uploadMultipleFiles(@UploadedFiles() files) {\n';
-          this.filegenerating+='const response = [];\n';
-          this.filegenerating+='files.forEach(file => {\n';
-          this.filegenerating+='const fileReponse = {\n';
-          this.filegenerating+='originalname: file.originalname,\n';
-          this.filegenerating+='filename: file.filename,\n';
-          this.filegenerating+='};\n';
-          this.filegenerating+='response.push(fileReponse);\n';
-          this.filegenerating+='});\n';
-          this.filegenerating+='return {\n';
-          this.filegenerating+='status: HttpStatus.OK,\n';
-          this.filegenerating+="message: 'Files uploaded successfully!',\n";
-          this.filegenerating+='data: response,\n';
-          this.filegenerating+=`};\n`;
-          this.filegenerating+='}\n';
+          this.filegenerating += ' @UseInterceptors(\n';
+          this.filegenerating += "FilesInterceptor('files', 10, {\n";
+          this.filegenerating += 'storage: diskStorage({\n',
+            this.filegenerating += "destination: './uploads',\n";
+          this.filegenerating += `filename: editFileName${element.path},\n`;
+          this.filegenerating += '}),\n';
+          this.filegenerating += `fileFilter: FileFilter${element.path},`;
+          this.filegenerating += '}),\n';
+          this.filegenerating += ')\n';
+          this.filegenerating += 'async uploadMultipleFiles(@UploadedFiles() files) {\n';
+          this.filegenerating += 'const response = [];\n';
+          this.filegenerating += 'files.forEach(file => {\n';
+          this.filegenerating += 'const fileReponse = {\n';
+          this.filegenerating += 'originalname: file.originalname,\n';
+          this.filegenerating += 'filename: file.filename,\n';
+          this.filegenerating += '};\n';
+          this.filegenerating += 'response.push(fileReponse);\n';
+          this.filegenerating += '});\n';
+          this.filegenerating += 'return {\n';
+          this.filegenerating += 'status: HttpStatus.OK,\n';
+          this.filegenerating += "message: 'Files uploaded successfully!',\n";
+          this.filegenerating += 'data: response,\n';
+          this.filegenerating += `};\n`;
+          this.filegenerating += '}\n';
           break;
         case 'changepassword':
           this.addgenrartinline('\tadding put changepassword');
@@ -423,7 +424,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
           this.filegenerating += `changepassword(@Param() params) {\n`;
           this.filegenerating += `\t return this.service.changepassword(decodeURI(params.login),decodeURI(params.password));\n`;
           this.filegenerating += `}\n`;
-        break;
+          break;
         case 'get':
           switch (element.operation) {
             case 'getall':
@@ -450,7 +451,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
               this.filegenerating += '}\n';
               break;
             case 'skiplimitbyfield':
-              this.addgenrartinline('\tadding verb get skiplimit by field');
+              this.addgenrartinline(`\tadding verb get skiplimit order by field ${element.field}`);
               this.filegenerating += `@Get('skiplimitorder${element.field}/:skip/:limit/:order')\n`;
               this.generatesecurity(element);
               this.filegenerating += `getskiplimitorder${element.field} (@Param('skip') skip:number,@Param('limit') limit:number,@Param('order') order:string)`;
@@ -459,46 +460,115 @@ export class GeneratorComponent implements OnInit, OnChanges {
               this.filegenerating += '}\n';
               break;
             case 'skiplimitfilter':
-              this.addgenrartinline('\tadding verb get skiplimit by filter');
+              this.addgenrartinline(`\tadding verb get skiplimit filter by field ${element.field}`);
               this.filegenerating += `@Get('skiplimitfilter${element.field}/:skip/:limit/:order/:${element.field}')\n`;
               this.generatesecurity(element);
               this.filegenerating += `skiplimitfilter${element.field} (@Param('skip') skip:number,@Param('limit') limit:number,@Param('order') order:string,@Param('${element.field}') ${element.field}:string ) {\n`;
               this.filegenerating += `\t return this.service.skiplimitfilter${element.field}(skip,limit,order,${element.field});\n`;
               this.filegenerating += '}\n';
               break;
-              case 'count':
-                this.addgenrartinline('\tadding count');
-                this.filegenerating += `@Get('count')\n`;
+            case 'count':
+              this.addgenrartinline('\tadding count');
+              this.filegenerating += `@Get('count')\n`;
+              this.generatesecurity(element);
+              this.filegenerating += 'count(){\n';
+              this.filegenerating += '\t return this.service.getCount();\n'
+              this.filegenerating += '}\n';
+              break;
+            case 'findandcount':
+              this.addgenrartinline('\tadding findandcount');
+              this.filegenerating += `@Get('findandcount')\n`;
+              this.generatesecurity(element);
+              this.filegenerating += 'findandcount(){\n';
+              this.filegenerating += '\t return this.service.getfindandcount();\n'
+              this.filegenerating += '}\n';
+              break;
+            case 'findandcountwithoptions':
+              this.addgenrartinline(`\tadding find and count with options ${element.path}`);
+              this.filegenerating += `@Get('findandcountwithoptions${element.path}/:options')\n`;
+              this.generatesecurity(element);
+              this.filegenerating += `findandcountwithoptions${element.path}(@Param('options') options:string){\n`;
+              this.filegenerating += `\t return this.service.getfindandcountwithoptions${element.path}(options);\n`
+              this.filegenerating += '}\n';
+              break;
+            case 'findwithoptions':
+              this.addgenrartinline(`\tadding find with options ${element.path}`);
+              this.filegenerating += `@Get('findwithoptions${element.path}/:options')\n`;
+              this.generatesecurity(element);
+              this.filegenerating += `findwithoptions${element.path}(@Param('options') options:string){\n`;
+              this.filegenerating += `\t return this.service.getfindwithoptions${element.path}(options);\n`
+              this.filegenerating += '}\n';
+              break;
+            case 'findgenerated':
+              {
+                this.addgenrartinline(`adding find generated ${element.path}`);
+                this.filegenerating += `@Get('findgenerated${element.path}`;
+                element.parameters.forEach(elempar => {
+                  this.filegenerating += `/:${elempar.name}`;
+                });
+                this.filegenerating += `')\n`;
                 this.generatesecurity(element);
-                this.filegenerating +='count(){\n';
-                this.filegenerating +='\t return this.service.getCount();\n'
-                this.filegenerating +='}\n';
-                break;
-                case 'findandcount':
-                this.addgenrartinline('\tadding findandcount');
-                this.filegenerating += `@Get('findandcount')\n`;
+                this.filegenerating += `findgenerated${element.path}(`;
+                element.parameters.forEach((elempar, index) => {
+                  if (index === 0) {
+                    this.filegenerating += `@Param('${elempar.name}') `;
+                    this.filegenerating += ` ${elempar.name}`;
+                    this.filegenerating+=(elempar.type === "string" || elempar.type === 'date') ? ':string' : ':number';
+                  } else {
+                    this.filegenerating +=`,@Param('${elempar.name}')`;
+                    this.filegenerating += ` ${elempar.name}`;
+                    this.filegenerating+= (elempar.type === "string" || elempar.type === 'date') ? ':string' : ':number';
+                  }
+                });
+                this.filegenerating += ` ){\n`;
+                this.filegenerating += `\t return this.service.getfindgenerated${element.path}(`;
+                element.parameters.forEach((elemepar, index) => {
+                  if (index === 0) {
+                    this.filegenerating += `${elemepar.name}`;
+                  }
+                  else {
+                    this.filegenerating += `,${elemepar.name}`;
+                  }
+                });
+                this.filegenerating += ');\n';
+                this.filegenerating += '}\n';
+              }
+            break;
+            case 'findandcountgenerated':
+              {
+                this.addgenrartinline(`adding find and count generated ${element.path}`);
+                this.filegenerating += `@Get('findandcountgenerated${element.path}`;
+                element.parameters.forEach(elempar => {
+                  this.filegenerating += `/:${elempar.name}`;
+                });
+                this.filegenerating += `')\n`;
                 this.generatesecurity(element);
-                this.filegenerating +='findandcount(){\n';
-                this.filegenerating +='\t return this.service.getfindandcount();\n'
-                this.filegenerating +='}\n';
-                break;
-                case 'findandcountwithoptions':
-                this.addgenrartinline('\tadding find and count with options');
-                this.filegenerating += `@Get('findandcountwithoptions${element.path}/:options')\n`;
-                this.generatesecurity(element);
-                this.filegenerating +=`findandcountwithoptions${element.path}(@Param('options') options:string){\n`;
-                this.filegenerating +=`\t return this.service.getfindandcountwithoptions${element.path}(options);\n`
-                this.filegenerating +='}\n';
-                break;
-                case 'findwithoptions':
-                this.addgenrartinline('\tadding find with options');
-                this.filegenerating += `@Get('findwithoptions${element.path}/:options')\n`;
-                this.generatesecurity(element);
-                this.filegenerating +=`findwithoptions${element.path}(@Param('options') options:string){\n`;
-                this.filegenerating +=`\t return this.service.getfindwithoptions${element.path}(options);\n`
-                this.filegenerating +='}\n';
-                break;
-                
+                this.filegenerating += `findandcountgenerated${element.path}(`;
+                element.parameters.forEach((elempar, index) => {
+                  if (index === 0) {
+                    this.filegenerating += `@Param('${elempar.name}') `;
+                    this.filegenerating += ` ${elempar.name}`;
+                    this.filegenerating+=(elempar.type === "string" || elempar.type === 'date') ? ':string' : ':number';
+                  } else {
+                    this.filegenerating +=`,@Param('${elempar.name}')`;
+                    this.filegenerating += ` ${elempar.name}`;
+                    this.filegenerating+= (elempar.type === "string" || elempar.type === 'date') ? ':string' : ':number';
+                  }
+                });
+                this.filegenerating += ` ){\n`;
+                this.filegenerating += `\t return this.service.getfindandcountgenerated${element.path}(`;
+                element.parameters.forEach((elemepar, index) => {
+                  if (index === 0) {
+                    this.filegenerating += `${elemepar.name}`;
+                  }
+                  else {
+                    this.filegenerating += `,${elemepar.name}`;
+                  }
+                });
+                this.filegenerating += ');\n';
+                this.filegenerating += '}\n';
+              }
+            break;
             default:
               break;
           }
@@ -525,13 +595,13 @@ export class GeneratorComponent implements OnInit, OnChanges {
           this.generatesecurity(element);
           this.filegenerating += `delete(@Param() params) {\n\t return this.service.delete(+params.id);\n}\n`;
           break;
-         case 'patch':
+        case 'patch':
           this.addgenrartinline('\tadding patch');
           this.filegenerating += `@Patch('/:id')\n`;
           this.generatesecurity(element);
-          this.filegenerating+= `patch(@Param() params,@Body() patchbody:any)`;
-          this.filegenerating+= `{\n\t return this.service.patch(+params.id,patchbody);\n}\n`;
-         break; 
+          this.filegenerating += `patch(@Param() params,@Body() patchbody:any)`;
+          this.filegenerating += `{\n\t return this.service.patch(+params.id,patchbody);\n}\n`;
+          break;
         default:
           break;
       }
@@ -583,12 +653,12 @@ export class GeneratorComponent implements OnInit, OnChanges {
       this.filegenerating += '// get for security\n';
     }
     for (let ind = 0; ind < this.config.schemas[index].schemasapi.length; ind++) {
-      const element = this.config.schemas[index].schemasapi[ind];
+      const element: Api = this.config.schemas[index].schemasapi[ind];
       switch (element.type) {
         case 'changepassword':
           this.addgenrartinline('\tadding service change password');
           this.filegenerating += `async changepassword(${sec.login}: string, newpassword:string): Promise<${schema}> {\n`;
-          this.filegenerating +=  `let reponse: Promise<${schema}>;\n`;
+          this.filegenerating += `let reponse: Promise<${schema}>;\n`;
           this.filegenerating += `\t await this.${schema}Repository.findOne({`;
           this.filegenerating += `where: [{ "${sec.login}": ${sec.login} }]`;
           this.filegenerating += `}).then(rep =>{ rep.${sec.password}=bcrypt.hashSync(newpassword,5);\n`;
@@ -600,6 +670,28 @@ export class GeneratorComponent implements OnInit, OnChanges {
           break;
         case 'get':
           switch (element.operation) {
+            case 'findandcountgenerated':
+              this.addgenrartinline('\tadding find and count generated');
+              this.filegenerating += `async getfindandcountgenerated${element.path}( `
+              element.parameters.forEach(elementpar => {
+                this.filegenerating += elementpar.name;
+                this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date') ? ':string' : ':number';
+              });
+              this.filegenerating += `):Promise<any[]> {\n`;
+              this.filegenerating += `\treturn await this.${schema}Repository.findAndCount(${element.options});\n`;
+              this.filegenerating += `}\n`;
+              break;
+            case 'findgenerated':
+              this.addgenrartinline('\tadding find generated');
+              this.filegenerating += `async getfindgenerated${element.path}( `
+              element.parameters.forEach(elementpar => {
+                this.filegenerating += elementpar.name;
+                this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date') ? ':string' : ':number';
+              });
+              this.filegenerating += `):Promise<any[]> {\n`;
+              this.filegenerating += `\treturn await this.${schema}Repository.find(${element.options});\n`;
+              this.filegenerating += `}\n`;
+              break;
             case 'findwithoptions':
               this.addgenrartinline('\tadding find  with options');
               this.filegenerating += `async getfindwithoptions${element.path}(options:string): Promise<any[]> {\n`;
@@ -692,11 +784,11 @@ export class GeneratorComponent implements OnInit, OnChanges {
           this.filegenerating += `\t return await this.${schema}Repository.delete(${schemalower});\n`;
           this.filegenerating += `}\n`;
           break;
-          case 'patch':
-            this.addgenrartinline('\tadding patch service');
-            this.filegenerating += `async patch(_id: number,patchbody:any) {\n`;
-            this.filegenerating +=`return await this.${schema}Repository.createQueryBuilder().update(${schema}).set(patchbody).where("id = :id", { id:_id }).execute();`;
-            this.filegenerating +='}\n';
+        case 'patch':
+          this.addgenrartinline('\tadding patch service');
+          this.filegenerating += `async patch(_id: number,patchbody:any) {\n`;
+          this.filegenerating += `return await this.${schema}Repository.createQueryBuilder().update(${schema}).set(patchbody).where("id = :id", { id:_id }).execute();`;
+          this.filegenerating += '}\n';
           break;
         default:
           break;

@@ -290,6 +290,49 @@
 					"security": true,
 					"roles": "Admin User",
 					"extfiles": ""
+				},
+				{
+					"idschema": "1",
+					"id": 17,
+					"type": "get",
+					"operation": "findgenerated",
+					"path": "findwithname",
+					"field": "",
+					"fields": [
+						"id",
+						"Name",
+						"login",
+						"password",
+						"roles",
+						"bearer"
+					],
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "",
+					"options": "{select:[\"Name\",\"login\"],where:{\"Name\":`${nombre}`},\"order\":{\"Name\":\"ASC\"},skip:0,take:10}",
+					"parameters": [
+						{
+							"name": "nombre",
+							"type": "number"
+						}
+					]
+				},
+				{
+					"id": 18,
+					"type": "get",
+					"operation": "findandcountgenerated",
+					"path": "gwoptions",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "",
+					"options": "{select:[\"Name\",\"login\"],where:{\"Name\":`${name}`},\"order\":{\"Name\":\"ASC\"},skip:0,take:10}",
+					"parameters": [
+						{
+							"name": "name",
+							"type": "string"
+						}
+					]
 				}
 			]
 		}

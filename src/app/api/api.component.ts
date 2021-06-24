@@ -43,14 +43,14 @@ export class ApiComponent implements OnInit {
 
   openadd(){
     const matRef = this.dialog.open(ApidatamodalComponent, { width: '300px' ,
-     data: { idschema:this.id, id: 0, type: '', operation: '' , path: '', fields: this.fields, field: '' , security: false, roles: '',extfiles:'' } as Typeoperation });
+     data: { idschema:this.id, id: 0, type: '', operation: '' , path: '', fields: this.fields, field: '' , security: false, roles: '',extfiles:'',options:'',parameters:[]  } as Typeoperation });
     matRef.afterClosed().subscribe(data => { if (data !== undefined){
       // tslint:disable-next-line: variable-name
       const _id = this.apis.length + 1;
       // tslint:disable-next-line: max-line-length
       this.apis.push({ id: _id , type: data.type, operation: data.operation, path: data.path, field: data.field, security: data.security, roles: data.roles});
       // tslint:disable-next-line: max-line-length
-      this.configservice.addapi(this.id, { id: _id , type: data.type, operation: data.operation, path: data.path, field: data.field, security: data.security, roles: data.roles, extfiles:data.extfiles});
+      this.configservice.addapi(this.id, { id: _id , type: data.type, operation: data.operation, path: data.path, field: data.field, security: data.security, roles: data.roles, extfiles:data.extfiles,options:data.options,parameters:data.parameters});
       this.dataSource.data = [...this.apis];
       this.table.renderRows();
       this.paginator.lastPage();
@@ -83,7 +83,7 @@ export class ApiComponent implements OnInit {
       field: reg.field,
       fields: this.fields,
       security: reg.security,
-      roles: reg.roles , extfiles: reg.extfiles} as Typeoperation });
+      roles: reg.roles , extfiles: reg.extfiles,options:reg.options,parameters:(reg.parameters!==undefined)?reg.parameters:[] } as Typeoperation });
     matRef.afterClosed().subscribe(data => { if (data !== undefined){
       this.configservice.editapi(this.id, _id, data);
       this.apis = [...this.configservice.getapis(this.id)];

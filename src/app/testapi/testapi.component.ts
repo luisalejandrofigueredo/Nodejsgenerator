@@ -5,10 +5,11 @@ import { ConfigService } from '../service/config.service';
 import { Schemahead } from '../interfaces/schemahead';
 import { Api } from "../interfaces/api";
 import { Schemaitem } from '../interfaces/schema'
-import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { FormControl, Validators, FormGroup, FormArray, FormBuilder, AbstractControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { GenoptionsComponent } from '../genoptions/genoptions.component';
 import { Overlay } from '@angular/cdk/overlay';
+
 
 @Component({
   selector: 'app-testapi',
@@ -36,10 +37,23 @@ export class TestapiComponent implements OnInit {
   rtoken: string;
   profileForm: FormGroup;
   form = new FormData();
-  constructor(private httpclient: HttpClient,private genoption:MatDialog, private configservice: ConfigService,private overlay: Overlay) { }
+  operationarray: {value:string,viewValue:string}[] = [
+    { value: 'getall', viewValue: 'Get All' },
+    { value: 'getone', viewValue: 'Get One' },
+    { value: 'skiplimit', viewValue: 'Get skiplimit by key' },
+    { value: 'skiplimitbyfield' , viewValue: 'Get skiplimit by field' },
+    { value: 'skiplimitfilter', viewValue: 'Get limit filter'},
+    { value: 'count', viewValue: 'Count'},
+    { value: 'findandcount', viewValue:'Find and Count'},
+    { value: 'findandcountwithoptions' , viewValue:'Find and Count with options'},
+    { value: 'findwithoptions' , viewValue:'Find with options'},
+    { value: 'findgenerated', viewValue:'Find generated' },
+    { value: 'findandcountgenerated', viewValue:'Find and count generated' }
+  ];
+  constructor(private fb: FormBuilder,private httpclient: HttpClient,private genoption:MatDialog, private configservice: ConfigService,private overlay: Overlay) { }
 
   ngOnInit(): void {
-    this.api = { id: 0, field: '', path: '', extfiles: '', type: '', roles: '', security: false, operation: '', };
+    this.api = { id: 0, field: '', path: '', extfiles: '', type: '', roles: '', security: false, operation: '', options:'' ,parameters:[]};
     this.host = '127.0.0.1';
     this.port = this.configservice.config.port.toString();
     if (this.configservice.config.enablehttps === false) {
@@ -62,6 +76,7 @@ export class TestapiComponent implements OnInit {
       order: new FormControl('ASC'),
       field: new FormControl(''),
       file: new FormControl(['']),
+      parameters: new FormArray([]),
       files: new FormControl(null),
       login: new FormControl(''),
       test: new FormControl(false),
@@ -69,6 +84,11 @@ export class TestapiComponent implements OnInit {
       body: new FormControl(''),
       reponse: new FormControl('')
     });
+  }
+
+  viewValue(value: string):string{
+    if(value==="") return "";
+    return this.operationarray.find(element=> element.value===value).viewValue
   }
 
   onFileSelected(event) {
@@ -182,8 +202,20 @@ export class TestapiComponent implements OnInit {
     this.api = this.configservice.getapi(this.profileForm.get('Schema').value, apinumber);
     typea = [this.api.type, this.api.operation];
     let body = '{';
+    (this.profileForm.get('parameters') as FormArray).disable();
     switch (typea[0]) {
       case 'get':
+        if (typea[1]==='findgenerated' || typea[1]==='findandcountgenerated') {
+          (this.profileForm.get('parameters') as FormArray).clear();
+          (this.profileForm.get('parameters') as FormArray).enable();
+          this.api.parameters.forEach(element => {
+            return (this.profileForm.get('parameters') as FormArray).push( this.fb.group({
+              type: element.type,
+              name: this.fb.control(element.name),
+              value: this.fb.control('',Validators.required)
+            }) );
+          });
+        }
         if (typea[1]='findwithoptions') {
           this.profileForm.patchValue({ body:'{ "where": {"id": 1},"order": {"id": "ASC"},"skip": 0,"take": 10,"cache": true }' });
          }
@@ -335,6 +367,42 @@ export class TestapiComponent implements OnInit {
        break; 
       case 'get':
         switch (typea[1]) {
+          case 'findandcountgenerated':
+            httpOptions = {
+              headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                'authorization': 'Bearer ' + this.rtoken
+              })
+            };
+            this.url = this.urlpri + `/${this.schemastring}/findandcountgenerated${this.api.path}`;
+            (this.profileForm.get('parameters') as FormArray).value.forEach(element => {
+              if (element.type==='string' || element.type==='date')
+              this.url+=`/${encodeURI(element.value)}`
+              else {
+                this.url+=`/${element.value}`;
+              }
+            }); 
+            this.httpclient.get(this.url, httpOptions).subscribe(res =>
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+          break;
+          case 'findgenerated':
+            httpOptions = {
+              headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                'authorization': 'Bearer ' + this.rtoken
+              })
+            };
+            this.url = this.urlpri + `/${this.schemastring}/findgenerated${this.api.path}`;
+            (this.profileForm.get('parameters') as FormArray).value.forEach(element => {
+              if (element.type==='string' || element.type==='date')
+              this.url+=`/${encodeURI(element.value)}`
+              else {
+                this.url+=`/${element.value}`;
+              }
+            }); 
+            this.httpclient.get(this.url, httpOptions).subscribe(res =>
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+          break;
           case 'findwithoptions':
             httpOptions = {
               headers: new HttpHeaders({
@@ -477,7 +545,9 @@ export class TestapiComponent implements OnInit {
     }
 
   }
-
+  get aliasesArrayControl():AbstractControl[] {
+    return (this.profileForm.get('parameters') as FormArray).controls;
+  }
   expand() {
     this.url = "";
   }

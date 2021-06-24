@@ -1,124 +1,156 @@
 <mat-form-field>
-    <input matInput placeholder="host"  (change)="changehost()"  class="terminal" [(ngModel)]="host">
+    <input matInput placeholder="host" (change)="changehost()" class="terminal" [(ngModel)]="host">
 </mat-form-field>
 <mat-accordion>
-<mat-expansion-panel (afterExpand)="expand()">
-    <mat-expansion-panel-header>
-        Login/Logout
-    </mat-expansion-panel-header>
-    <p class="title">Login</p>
-    <p>URL:<span class="terminal">{{url}}</span></p>
-    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-        <p>Post</p>
-        <mat-form-field>
-            <input matInput placeholder="Login" [(ngModel)]="login">
-        </mat-form-field>
-        <mat-form-field>
-            <input matInput placeholder="Password" [(ngModel)]="password">
-        </mat-form-field>
-        <mat-form-field fxFlex="50">
-            <input matInput placeholder="reponse" [(ngModel)]="reponse">
-        </mat-form-field>
-        <mat-form-field>
-            <input matInput placeholder="Repose token" [(ngModel)]="rtoken">
-        </mat-form-field>
-    </div>
-    <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
-        <mat-form-field style="width: 100%;">
-            <textarea matInput name="loginheader" placeholder="Header" [(ngModel)]="loginheader"
-                cdkTextareaAutosize></textarea>
-        </mat-form-field>
-        <button mat-raised-button color="primary" (click)="dologin()">send</button>
-    </div>
-    <p class="title">Logout</p>
-    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-        <p>Get</p>
-        <mat-form-field>
-            <input matInput placeholder="Login" [(ngModel)]="logout">
-        </mat-form-field>
-        <mat-form-field fxFlex="50">
-            <input matInput placeholder="Token" [(ngModel)]="token">
-        </mat-form-field>
-        <button color="primary" mat-raised-button (click)="copytoken()">Copy token</button>
-        <mat-form-field>
-            <input matInput placeholder="reponse" [(ngModel)]="reponselogout">
-        </mat-form-field>
-        <button mat-raised-button color="primary" (click)="dologout()">send</button>
-    </div>
-</mat-expansion-panel>
-<mat-expansion-panel (afterExpand)="expand()">
-    <mat-expansion-panel-header>
-        Test API
-    </mat-expansion-panel-header>
-    <p>URL:<span class="terminal">{{url}}</span></p>
-    <form [formGroup]="profileForm" (ngSubmit)="send()">
+    <mat-expansion-panel (afterExpand)="expand()">
+        <mat-expansion-panel-header>
+            Login/Logout
+        </mat-expansion-panel-header>
+        <p class="title">Login</p>
+        <p>URL:<span class="terminal">{{url}}</span></p>
         <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-            <mat-select placeholder="Schema" (selectionChange)="change()" formControlName="Schema" name="schema">
-                <mat-option *ngFor="let item of schemas" [value]="item.id">
-                    {{item.name}}
-                </mat-option>
-            </mat-select>
-            <mat-select placeholder="Operation" (selectionChange)="changeoperation($event)" formControlName="operation"
-                name="operation">
-                <mat-option *ngFor="let item of apis"
-                    [value]="item.id">
-                    <span *ngIf='item.type==="uploadfile"||item.type==="uploadfiles"'>{{item.type}} {{item.operation}} {{item.extfiles}}</span>
-                    <span *ngIf='!(item.type==="uploadfile"||item.type==="uploadfiles")'>{{item.type}} {{item.operation}} {{item.field}}</span>
-                </mat-option>
-            </mat-select>
-            <mat-form-field
-                *ngIf="(api.type==='get' && api.operation==='getone') || (api.type==='delete') || (api.type==='patch')">
-                <input matInput type="number" placeholder="record id" formControlName="record">
+            <p>Post</p>
+            <mat-form-field>
+                <input matInput placeholder="Login" [(ngModel)]="login">
             </mat-form-field>
-            <mat-form-field
-                *ngIf="(api.type==='get' && api.operation==='skiplimit') || (api.type==='get' && api.operation==='skiplimitbyfield')">
-                <input matInput type="number" placeholder="skip" formControlName="skip">
+            <mat-form-field>
+                <input matInput placeholder="Password" [(ngModel)]="password">
             </mat-form-field>
-            <mat-form-field
-                *ngIf="(api.type==='get' && api.operation==='skiplimit' ) || (api.type==='get' && api.operation==='skiplimitbyfield')">
-                <input matInput type="number" placeholder="limit" formControlName="limit">
+            <mat-form-field fxFlex="50">
+                <input matInput placeholder="reponse" [(ngModel)]="reponse">
             </mat-form-field>
-            <mat-form-field
-                *ngIf="(api.type==='get' && api.operation==='skiplimit' ) || (api.type==='get' && api.operation==='skiplimitbyfield')">
-                <input matInput type="text" maxlength="4" placeholder="order" formControlName="order">
+            <mat-form-field>
+                <input matInput placeholder="Repose token" [(ngModel)]="rtoken">
             </mat-form-field>
-            <mat-form-field *ngIf="(api.type==='get' && api.operation==='skiplimitfilter')">
-                <input matInput placeholder="field" formControlName="field">
-            </mat-form-field>
-            <mat-form-field *ngIf="(api.type==='changepassword')">
-                <input matInput placeholder="Login" formControlName="login">
-            </mat-form-field>
-            <mat-form-field *ngIf="(api.type==='changepassword')">
-                <input matInput placeholder="New Password" formControlName="newpassword">
-            </mat-form-field>
-            <input *ngIf="(api.type==='uploadfile')" type="file"(change)="onFileSelected($event)" placeholder="File" formControlName="file">
-            <input *ngIf="(api.type==='uploadfiles')" type="file" (change)="onFilesSelected($event)" placeholder="Files" formControlName="files" multiple>
-            <mat-form-field *ngIf="api.type==='getfile'">
-                <input matInput (change)="changefile()" placeholder="File" formControlName="field">
-            </mat-form-field>
-            <mat-checkbox *ngIf="(api.type==='getfile')" formControlName="test">Test with image</mat-checkbox>
         </div>
-        <div  fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-            <mat-form-field  style="width: 100%;">
-                <textarea matInput placeholder="header" formControlName="header" cdkTextareaAutosize></textarea>
+        <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
+            <mat-form-field style="width: 100%;">
+                <textarea matInput name="loginheader" placeholder="Header" [(ngModel)]="loginheader"
+                    cdkTextareaAutosize></textarea>
             </mat-form-field>
-            <button  color="primary" type="button" mat-raised-button (click)="gheader()">Generate Header</button>
+            <button mat-raised-button color="primary" (click)="dologin()">send</button>
         </div>
-        <img *ngIf="this.profileForm.get('test').value===true && api.type==='getfile' && this.profileForm.get('field').value!==''" [src]="this.urlpri +'/'+this.schemastring+'/getfile/'+this.profileForm.get('field').value | authpipe | async" alt="">
-        <div  fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-            <mat-form-field *ngIf="api.type!=='get'" style="width: 100%;">
-                <textarea matInput name="body" placeholder="body" formControlName="body" cdkTextareaAutosize></textarea>
+        <p class="title">Logout</p>
+        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+            <p>Get</p>
+            <mat-form-field>
+                <input matInput placeholder="Login" [(ngModel)]="logout">
             </mat-form-field>
-            <mat-form-field *ngIf="(api.type==='get' && api.operation==='findandcountwithoptions') || (api.type==='get' && api.operation==='findwithoptions')" style="width: 100%;">
-                <textarea matInput name="body" placeholder="options parameter" formControlName="body" cdkTextareaAutosize></textarea>
+            <mat-form-field fxFlex="50">
+                <input matInput placeholder="Token" [(ngModel)]="token">
             </mat-form-field>
-            <button mat-icon-button type="button" (click)="opengenoption()" *ngIf="(api.type==='get' && api.operation==='findandcountwithoptions') || (api.type==='get' && api.operation==='findwithoptions')"><mat-icon>code</mat-icon></button>
+            <button color="primary" mat-raised-button (click)="copytoken()">Copy token</button>
+            <mat-form-field>
+                <input matInput placeholder="reponse" [(ngModel)]="reponselogout">
+            </mat-form-field>
+            <button mat-raised-button color="primary" (click)="dologout()">send</button>
         </div>
-        <mat-form-field *ngIf="(this.profileForm.get('test').value===false)" style="width: 100%;">
-            <textarea  matInput name="reponse" placeholder="reponse" formControlName="reponse"
-                cdkTextareaAutosize></textarea>
-        </mat-form-field>
-        <button mat-raised-button type="submit" color="primary" mat-button [disabled]="!profileForm.valid">Send</button>
-    </form>
-</mat-expansion-panel>
+    </mat-expansion-panel>
+    <mat-expansion-panel (afterExpand)="expand()">
+        <mat-expansion-panel-header>
+            Test API
+        </mat-expansion-panel-header>
+        <p>URL:<span class="terminal">{{url}}</span></p>
+        <form [formGroup]="profileForm" (ngSubmit)="send()">
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                <mat-select placeholder="Schema" (selectionChange)="change()" formControlName="Schema" name="schema">
+                    <mat-option *ngFor="let item of schemas" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+                <mat-select placeholder="Operation" (selectionChange)="changeoperation($event)"
+                    formControlName="operation" name="operation">
+                    <mat-option *ngFor="let item of apis" [value]="item.id">
+                        <span *ngIf='item.type==="uploadfile"||item.type==="uploadfiles"'>{{item.type}}
+                            {{item.operation}} {{item.extfiles}}</span>
+                        <span *ngIf='!(item.type==="uploadfile"||item.type==="uploadfiles")'>
+                              {{(viewValue(item.operation)==="")? item.type : viewValue(item.operation)}} {{item.field}}</span>
+                    </mat-option>
+                </mat-select>
+                <mat-form-field
+                    *ngIf="(api.type==='get' && api.operation==='getone') || (api.type==='delete') || (api.type==='patch')">
+                    <input matInput type="number" placeholder="record id" formControlName="record">
+                </mat-form-field>
+                <mat-form-field
+                    *ngIf="(api.type==='get' && api.operation==='skiplimit') || (api.type==='get' && api.operation==='skiplimitbyfield')">
+                    <input matInput type="number" placeholder="skip" formControlName="skip">
+                </mat-form-field>
+                <mat-form-field
+                    *ngIf="(api.type==='get' && api.operation==='skiplimit' ) || (api.type==='get' && api.operation==='skiplimitbyfield')">
+                    <input matInput type="number" placeholder="limit" formControlName="limit">
+                </mat-form-field>
+                <mat-form-field
+                    *ngIf="(api.type==='get' && api.operation==='skiplimit' ) || (api.type==='get' && api.operation==='skiplimitbyfield')">
+                    <input matInput type="text" maxlength="4" placeholder="order" formControlName="order">
+                </mat-form-field>
+                <mat-form-field *ngIf="(api.type==='get' && api.operation==='skiplimitfilter')">
+                    <input matInput placeholder="field" formControlName="field">
+                </mat-form-field>
+                <mat-form-field *ngIf="(api.type==='changepassword')">
+                    <input matInput placeholder="Login" formControlName="login">
+                </mat-form-field>
+                <mat-form-field *ngIf="(api.type==='changepassword')">
+                    <input matInput placeholder="New Password" formControlName="newpassword">
+                </mat-form-field>
+                <input *ngIf="(api.type==='uploadfile')" type="file" (change)="onFileSelected($event)"
+                    placeholder="File" formControlName="file">
+                <input *ngIf="(api.type==='uploadfiles')" type="file" (change)="onFilesSelected($event)"
+                    placeholder="Files" formControlName="files" multiple>
+                <mat-form-field *ngIf="api.type==='getfile'">
+                    <input matInput (change)="changefile()" placeholder="File" formControlName="field">
+                </mat-form-field>
+                <mat-checkbox *ngIf="(api.type==='getfile')" formControlName="test">Test with image</mat-checkbox>
+            </div>
+            <div *ngIf="(api.type==='get' && api.operation==='findgenerated') || (api.type==='get' && api.operation==='findandcountgenerated')" formArrayName="parameters">
+                <div class='componentWraper'>
+                    <p class='componentTitle'>Parameters</p>
+                    <div *ngFor="let lessonForm of aliasesArrayControl;let i = index">
+                        <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                            <ng-container [formGroupName]="i">
+                                <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                                    <mat-form-field>
+                                        <input matInput formControlName="name" [readonly]="true">
+                                    </mat-form-field>
+                                    <mat-form-field>
+                                        <input matInput placeholder="Value" formControlName="value">
+                                    </mat-form-field>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                <mat-form-field style="width: 100%;">
+                    <textarea matInput placeholder="header" formControlName="header" cdkTextareaAutosize></textarea>
+                </mat-form-field>
+                <button color="primary" type="button" mat-raised-button (click)="gheader()">Generate Header</button>
+            </div>
+            <img *ngIf="this.profileForm.get('test').value===true && api.type==='getfile' && this.profileForm.get('field').value!==''"
+                [src]="this.urlpri +'/'+this.schemastring+'/getfile/'+this.profileForm.get('field').value | authpipe | async"
+                alt="">
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                <mat-form-field *ngIf="api.type!=='get'" style="width: 100%;">
+                    <textarea matInput name="body" placeholder="body" formControlName="body"
+                        cdkTextareaAutosize></textarea>
+                </mat-form-field>
+                <mat-form-field
+                    *ngIf="(api.type==='get' && api.operation==='findandcountwithoptions') || (api.type==='get' && api.operation==='findwithoptions')"
+                    style="width: 100%;">
+                    <textarea matInput name="body" placeholder="options parameter" formControlName="body"
+                        cdkTextareaAutosize></textarea>
+                </mat-form-field>
+                <button mat-icon-button type="button" (click)="opengenoption()"
+                    *ngIf="(api.type==='get' && api.operation==='findandcountwithoptions') || (api.type==='get' && api.operation==='findwithoptions')">
+                    <mat-icon>code</mat-icon>
+                </button>
+            </div>
+            <mat-form-field *ngIf="(this.profileForm.get('test').value===false)" style="width: 100%;">
+                <textarea matInput name="reponse" placeholder="reponse" formControlName="reponse"
+                    cdkTextareaAutosize></textarea>
+            </mat-form-field>
+            <button mat-raised-button type="submit" color="primary" mat-button
+                [disabled]="!profileForm.valid">Send</button>
+        </form>
+    </mat-expansion-panel>
 </mat-accordion>

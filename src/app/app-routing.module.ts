@@ -7,7 +7,6 @@ import {ApiComponent } from './api/api.component';
 import {GeneratorComponent} from './generator/generator.component';
 import {BrowserelationsComponent } from './browserelations/browserelations.component';
 import {GensecurityComponent } from './gensecurity/gensecurity.component';
-import {ViewsecurityComponent} from './viewsecurity/viewsecurity.component';
 import {HelpComponent} from './help/help.component';
 import {HelpconfigComponent} from './help/helpconfig/helpconfig.component';
 import {ConfigprincipalComponent} from './help/helpconfig/configprincipal/configprincipal.component'
@@ -32,10 +31,6 @@ const routes: Routes = [{
   {
     path: 'gensecurity',
     component: GensecurityComponent
-  },
-  {
-    path: 'viewsecurity/:file/:filelogin',
-    component: ViewsecurityComponent
   },
   {
     path: 'help',

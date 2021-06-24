@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Menu, screen } = require('electron')
+const { app, BrowserWindow, ipcMain, Menu, screen, shell } = require('electron');
 const { spawn } = require('child_process');
 const url = require("url");
 const path = require("path");
@@ -45,6 +45,10 @@ function createWindow() {
     mainWindow = null
   })
 }
+ipcMain.on('helpoptions', (event, arg) => {
+ shell.openExternal('https://typeorm.io/#/find-options');
+});
+
 ipcMain.on('savemain', (event, arg) => {
   console.log('writing files os:', process.platform);
   let dir = '';

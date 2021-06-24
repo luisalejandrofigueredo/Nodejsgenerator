@@ -1,0 +1,25 @@
+
+<mat-dialog-content>
+<table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef > Name </th>
+        <td mat-cell *matCellDef="let row" [ngClass]="{'selected':row.selected}"> {{row.name}} </td>
+    </ng-container>
+    <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef> Type </th>
+        <td mat-cell *matCellDef="let row"> {{row.type}} </td>
+    </ng-container>
+    <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Action </th>
+        <td mat-cell *matCellDef="let row; let i = index"><button color="accent" mat-mini-fab (click)="done(i)"><mat-icon>done</mat-icon></button></td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="['name','type','action']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['name','type','action'];"></tr>
+</table>
+</mat-dialog-content>
+<mat-dialog-actions>
+<div mat-dialog-actions style="justify-content: flex-end;">
+    <button mat-raised-button type="button" (click)="onNoClick()" cdkFocusInitial>No</button>
+    <button mat-raised-button type="button" color="primary" mat-button (click)="onYesClick()">Yes</button>
+</div>
+</mat-dialog-actions>

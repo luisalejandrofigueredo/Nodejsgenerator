@@ -1,0 +1,30 @@
+<button mat-icon-button (click)="addparameter()">
+    <mat-icon>add</mat-icon>
+</button>
+<form [formGroup]="form">
+    <div formArrayName="parameters">
+        <div *ngFor="let lessonForm of aliasesArrayControl;let i = index">
+            <ng-container [formGroupName]="i">
+                <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                    <mat-form-field>
+                        <input matInput placeholder="Parameter name" formControlName="name">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-select placeholder="Type data" formControlName="type">
+                            <mat-option *ngFor="let item of types"  [value]="item.value">
+                                {{item.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button mat-icon-button (click)="deleteparameter(i)">
+                        <mat-icon>remove</mat-icon>
+                    </button>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</form>
+<div mat-dialog-actions style="justify-content: flex-end;">
+    <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>
+    <button mat-raised-button [disabled]="!form.valid" color="primary" mat-button (click)="onYesClick()">Yes</button>
+</div>

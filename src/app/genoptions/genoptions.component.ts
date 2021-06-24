@@ -75,21 +75,7 @@ export class GenoptionsComponent implements OnInit {
     this.selected.push(this.profileForm.get('field').value);
     this.generatefield();
   }
-  genselect() {
-    this.gensel = true;
-    this.panels.toArray().forEach(p => p.close());
-  }
-
-  genWhere() {
-    this.genwhe = true;
-    this.panels.toArray().forEach(p => p.close());
-  }
-
-  genOrder() {
-    this.genord = true;
-    this.panels.toArray().forEach(p => p.close());
-  }
-
+  
   removefieldwhere() {
     if (this.selectedwhere.some((element) => element.field === this.profileFormWhere.get('field').value)) {
       let index = this.selectedwhere.findIndex(element => element.field === this.profileFormWhere.get('field').value);
@@ -98,7 +84,7 @@ export class GenoptionsComponent implements OnInit {
       return;
     }
   }
-
+  
   generatewhere() {
     let textselect = '"where":{';
     this.selectedwhere.forEach((element, index) => {
@@ -118,7 +104,7 @@ export class GenoptionsComponent implements OnInit {
     textselect += '}';
     this.profileFormWhere.patchValue({ textselect: textselect });
   }
-
+  
   addfieldwhere() {
     if (this.selectedwhere.some(element => element.field === this.profileFormWhere.get('field').value)) {
       const dialogRef = this.dialogRefYes.open(YesnoComponent, {
@@ -139,7 +125,7 @@ export class GenoptionsComponent implements OnInit {
     this.selectedwhere.push({ field: this.profileFormWhere.get('field').value, value: this.profileFormWhere.get('value').value });
     this.generatewhere();
   }
-
+  
   addfieldorder() {
     if (this.selectedorder.some(element => element.field === this.profileFormWhere.get('field').value)) { return };
     this.selectedorder.push({ field: this.profileFormOrder.get('field').value, order: this.profileFormOrder.get('order').value });
@@ -154,8 +140,22 @@ export class GenoptionsComponent implements OnInit {
     textselect += '}';
     this.profileFormOrder.patchValue({ textselect: textselect });
   }
+  
+  
+  genselect() {
+    this.gensel = true;
+    this.panels.toArray().forEach(p => p.close());
+  }
 
+  genWhere() {
+    this.genwhe = true;
+    this.panels.toArray().forEach(p => p.close());
+  }
 
+  genOrder() {
+    this.genord = true;
+    this.panels.toArray().forEach(p => p.close());
+  }
   onNoClick(): void {
     this.dialogRef.close();
   }

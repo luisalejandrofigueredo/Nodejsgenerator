@@ -26,7 +26,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {  MatSortModule } from '@angular/material/sort';
 import {ClipboardModule} from '@angular/cdk/clipboard';
-import { MonacoEditorModule, MONACO_PATH } from '@materia-ui/ngx-monaco-editor';
 import { SchematicsComponent } from './schematics/schematics.component';
 import { DatamodalComponent } from './datamodal/datamodal.component';
 import { NgxElectronModule } from 'ngx-electron';
@@ -41,7 +40,6 @@ import { BrowserelationsComponent } from './browserelations/browserelations.comp
 import { RelationdatamodalComponent } from './relationdatamodal/relationdatamodal.component';
 import { RelationdatamodalonetomanyComponent } from './relationdatamodalonetomany/relationdatamodalonetomany.component';
 import { GensecurityComponent } from './gensecurity/gensecurity.component';
-import { ViewsecurityComponent } from './viewsecurity/viewsecurity.component';
 import { LoggerComponent } from './config/logger/logger.component';
 import { HelpComponent } from './help/help.component';
 import { HelpconfigComponent } from './help/helpconfig/helpconfig.component';
@@ -51,6 +49,9 @@ import { ConfigdatabaseComponent } from './help/helpconfig/configdatabase/config
 import { TestapiComponent } from './testapi/testapi.component';
 import { AuthpipePipe } from './authpipe.pipe';
 import { GenoptionsComponent } from './genoptions/genoptions.component';
+import { ParametersmodalComponent } from './parametersmodal/parametersmodal.component';
+import { GenoptionswithoperatorsComponent } from './genoptionswithoperators/genoptionswithoperators.component';
+import { ViewparametersComponent } from './viewparameters/viewparameters.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -68,7 +69,6 @@ import { GenoptionsComponent } from './genoptions/genoptions.component';
     RelationdatamodalComponent,
     RelationdatamodalonetomanyComponent,
     GensecurityComponent,
-    ViewsecurityComponent,
     LoggerComponent,
     HelpComponent,
     HelpconfigComponent,
@@ -78,6 +78,9 @@ import { GenoptionsComponent } from './genoptions/genoptions.component';
     TestapiComponent,
     AuthpipePipe,
     GenoptionsComponent,
+    ParametersmodalComponent,
+    GenoptionswithoperatorsComponent,
+    ViewparametersComponent,
   ],
   imports: [ 
     BrowserModule, 
@@ -106,14 +109,10 @@ import { GenoptionsComponent } from './genoptions/genoptions.component';
     MatProgressBarModule,
     MatSortModule,
     ClipboardModule,
-    NgxElectronModule,
-    MonacoEditorModule ],
-  providers: [{
-    provide: MONACO_PATH,
-    useValue: 'https://unpkg.com/monaco-editor@0.18.1/min/vs'
-  }],
+    NgxElectronModule ],
+  providers: [],
   bootstrap: [AppComponent],
   // tslint:disable-next-line: max-line-length
-  entryComponents: [DatamodalComponent, FormschemamodalComponent, ApidatamodalComponent, RelationdatamodalComponent, RelationdatamodalonetomanyComponent,GenoptionsComponent]
+  entryComponents: [DatamodalComponent, FormschemamodalComponent, ApidatamodalComponent, RelationdatamodalComponent, RelationdatamodalonetomanyComponent,GenoptionsComponent,ParametersmodalComponent,GenoptionswithoperatorsComponent]
 })
 export class AppModule { }

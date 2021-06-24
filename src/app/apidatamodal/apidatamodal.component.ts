@@ -1,9 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Typeoperation } from '../interfaces/typeoperation';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import {ConfigService} from '../service/config.service';
 import { Schemahead } from '../interfaces/schemahead';
+import { ParametersmodalComponent } from '../parametersmodal/parametersmodal.component';
+import { GenoptionswithoperatorsComponent } from '../genoptionswithoperators/genoptionswithoperators.component';
+
 interface Type {
   value: string;
   viewValue: string;
@@ -31,7 +34,9 @@ export class ApidatamodalComponent implements OnInit {
     { value: 'count', viewValue: 'Count'},
     { value: 'findandcount', viewValue:'Find and Count'},
     { value: 'findandcountwithoptions' , viewValue:'Find and Count with options'},
-    { value: 'findwithoptions' , viewValue:'Find with options'}
+    { value: 'findwithoptions' , viewValue:'Find with options'},
+    { value: 'findgenerated', viewValue:'Find generated' },
+    { value: 'findandcountgenerated', viewValue:'Find and count generated' }
   ];
 
   fields: string[];
@@ -44,7 +49,7 @@ export class ApidatamodalComponent implements OnInit {
   profileForm: FormGroup;
   idschema:number;
   schema:Schemahead;
-  constructor(private configservice:ConfigService ,public dialogRef: MatDialogRef<ApidatamodalComponent>, @Inject(MAT_DIALOG_DATA) public data: Typeoperation) { }
+  constructor(private dialog:MatDialog,private configservice:ConfigService ,public dialogRef: MatDialogRef<ApidatamodalComponent>, @Inject(MAT_DIALOG_DATA) public data: Typeoperation) { }
 
   ngOnInit(): void {
     this.idschema=this.data.idschema;
@@ -70,9 +75,46 @@ export class ApidatamodalComponent implements OnInit {
       security: new FormControl(this.data.security, Validators.required),
       extfiles: new FormControl(this.data.extfiles, Validators.required),
       roles: new FormControl(this.data.roles, Validators.required),
+      options: new FormControl(this.data.options,Validators.required),
+      parameters: new FormControl(JSON.stringify(this.data.parameters),Validators.required)
+    });
+    this.profileForm.get('selectedOperation').disable;
+    this.profileForm.get('parameters').disable;
+  }
+  generatecode(){
+    const dialogRef = this.dialog.open(GenoptionswithoperatorsComponent, {
+      width: '800px',
+      disableClose: true,
+      data: {fields: this.configservice.getfieldschemaswithid(this.idschema), parameters:JSON.parse(this.profileForm.get('parameters').value)}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+       this.profileForm.patchValue({options: result.options});
+      }
     });
   }
-
+  generateparameters(){
+    const dialogRef = this.dialog.open(ParametersmodalComponent, {
+      width: '500px',
+      disableClose: true,
+      data: (this.profileForm.get('parameters').value!=="") ? JSON.parse(this.profileForm.get('parameters').value as string): []
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+       this.profileForm.patchValue({parameters: JSON.stringify(result.parameters)});
+      }
+    });
+  }
+  operationchange(){
+    if(this.profileForm.get('selectedOperation').value==='findgenerated'){
+      this.profileForm.get('selectedOperation').enable;
+      this.profileForm.get('parameters').enable;
+    }
+    else{
+      this.profileForm.get('selectedOperation').disable;
+      this.profileForm.get('parameters').disable;
+    }
+  }
   onNoClick(){
     this.dialogRef.close();
   }
@@ -85,6 +127,13 @@ export class ApidatamodalComponent implements OnInit {
     this.data.security = this.profileForm.get('security').value;
     this.data.roles = this.profileForm.get('roles').value;
     this.data.extfiles= this.profileForm.get('extfiles').value,
+    this.data.options= this.profileForm.get('options').value;
+    if (this.profileForm.get('selectedOperation').value==='findgenerated' || this.profileForm.get('selectedOperation').value==='findandcountgenerated'){
+      this.data.parameters=JSON.parse(this.profileForm.get('parameters').value as string);
+    }
+    else{
+      this.data.parameters=[];
+    }
     this.dialogRef.close(this.data);
   }
 }
