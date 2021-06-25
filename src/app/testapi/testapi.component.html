@@ -64,7 +64,10 @@
                         <span *ngIf='item.type==="uploadfile"||item.type==="uploadfiles"'>{{item.type}}
                             {{item.operation}} {{item.extfiles}}</span>
                         <span *ngIf='!(item.type==="uploadfile"||item.type==="uploadfiles")'>
-                              {{(viewValue(item.operation)==="")? item.type : viewValue(item.operation)}} {{item.field}}</span>
+                            {{(viewValue(item.operation)==="")? item.type : viewValue(item.operation)}}
+                        </span>
+                         <span *ngIf="item.field!==''">Filter=>{{item.field}}</span>   
+                         {{item.path}}
                     </mat-option>
                 </mat-select>
                 <mat-form-field
@@ -101,7 +104,8 @@
                 </mat-form-field>
                 <mat-checkbox *ngIf="(api.type==='getfile')" formControlName="test">Test with image</mat-checkbox>
             </div>
-            <div *ngIf="(api.type==='get' && api.operation==='findgenerated') || (api.type==='get' && api.operation==='findandcountgenerated')" formArrayName="parameters">
+            <div *ngIf="(api.type==='get' && (api.operation==='findgenerated' ||  api.operation==='findandcountgenerated')) && this.getlegtharray!==0"
+                formArrayName="parameters">
                 <div class='componentWraper'>
                     <p class='componentTitle'>Parameters</p>
                     <div *ngFor="let lessonForm of aliasesArrayControl;let i = index">

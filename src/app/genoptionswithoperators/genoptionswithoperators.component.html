@@ -1,18 +1,20 @@
 <p mat-dialog-title>Generate options</p>
 <mat-accordion #matacordion="matAccordion">
-    <button mat-icon-button (click)="goToLink()"><mat-icon>help</mat-icon></button>
+    <button mat-icon-button (click)="goToLink()">
+        <mat-icon>help</mat-icon>
+    </button>
     <mat-expansion-panel #matExpansionPanelSelect>
         <mat-expansion-panel-header>
             <P>Select</P>
         </mat-expansion-panel-header>
         <form [formGroup]="profileForm" (ngSubmit)="genselect()">
             <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-                <mat-select placeholder="Field"  formControlName="field">
+                <mat-select placeholder="Field" formControlName="field">
                     <mat-option *ngFor="let item of fields" [value]="item.id">
                         {{item.name}}
                     </mat-option>
                 </mat-select>
-                <button mat-icon-button matTooltip="Add field"(click)="addfield()" type="button">
+                <button mat-icon-button matTooltip="Add field" (click)="addfield()" type="button">
                     <mat-icon>add</mat-icon>
                 </button>
                 <button mat-icon-button matTooltip="Remove field" (click)="removefield()" type="button">
@@ -38,24 +40,57 @@
                         {{item.name}}
                     </mat-option>
                 </mat-select>
-                <mat-select placeholder="Operator" (selectionChange)="selectoperator($event)" formControlName="operator" >
+                <mat-select placeholder="Operator" (selectionChange)="selectoperator($event)"
+                    formControlName="operator">
                     <mat-option *ngFor="let item of operators" [value]="item.value">
                         {{item.viewValue}}
                     </mat-option>
                 </mat-select>
-                <mat-form-field>
-                    <input matInput formControlName="value" placeholder="Value">
-                </mat-form-field>
-                <mat-form-field *ngIf="this.profileFormWhere.get('operator').value==='between'">
-                    <input matInput formControlName="value2" placeholder="Value">
-                </mat-form-field>
-                <button mat-icon-button *ngIf="this.profileFormWhere.get('operator').value!=='value'" matTooltip="Add parameter" (click)="addparameter()" type="button">
-                    <mat-icon >add</mat-icon>
-                </button>
+                <ng-container
+                    *ngIf="this.profileFormWhere.get('operator').value==='value'; then thenTemplate; else elseTemplate">
+                </ng-container>
+                <ng-template #thenTemplate>
+                    <div class='componentWraper'>
+                        <p class='componentTitle'>Value</p>
+                        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                            <mat-form-field>
+                                <input matInput formControlName="value" placeholder="Value">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template #elseTemplate>
+                    <div class='componentWraper'>
+                        <p class='componentTitle'>Parameters or value</p>
+                        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                            <mat-form-field>
+                                <input matInput formControlName="value" placeholder="Value">
+                            </mat-form-field>
+                            <button mat-icon-button matTooltip="Add parameter"
+                                (click)="addparameter(this.profileFormWhere.get('field').value)" type="button">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </ng-template>
+                <div *ngIf="this.profileFormWhere.get('operator').value==='between'" class='componentWraper'>
+                    <p class='componentTitle'>Parameters or value</p>
+                    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                        <mat-form-field *ngIf="this.profileFormWhere.get('operator').value==='between'">
+                            <input matInput formControlName="value2" placeholder="Value">
+                        </mat-form-field>
+                        <button mat-icon-button *ngIf="this.profileFormWhere.get('operator').value==='between'"
+                            matTooltip="Add parameter"
+                            (click)="addparametervalue2(this.profileFormWhere.get('field').value)" type="button">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                    </div>
+                </div>
                 <button mat-icon-button matTooltip="Add field where condition" (click)="addfieldwhere()" type="button">
                     <mat-icon>add</mat-icon>
                 </button>
-                <button mat-icon-button matTooltip="Add field where condition" (click)="removefieldwhere()" type="button">
+                <button mat-icon-button matTooltip="Add field where condition" (click)="removefieldwhere()"
+                    type="button">
                     <mat-icon>remove</mat-icon>
                 </button>
             </div>
@@ -73,7 +108,7 @@
         </mat-expansion-panel-header>
         <form [formGroup]="profileFormOrder" (ngSubmit)="genOrder()">
             <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-                <mat-select placeholder="Field"  formControlName="field">
+                <mat-select placeholder="Field" formControlName="field">
                     <mat-option *ngFor="let item of fields" [value]="item.id">
                         {{item.name}}
                     </mat-option>
@@ -106,11 +141,17 @@
             <mat-form-field>
                 <input matInput placeholder="Skip" formControlName="skip">
             </mat-form-field>
+            <button mat-icon-button matTooltip="Add parameter" (click)="addparameterskip()" type="button">
+                <mat-icon>add</mat-icon>
+            </button>
             <mat-form-field>
                 <input matInput placeholder="Limit" formControlName="limit">
             </mat-form-field>
+            <button mat-icon-button matTooltip="Add parameter" (click)="addparameterlimit()" type="button">
+                <mat-icon>add</mat-icon>
+            </button>
             <button mat-raised-button type="submit" color="primary" mat-button
-                    [disabled]="!profileFormskiplimit.valid">Ready</button>
+                [disabled]="!profileFormskiplimit.valid">Ready</button>
         </form>
     </mat-expansion-panel>
 </mat-accordion>

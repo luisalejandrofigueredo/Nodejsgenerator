@@ -7,6 +7,7 @@ import { Api } from '../interfaces/api';
 import { ConfigService } from '../service/config.service';
 import { ViewparametersComponent } from '../viewparameters/viewparameters.component';
 import { YesnoComponent } from '../yesno/yesno.component';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-genoptionswithoperators',
@@ -18,7 +19,7 @@ export class GenoptionswithoperatorsComponent implements OnInit {
   api: Api;
   selected: number[] = [];
   selectedorder: { field: number, order: string }[] = [];
-  selectedwhere: { operation: string; field: number, value: string }[] = [];
+  selectedwhere: { operation: string; field: number, value: string; value2?: string }[] = [];
   operators: { value: string, viewValue: string }[] = [
     { value: 'value', viewValue: 'Value' },
     { value: 'parameter', viewValue: 'Parameter' },
@@ -72,6 +73,7 @@ export class GenoptionswithoperatorsComponent implements OnInit {
   }
 
   selectoperator(event) {
+    this.profileFormWhere.patchValue({value:'',value2:''});
     this.profileFormWhere.get('value2').disable();
     switch (event.value) {
       case 'between':
@@ -115,20 +117,65 @@ export class GenoptionswithoperatorsComponent implements OnInit {
         break;
     }
   }
-  addparameter() {
+  addparameter(index:number) {
+    const filter:string=this.fields[index-1].type;
     const dialogRef = this.dialogRefYes.open(ViewparametersComponent, {
       width: '500px',
       autoFocus: false,
       disableClose: false,
-      data: { parameters: this.data.parameters }
+      data: { parameters: this.data.parameters,filter:filter }
     });
     dialogRef.afterClosed().subscribe((ret: { name: string, type: string }) => {
       if (ret !== undefined) {
         this.profileFormWhere.patchValue({ value: "`${" + `${ret.name}` + "}`" })
       }
     });
-
   }
+
+  addparametervalue2(index:number) {
+    const filter:string=this.fields[index-1].type;
+    const dialogRef = this.dialogRefYes.open(ViewparametersComponent, {
+      width: '500px',
+      autoFocus: false,
+      disableClose: false,
+      data: { parameters: this.data.parameters ,filter:filter}
+    });
+    dialogRef.afterClosed().subscribe((ret: { name: string, type: string }) => {
+      if (ret !== undefined) {
+        this.profileFormWhere.patchValue({ value2: "`${" + `${ret.name}` + "}`" })
+      }
+    });
+  }
+  addparameterskip(){
+    const filter:string='number';
+    const dialogRef = this.dialogRefYes.open(ViewparametersComponent, {
+      width: '500px',
+      autoFocus: false,
+      disableClose: false,
+      data: { parameters: this.data.parameters ,filter:filter}
+    });
+    dialogRef.afterClosed().subscribe((ret: { name: string, type: string }) => {
+      if (ret !== undefined) {
+        this.profileFormskiplimit.patchValue({ skip: "`${" + `${ret.name}` + "}`" })
+      }
+    });
+  }
+
+  addparameterlimit(){
+    const filter:string='number';
+    const dialogRef = this.dialogRefYes.open(ViewparametersComponent, {
+      width: '500px',
+      autoFocus: false,
+      disableClose: false,
+      data: { parameters: this.data.parameters ,filter:filter}
+    });
+    dialogRef.afterClosed().subscribe((ret: { name: string, type: string }) => {
+      if (ret !== undefined) {
+        this.profileFormskiplimit.patchValue({ limit: "`${" + `${ret.name}` + "}`" })
+      }
+    });
+  }
+  
   removefield() {
     if (this.selected.some((element) => element === this.profileForm.get('field').value)) {
       let index = this.selected.findIndex(element => element === this.profileForm.get('field').value);
@@ -171,6 +218,12 @@ export class GenoptionswithoperatorsComponent implements OnInit {
     this.selectedwhere.forEach((element, index) => {
       switch (element.operation) {
         case 'between':
+          if (index === 0) {
+            textselect += `"${this.fields[element.field - 1].name}": Between(${element.value},${element.value2})`;
+          } else {
+            textselect += `,"${this.fields[element.field - 1].name}": Between(${element.value},${element.value2})`;
+          }
+          break;
         case 'value':
           if (index === 0) {
             if (this.fields[element.field - 1].type === 'number') {
@@ -211,13 +264,21 @@ export class GenoptionswithoperatorsComponent implements OnInit {
       dialogRef.afterClosed().subscribe(ret => {
         if (ret !== undefined) {
           let index = this.selectedwhere.findIndex(element => element.field === this.profileFormWhere.get('field').value);
-          this.selectedwhere.splice(index, 1, { operation: this.profileFormWhere.get('operator').value, field: this.profileFormWhere.get('field').value, value: this.profileFormWhere.get('value').value });
+          if (this.profileFormWhere.get('operator').value === 'between') {
+            this.selectedwhere.splice(index, 1, { operation: this.profileFormWhere.get('operator').value, field: this.profileFormWhere.get('field').value, value: this.profileFormWhere.get('value').value,value2:this.profileFormWhere.get('value2').value});
+          } else{
+            this.selectedwhere.splice(index, 1, { operation: this.profileFormWhere.get('operator').value, field: this.profileFormWhere.get('field').value, value: this.profileFormWhere.get('value').value });
+          }
           this.generatewhere();
         }
       });
       return;
     };
-    this.selectedwhere.push({ operation: this.profileFormWhere.get('operator').value, field: this.profileFormWhere.get('field').value, value: this.profileFormWhere.get('value').value });
+    if (this.profileFormWhere.get('operator').value === 'between') {
+       this.selectedwhere.push({ operation: this.profileFormWhere.get('operator').value, field: this.profileFormWhere.get('field').value, value: this.profileFormWhere.get('value').value,value2: this.profileFormWhere.get('value2').value });
+    } else {
+       this.selectedwhere.push({ operation: this.profileFormWhere.get('operator').value, field: this.profileFormWhere.get('field').value, value: this.profileFormWhere.get('value').value });
+     }
     this.generatewhere();
   }
 

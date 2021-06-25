@@ -83,7 +83,7 @@ export class ApidatamodalComponent implements OnInit {
   }
   generatecode(){
     const dialogRef = this.dialog.open(GenoptionswithoperatorsComponent, {
-      width: '800px',
+      width: '100%',
       disableClose: true,
       data: {fields: this.configservice.getfieldschemaswithid(this.idschema), parameters:JSON.parse(this.profileForm.get('parameters').value)}
     });

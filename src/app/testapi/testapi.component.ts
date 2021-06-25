@@ -193,6 +193,9 @@ export class TestapiComponent implements OnInit {
     this.apis = [...this.configservice.getapis(this.profileForm.get('Schema').value)];
     this.schemastring = this.configservice.getschemaname(this.profileForm.get('Schema').value);
   }
+  get getlegtharray():number {
+    return (this.profileForm.get('parameters') as FormArray).length;
+  }
 
   changeoperation(event) {
     let typea: Array<string> = [];
