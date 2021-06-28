@@ -7,7 +7,6 @@ import { Api } from '../interfaces/api';
 import { ConfigService } from '../service/config.service';
 import { ViewparametersComponent } from '../viewparameters/viewparameters.component';
 import { YesnoComponent } from '../yesno/yesno.component';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-genoptionswithoperators',
@@ -19,20 +18,20 @@ export class GenoptionswithoperatorsComponent implements OnInit {
   api: Api;
   selected: number[] = [];
   selectedorder: { field: number, order: string }[] = [];
-  selectedwhere: { operation: string; field: number, value: string; value2?: string }[] = [];
-  operators: { value: string, viewValue: string }[] = [
-    { value: 'value', viewValue: 'Value' },
-    { value: 'parameter', viewValue: 'Parameter' },
-    { value: 'not', viewValue: 'Not' },
-    { value: 'lessthan', viewValue: "LessThan" },
-    { value: 'lessthanorequal', viewValue: 'LessThanOrEqual' },
-    { value: 'morethan', viewValue: 'MoreThan' },
-    { value: 'morethanorequal', viewValue: 'MoreThanOrEqual' },
-    { value: 'equal', viewValue: 'Equal' },
-    { value: 'like', viewValue: 'Like' },
-    { value: 'between', viewValue: 'Between' },
-    { value: 'in', viewValue: 'In' },
-    { value: 'any', viewValue: 'Any' }
+  selectedwhere: { operation: string; field: number, type: string, value: string; value2?: string; not?: boolean }[] = [];
+  operators: { value: string, viewValue: string, vnot: boolean }[] = [
+    { value: 'value', viewValue: 'Value', vnot: false },
+    { value: 'parameter', viewValue: 'Parameter', vnot: false },
+    { value: 'not', viewValue: 'Not', vnot: false },
+    { value: 'lessthan', viewValue: "LessThan", vnot: false },
+    { value: 'lessthanorequal', viewValue: 'LessThanOrEqual', vnot: false },
+    { value: 'morethan', viewValue: 'MoreThan', vnot: false },
+    { value: 'morethanorequal', viewValue: 'MoreThanOrEqual', vnot: false },
+    { value: 'equal', viewValue: 'Equal', vnot: false },
+    { value: 'like', viewValue: 'Like', vnot: false },
+    { value: 'between', viewValue: 'Between', vnot: false },
+    { value: 'in', viewValue: 'In', vnot: false },
+    { value: 'any', viewValue: 'Any', vnot: false }
   ];
   profileForm: FormGroup;
   profileFormOrder: FormGroup;
@@ -59,6 +58,7 @@ export class GenoptionswithoperatorsComponent implements OnInit {
     });
     this.profileFormWhere = new FormGroup({
       operator: new FormControl('', Validators.required),
+      not: new FormControl(false),
       field: new FormControl(0, Validators.required),
       value: new FormControl('', Validators.required),
       value2: new FormControl('', Validators.required),
@@ -73,7 +73,7 @@ export class GenoptionswithoperatorsComponent implements OnInit {
   }
 
   selectoperator(event) {
-    this.profileFormWhere.patchValue({value:'',value2:''});
+    this.profileFormWhere.patchValue({ value: '', value2: '' });
     this.profileFormWhere.get('value2').disable();
     switch (event.value) {
       case 'between':
@@ -91,39 +91,41 @@ export class GenoptionswithoperatorsComponent implements OnInit {
     switch (this.fields[event.value - 1].type) {
       case 'string':
         this.operators = [
-          { value: 'value', viewValue: 'Value' },
-          { value: 'parameter', viewValue: 'Parameter' },
-          { value: 'not', viewValue: 'Not' },
-          { value: 'equal', viewValue: 'Equal' },
-          { value: 'like', viewValue: 'Like' },
-          { value: 'in', viewValue: 'In' },
-          { value: 'any', viewValue: 'Any' },
-          { value: 'raw', viewValue: 'Raw' }];
+          { value: 'value', viewValue: 'Value', vnot: false },
+          { value: 'parameter', viewValue: 'Parameter', vnot: false },
+          { value: 'equal', viewValue: 'Equal', vnot: true },
+          { value: 'like', viewValue: 'Like', vnot: true },
+          { value: 'in', viewValue: 'In', vnot: true },
+          { value: 'any', viewValue: 'Any', vnot: true },
+          { value: 'raw', viewValue: 'Raw', vnot: false }];
         break;
       case 'number':
-        this.operators = [{ value: 'value', viewValue: 'Value' },
-        { value: 'parameter', viewValue: 'Parameter' },
-        { value: 'not', viewValue: 'Not' },
-        { value: 'lessthan', viewValue: "LessThan" },
-        { value: 'lessthanorequal', viewValue: 'LessThanOrEqual' },
-        { value: 'morethan', viewValue: 'MoreThan' },
-        { value: 'morethanorequal', viewValue: 'MoreThanOrEqual' },
-        { value: 'equal', viewValue: 'Equal' },
-        { value: 'between', viewValue: 'Between' },
-        { value: 'raw', viewValue: 'Raw' },
+        this.operators = [{ value: 'value', viewValue: 'Value', vnot: false },
+        { value: 'parameter', viewValue: 'Parameter', vnot: false },
+        { value: 'lessthan', viewValue: "LessThan", vnot: true },
+        { value: 'lessthanorequal', viewValue: 'LessThanOrEqual', vnot: true },
+        { value: 'morethan', viewValue: 'MoreThan', vnot: true },
+        { value: 'morethanorequal', viewValue: 'MoreThanOrEqual', vnot: true },
+        { value: 'equal', viewValue: 'Equal', vnot: true },
+        { value: 'between', viewValue: 'Between', vnot: true },
+        { value: 'raw', viewValue: 'Raw', vnot: false },
         ];
         break;
       default:
         break;
     }
   }
-  addparameter(index:number) {
-    const filter:string=this.fields[index-1].type;
+  ifnot(oper: string): boolean {
+    if (oper === "") return false;
+    return this.operators.find(operator => operator.value === oper).vnot;
+  }
+  addparameter(index: number) {
+    const filter: string = this.fields[index - 1].type;
     const dialogRef = this.dialogRefYes.open(ViewparametersComponent, {
       width: '500px',
       autoFocus: false,
       disableClose: false,
-      data: { parameters: this.data.parameters,filter:filter }
+      data: { parameters: this.data.parameters, filter: filter }
     });
     dialogRef.afterClosed().subscribe((ret: { name: string, type: string }) => {
       if (ret !== undefined) {
@@ -132,13 +134,13 @@ export class GenoptionswithoperatorsComponent implements OnInit {
     });
   }
 
-  addparametervalue2(index:number) {
-    const filter:string=this.fields[index-1].type;
+  addparametervalue2(index: number) {
+    const filter: string = this.fields[index - 1].type;
     const dialogRef = this.dialogRefYes.open(ViewparametersComponent, {
       width: '500px',
       autoFocus: false,
       disableClose: false,
-      data: { parameters: this.data.parameters ,filter:filter}
+      data: { parameters: this.data.parameters, filter: filter }
     });
     dialogRef.afterClosed().subscribe((ret: { name: string, type: string }) => {
       if (ret !== undefined) {
@@ -146,13 +148,13 @@ export class GenoptionswithoperatorsComponent implements OnInit {
       }
     });
   }
-  addparameterskip(){
-    const filter:string='number';
+  addparameterskip() {
+    const filter: string = 'number';
     const dialogRef = this.dialogRefYes.open(ViewparametersComponent, {
       width: '500px',
       autoFocus: false,
       disableClose: false,
-      data: { parameters: this.data.parameters ,filter:filter}
+      data: { parameters: this.data.parameters, filter: filter }
     });
     dialogRef.afterClosed().subscribe((ret: { name: string, type: string }) => {
       if (ret !== undefined) {
@@ -161,13 +163,13 @@ export class GenoptionswithoperatorsComponent implements OnInit {
     });
   }
 
-  addparameterlimit(){
-    const filter:string='number';
+  addparameterlimit() {
+    const filter: string = 'number';
     const dialogRef = this.dialogRefYes.open(ViewparametersComponent, {
       width: '500px',
       autoFocus: false,
       disableClose: false,
-      data: { parameters: this.data.parameters ,filter:filter}
+      data: { parameters: this.data.parameters, filter: filter }
     });
     dialogRef.afterClosed().subscribe((ret: { name: string, type: string }) => {
       if (ret !== undefined) {
@@ -175,7 +177,7 @@ export class GenoptionswithoperatorsComponent implements OnInit {
       }
     });
   }
-  
+
   removefield() {
     if (this.selected.some((element) => element === this.profileForm.get('field').value)) {
       let index = this.selected.findIndex(element => element === this.profileForm.get('field').value);
@@ -212,16 +214,71 @@ export class GenoptionswithoperatorsComponent implements OnInit {
       return;
     }
   }
+  notinwhere(not: boolean, operatorbody: string): string {
+    if (not)
+      return 'Not(' + operatorbody + ')';
+    else return operatorbody;
 
+  }
   generatewhere() {
     let textselect = 'where:{';
     this.selectedwhere.forEach((element, index) => {
       switch (element.operation) {
+        case 'equal':
+          if (element.type === 'number') {
+            if (index === 0) {
+              textselect += `"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `Equal(${element.value})`);
+            }
+            else {
+              textselect += `,"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `Equal(${element.value})`);
+            }
+          } else {
+            if (index === 0) {
+              textselect += `"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `Equal("${element.value}")`);
+            }
+            else {
+              textselect += `,"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `Equal("${element.value}")`);
+            }
+
+          }
+          break;
+        case 'lessthan':
+          if (index === 0) {
+            textselect += `"${this.fields[element.field - 1].name}":`+this.notinwhere(element.not,`LessThan(${element.value})`);
+          }
+          else {
+            textselect += ','+`"${this.fields[element.field - 1].name}":`+this.notinwhere(element.not,`LessThan(${element.value})`);
+          }
+          break;
+        case 'lessthanorequal':
+          if (index === 0) {
+            textselect += `"${this.fields[element.field - 1].name}":`+this.notinwhere(element.not,`LessThanOrEqual(${element.value})`);
+          }
+          else {
+            textselect += ','+`"${this.fields[element.field - 1].name}":`+this.notinwhere(element.not,`LessThanOrEqual(${element.value})`);
+          }
+          break;
+        case 'morethan':
+          if (index === 0) {
+            textselect += `"${this.fields[element.field - 1].name}":`+this.notinwhere(element.not,`MoreThan(${element.value})`);
+          }
+          else {
+            textselect += `,"${this.fields[element.field - 1].name}":`+this.notinwhere(element.not,`MoreThan(${element.value})`);
+          }
+          break;
+        case 'morethanorequal':
+          if (index === 0) {
+            textselect += `"${this.fields[element.field - 1].name}":`+this.notinwhere(element.not,`MoreThanOrEqual(${element.value})`);
+          }
+          else {
+            textselect += `,"${this.fields[element.field - 1].name}":`+this.notinwhere(element.not,`MoreThanOrEqual(${element.value})`);
+          }
+          break;
         case 'between':
           if (index === 0) {
-            textselect += `"${this.fields[element.field - 1].name}": Between(${element.value},${element.value2})`;
+            textselect += `"${this.fields[element.field - 1].name}":`+ this.notinwhere(element.not,`Between(${element.value},${element.value2})`);
           } else {
-            textselect += `,"${this.fields[element.field - 1].name}": Between(${element.value},${element.value2})`;
+            textselect += `,"${this.fields[element.field - 1].name}":`+ this.notinwhere(element.not,`Between(${element.value},${element.value2})`);
           }
           break;
         case 'value':
@@ -254,6 +311,7 @@ export class GenoptionswithoperatorsComponent implements OnInit {
   }
 
   addfieldwhere() {
+    const type: string = this.fields[this.profileFormWhere.get('field').value - 1].type;
     if (this.selectedwhere.some(element => element.field === this.profileFormWhere.get('field').value)) {
       const dialogRef = this.dialogRefYes.open(YesnoComponent, {
         width: '500px',
@@ -265,9 +323,9 @@ export class GenoptionswithoperatorsComponent implements OnInit {
         if (ret !== undefined) {
           let index = this.selectedwhere.findIndex(element => element.field === this.profileFormWhere.get('field').value);
           if (this.profileFormWhere.get('operator').value === 'between') {
-            this.selectedwhere.splice(index, 1, { operation: this.profileFormWhere.get('operator').value, field: this.profileFormWhere.get('field').value, value: this.profileFormWhere.get('value').value,value2:this.profileFormWhere.get('value2').value});
-          } else{
-            this.selectedwhere.splice(index, 1, { operation: this.profileFormWhere.get('operator').value, field: this.profileFormWhere.get('field').value, value: this.profileFormWhere.get('value').value });
+            this.selectedwhere.splice(index, 1, { operation: this.profileFormWhere.get('operator').value, field: this.profileFormWhere.get('field').value, value: this.profileFormWhere.get('value').value, type: type, value2: this.profileFormWhere.get('value2').value, not: this.profileFormWhere.get('not').value });
+          } else {
+            this.selectedwhere.splice(index, 1, { operation: this.profileFormWhere.get('operator').value, field: this.profileFormWhere.get('field').value, type: type, value: this.profileFormWhere.get('value').value, value2: this.profileFormWhere.get('value2').value, not: this.profileFormWhere.get('not').value });
           }
           this.generatewhere();
         }
@@ -275,10 +333,10 @@ export class GenoptionswithoperatorsComponent implements OnInit {
       return;
     };
     if (this.profileFormWhere.get('operator').value === 'between') {
-       this.selectedwhere.push({ operation: this.profileFormWhere.get('operator').value, field: this.profileFormWhere.get('field').value, value: this.profileFormWhere.get('value').value,value2: this.profileFormWhere.get('value2').value });
+      this.selectedwhere.push({ operation: this.profileFormWhere.get('operator').value, field: this.profileFormWhere.get('field').value, value: this.profileFormWhere.get('value').value, type: type, value2: this.profileFormWhere.get('value2').value, not: this.profileFormWhere.get('not').value });
     } else {
-       this.selectedwhere.push({ operation: this.profileFormWhere.get('operator').value, field: this.profileFormWhere.get('field').value, value: this.profileFormWhere.get('value').value });
-     }
+      this.selectedwhere.push({ operation: this.profileFormWhere.get('operator').value, field: this.profileFormWhere.get('field').value, value: this.profileFormWhere.get('value').value, type: type, not: this.profileFormWhere.get('not').value });
+    }
     this.generatewhere();
   }
 

@@ -352,14 +352,10 @@
 					"security": true,
 					"roles": "Admin User",
 					"extfiles": "",
-					"options": "{select:[\"Name\",\"login\"],skip:`${skip}`,take:`${limit}`}",
+					"options": "{select:[\"Name\",\"login\"],where:{\"id\":MoreThan(`${LessThanP}`)}}",
 					"parameters": [
 						{
-							"name": "skip",
-							"type": "number"
-						},
-						{
-							"name": "limit",
+							"name": "LessThanP",
 							"type": "number"
 						}
 					]
@@ -382,8 +378,17 @@
 					"security": true,
 					"roles": "Admin User",
 					"extfiles": "",
-					"options": "{where:{\"id\": Between(0,10),\"Name\":\"Pepe\"}}",
-					"parameters": []
+					"options": "{where:{\"id\":Not(Between(`${desde}`,`${hasta}`))}}",
+					"parameters": [
+						{
+							"name": "desde",
+							"type": "number"
+						},
+						{
+							"name": "hasta",
+							"type": "number"
+						}
+					]
 				}
 			]
 		}
