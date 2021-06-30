@@ -13,7 +13,9 @@ export class ParametersmodalComponent implements OnInit {
   types: {value:string,viewValue:string}[] = [
     { value: 'number', viewValue: 'Number' },
     { value: 'string', viewValue: 'String' },
-    { value: 'date', viewValue: 'date' }
+    { value: 'date', viewValue: 'date' },
+    { value: 'arraystring',viewValue:'ArrayString'}
+
   ];
   constructor(private fb:FormBuilder,private dialogRef: MatDialogRef<ParametersmodalComponent>, @Inject(MAT_DIALOG_DATA) public data) { 
     this.form = this.fb.group({parameters:this.fb.array([])});

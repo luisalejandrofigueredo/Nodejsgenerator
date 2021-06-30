@@ -8,6 +8,13 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ViewparametersComponent implements OnInit {
   dataSource:{name:string;type:string,selected:boolean}[]=[];
+  types: {value:string,viewValue:string}[] = [
+    { value: 'number', viewValue: 'Number' },
+    { value: 'string', viewValue: 'String' },
+    { value: 'date', viewValue: 'date' },
+    { value: 'arraystring',viewValue:'ArrayString'}
+
+  ];
   constructor(public dialogRef: MatDialogRef<ViewparametersComponent>, @Inject(MAT_DIALOG_DATA) public data: {parameters:{name:string;type:string}[], filter:string}) { 
     data.parameters.forEach(element => {
       if(element.type===data.filter)
@@ -16,7 +23,9 @@ export class ViewparametersComponent implements OnInit {
       }
     });    
   }
-  
+  viewparameter(filter:string): string {
+    return this.types.find(element=>element.value===filter).viewValue
+  }
   ngOnInit(): void {
     
   }

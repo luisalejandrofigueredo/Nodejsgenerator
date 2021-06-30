@@ -7,6 +7,7 @@ import { Api } from '../interfaces/api';
 import { ConfigService } from '../service/config.service';
 import { ViewparametersComponent } from '../viewparameters/viewparameters.component';
 import { YesnoComponent } from '../yesno/yesno.component';
+import { AddarrayComponent } from '../addarray/addarray.component';
 
 @Component({
   selector: 'app-genoptionswithoperators',
@@ -76,6 +77,12 @@ export class GenoptionswithoperatorsComponent implements OnInit {
     this.profileFormWhere.patchValue({ value: '', value2: '' });
     this.profileFormWhere.get('value2').disable();
     switch (event.value) {
+      case 'in':
+        this.profileFormWhere.patchValue({ value: '' });
+        break;
+      case 'any':
+        this.profileFormWhere.patchValue({ value: '' });
+        break;
       case 'between':
         this.profileFormWhere.get('value2').enable();
         break;
@@ -115,12 +122,41 @@ export class GenoptionswithoperatorsComponent implements OnInit {
         break;
     }
   }
+
+  addarray(){
+    const dialogRef = this.dialogRefYes.open(AddarrayComponent, {
+      width: '500px',
+      autoFocus: false,
+      disableClose: false,
+      data: { values: this.profileFormWhere.get('value').value }
+    });
+    dialogRef.afterClosed().subscribe((ret: { values:[{ value:string}]  }) => {
+      let array:string='';
+      if (ret !== undefined) {
+        ret.values.forEach((element,index) => {
+          if (index===0){
+            array= `"${element.value}"` ;
+          }
+          else{
+            array+= ',"'+`${element.value}"` ;
+          }
+        });
+        this.profileFormWhere.patchValue({ value: array })
+      }
+    });
+    
+  }
   ifnot(oper: string): boolean {
     if (oper === "") return false;
     return this.operators.find(operator => operator.value === oper).vnot;
   }
   addparameter(index: number) {
-    const filter: string = this.fields[index - 1].type;
+    let filter: string;
+    if (this.profileFormWhere.get('operator').value === 'in' || this.profileFormWhere.get('operator').value === 'any') {
+      filter = 'arraystring';
+    } else {
+      filter = this.fields[index - 1].type;
+    }
     const dialogRef = this.dialogRefYes.open(ViewparametersComponent, {
       width: '500px',
       autoFocus: false,
@@ -129,7 +165,7 @@ export class GenoptionswithoperatorsComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((ret: { name: string, type: string }) => {
       if (ret !== undefined) {
-        this.profileFormWhere.patchValue({ value: "`${" + `${ret.name}` + "}`" })
+        this.profileFormWhere.patchValue({ value:  `${ret.name}` })
       }
     });
   }
@@ -244,41 +280,41 @@ export class GenoptionswithoperatorsComponent implements OnInit {
           break;
         case 'lessthan':
           if (index === 0) {
-            textselect += `"${this.fields[element.field - 1].name}":`+this.notinwhere(element.not,`LessThan(${element.value})`);
+            textselect += `"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `LessThan(${element.value})`);
           }
           else {
-            textselect += ','+`"${this.fields[element.field - 1].name}":`+this.notinwhere(element.not,`LessThan(${element.value})`);
+            textselect += ',' + `"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `LessThan(${element.value})`);
           }
           break;
         case 'lessthanorequal':
           if (index === 0) {
-            textselect += `"${this.fields[element.field - 1].name}":`+this.notinwhere(element.not,`LessThanOrEqual(${element.value})`);
+            textselect += `"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `LessThanOrEqual(${element.value})`);
           }
           else {
-            textselect += ','+`"${this.fields[element.field - 1].name}":`+this.notinwhere(element.not,`LessThanOrEqual(${element.value})`);
+            textselect += ',' + `"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `LessThanOrEqual(${element.value})`);
           }
           break;
         case 'morethan':
           if (index === 0) {
-            textselect += `"${this.fields[element.field - 1].name}":`+this.notinwhere(element.not,`MoreThan(${element.value})`);
+            textselect += `"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `MoreThan(${element.value})`);
           }
           else {
-            textselect += `,"${this.fields[element.field - 1].name}":`+this.notinwhere(element.not,`MoreThan(${element.value})`);
+            textselect += `,"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `MoreThan(${element.value})`);
           }
           break;
         case 'morethanorequal':
           if (index === 0) {
-            textselect += `"${this.fields[element.field - 1].name}":`+this.notinwhere(element.not,`MoreThanOrEqual(${element.value})`);
+            textselect += `"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `MoreThanOrEqual(${element.value})`);
           }
           else {
-            textselect += `,"${this.fields[element.field - 1].name}":`+this.notinwhere(element.not,`MoreThanOrEqual(${element.value})`);
+            textselect += `,"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `MoreThanOrEqual(${element.value})`);
           }
           break;
         case 'between':
           if (index === 0) {
-            textselect += `"${this.fields[element.field - 1].name}":`+ this.notinwhere(element.not,`Between(${element.value},${element.value2})`);
+            textselect += `"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `Between(${element.value},${element.value2})`);
           } else {
-            textselect += `,"${this.fields[element.field - 1].name}":`+ this.notinwhere(element.not,`Between(${element.value},${element.value2})`);
+            textselect += `,"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `Between(${element.value},${element.value2})`);
           }
           break;
         case 'value':
@@ -300,6 +336,22 @@ export class GenoptionswithoperatorsComponent implements OnInit {
             textselect += `"${this.fields[element.field - 1].name}":` + `${element.value}`;
           } else {
             textselect += `,"${this.fields[element.field - 1].name}":` + `${element.value}`;
+          }
+          break;
+        case 'in':
+          if (index === 0) {
+            textselect += `"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `In(${element.value})`);
+          }
+          else {
+            textselect += ',' + `"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `In(${element.value})`);
+          }
+          break;
+        case 'any':
+          if (index === 0) {
+            textselect += `"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `Any(${element.value})`);
+          }
+          else {
+            textselect += ',' + `"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `Any(${element.value})`);
           }
           break;
         default:

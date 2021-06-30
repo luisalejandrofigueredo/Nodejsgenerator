@@ -1,10 +1,4 @@
-<ng-container *ngIf="data.filter==='number'; then thenTemplate; else elseTemplate"></ng-container>
-<ng-template #thenTemplate>
-    <p>Choose numerical parameter</p>
-</ng-template>
-<ng-template #elseTemplate>
-    <p>Choose string parameter</p>
-</ng-template>
+<p>Choose  {{viewparameter(data.filter)}} type parameter</p>
 <mat-dialog-content>
 <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8">
     <ng-container matColumnDef="name">

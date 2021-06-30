@@ -1,0 +1,23 @@
+<button mat-icon-button (click)="addvalue()">
+    <mat-icon>add</mat-icon>
+</button>
+<form [formGroup]="form">
+    <div formArrayName="values">
+        <div *ngFor="let lessonForm of aliasesArrayControl;let i = index">
+            <ng-container [formGroupName]="i">
+                <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                    <mat-form-field>
+                        <input matInput placeholder="Value" formControlName="value">
+                    </mat-form-field>
+                    <button mat-icon-button type="button" (click)="deletevalue(i)">
+                        <mat-icon>remove</mat-icon>
+                    </button>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</form>
+<div mat-dialog-actions style="justify-content: flex-end;">
+    <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>
+    <button mat-raised-button [disabled]="!form.valid" color="primary" mat-button (click)="onYesClick()">Yes</button>
+</div>

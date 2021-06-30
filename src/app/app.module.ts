@@ -52,6 +52,7 @@ import { GenoptionsComponent } from './genoptions/genoptions.component';
 import { ParametersmodalComponent } from './parametersmodal/parametersmodal.component';
 import { GenoptionswithoperatorsComponent } from './genoptionswithoperators/genoptionswithoperators.component';
 import { ViewparametersComponent } from './viewparameters/viewparameters.component';
+import { AddarrayComponent } from './addarray/addarray.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -81,6 +82,7 @@ import { ViewparametersComponent } from './viewparameters/viewparameters.compone
     ParametersmodalComponent,
     GenoptionswithoperatorsComponent,
     ViewparametersComponent,
+    AddarrayComponent,
   ],
   imports: [ 
     BrowserModule, 
@@ -113,6 +115,6 @@ import { ViewparametersComponent } from './viewparameters/viewparameters.compone
   providers: [],
   bootstrap: [AppComponent],
   // tslint:disable-next-line: max-line-length
-  entryComponents: [DatamodalComponent, FormschemamodalComponent, ApidatamodalComponent, RelationdatamodalComponent, RelationdatamodalonetomanyComponent,GenoptionsComponent,ParametersmodalComponent,GenoptionswithoperatorsComponent]
+  entryComponents: [DatamodalComponent, FormschemamodalComponent, ApidatamodalComponent, RelationdatamodalComponent, RelationdatamodalonetomanyComponent,GenoptionsComponent,ParametersmodalComponent,GenoptionswithoperatorsComponent,AddarrayComponent]
 })
 export class AppModule { }

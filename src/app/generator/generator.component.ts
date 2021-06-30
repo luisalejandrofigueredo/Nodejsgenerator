@@ -513,11 +513,11 @@ export class GeneratorComponent implements OnInit, OnChanges {
                   if (index === 0) {
                     this.filegenerating += `@Param('${elempar.name}') `;
                     this.filegenerating += ` ${elempar.name}`;
-                    this.filegenerating += (elempar.type === "string" || elempar.type === 'date') ? ':string' : ':number';
+                    this.filegenerating += (elempar.type === "string" || elempar.type === 'date' || elempar.type === 'arraystring') ? ':string' : ':number';
                   } else {
                     this.filegenerating += `,@Param('${elempar.name}')`;
                     this.filegenerating += ` ${elempar.name}`;
-                    this.filegenerating += (elempar.type === "string" || elempar.type === 'date') ? ':string' : ':number';
+                    this.filegenerating += (elempar.type === "string" || elempar.type === 'date' || elempar.type === 'arraystring') ? ':string' : ':number';
                   }
                 });
                 this.filegenerating += ` ){\n`;
@@ -548,11 +548,11 @@ export class GeneratorComponent implements OnInit, OnChanges {
                   if (index === 0) {
                     this.filegenerating += `@Param('${elempar.name}') `;
                     this.filegenerating += ` ${elempar.name}`;
-                    this.filegenerating += (elempar.type === "string" || elempar.type === 'date') ? ':string' : ':number';
+                    this.filegenerating += (elempar.type === "string" || elempar.type === 'date' || elempar.type === 'arraystring' ) ? ':string' : ':number';
                   } else {
                     this.filegenerating += `,@Param('${elempar.name}')`;
                     this.filegenerating += ` ${elempar.name}`;
-                    this.filegenerating += (elempar.type === "string" || elempar.type === 'date') ? ':string' : ':number';
+                    this.filegenerating += (elempar.type === "string" || elempar.type === 'date' || elempar.type === 'arraystring' ) ? ':string' : ':number';
                   }
                 });
                 this.filegenerating += ` ){\n`;
@@ -630,6 +630,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
 
   //generando servicio
   servicegenerator(index: number, schema: string, mastersecurity: boolean) {
+    let options="";
     const schemalower = schema.toLowerCase();
     const sec = this.configservice.getsecurity();
     this.filegenerating = '';
@@ -671,35 +672,51 @@ export class GeneratorComponent implements OnInit, OnChanges {
         case 'get':
           switch (element.operation) {
             case 'findandcountgenerated':
+              options=element.options;
               this.addgenrartinline('\tadding find and count generated');
               this.filegenerating += `async getfindandcountgenerated${element.path}( `
               element.parameters.forEach((elementpar, index) => {
                 if (index === 0) {
                   this.filegenerating += elementpar.name;
-                  this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date') ? ':string' : ':number';
+                  this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date' || elementpar.type === 'arraystring') ? ':string' : ':number';
                 } else {
                   this.filegenerating += ', ' + elementpar.name;
-                  this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date') ? ':string' : ':number';
+                  this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date' || elementpar.type === 'arraystring') ? ':string' : ':number';
                 }
               });
               this.filegenerating += `):Promise<any[]> {\n`;
-              this.filegenerating += `\treturn await this.${schema}Repository.findAndCount(${element.options});\n`;
+              element.parameters.forEach((elementpar, index) => {
+                if (elementpar.type==='arraystring'){
+                  this.filegenerating += `const arraystring${elementpar.name}:string[]=${elementpar.name}.split(',');\n`;
+                  const regex=new RegExp(elementpar.name,'g');
+                  options=options.replace(regex ,'arraystring'+elementpar.name);
+                }
+              });
+              this.filegenerating += `\treturn await this.${schema}Repository.findAndCount(${options});\n`;
               this.filegenerating += `}\n`;
               break;
             case 'findgenerated':
+              options=element.options;
               this.addgenrartinline('\tadding find generated');
               this.filegenerating += `async getfindgenerated${element.path}( `
               element.parameters.forEach((elementpar, index) => {
                 if (index === 0) {
                   this.filegenerating += elementpar.name;
-                  this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date') ? ':string' : ':number';
+                  this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date' || elementpar.type === 'arraystring') ? ':string' : ':number';
                 } else {
                   this.filegenerating += ', ' + elementpar.name;
-                  this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date') ? ':string' : ':number';
+                  this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date' || elementpar.type === 'arraystring' ) ? ':string' : ':number';
                 }
               });
               this.filegenerating += `):Promise<any[]> {\n`;
-              this.filegenerating += `\treturn await this.${schema}Repository.find(${element.options});\n`;
+              element.parameters.forEach((elementpar, index) => {
+                if (elementpar.type==='arraystring'){
+                  this.filegenerating += `const arraystring${elementpar.name}:string[]=${elementpar.name}.split(',');\n`;
+                  const regex=new RegExp(elementpar.name,'g');
+                  options=options.replace(regex ,'arraystring'+elementpar.name);
+                }
+              });
+              this.filegenerating += `\treturn await this.${schema}Repository.find(${options});\n`;
               this.filegenerating += `}\n`;
               break;
             case 'findwithoptions':

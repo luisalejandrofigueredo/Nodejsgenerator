@@ -119,6 +119,7 @@
                                     <mat-form-field>
                                         <input matInput placeholder="Value" formControlName="value">
                                     </mat-form-field>
+                                    <button mat-icon-button (click)="addstringarray(i)" *ngIf="ifarray(i)" type="button"><mat-icon>add</mat-icon></button>
                                 </div>
                             </ng-container>
                         </div>

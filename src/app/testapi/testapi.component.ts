@@ -9,6 +9,7 @@ import { FormControl, Validators, FormGroup, FormArray, FormBuilder, AbstractCon
 import { MatDialog } from '@angular/material/dialog';
 import { GenoptionsComponent } from '../genoptions/genoptions.component';
 import { Overlay } from '@angular/cdk/overlay';
+import { AddarrayComponent } from '../addarray/addarray.component';
 
 
 @Component({
@@ -37,23 +38,23 @@ export class TestapiComponent implements OnInit {
   rtoken: string;
   profileForm: FormGroup;
   form = new FormData();
-  operationarray: {value:string,viewValue:string}[] = [
+  operationarray: { value: string, viewValue: string }[] = [
     { value: 'getall', viewValue: 'Get All' },
     { value: 'getone', viewValue: 'Get One' },
     { value: 'skiplimit', viewValue: 'Get skiplimit by key' },
-    { value: 'skiplimitbyfield' , viewValue: 'Get skiplimit by field' },
-    { value: 'skiplimitfilter', viewValue: 'Get limit filter'},
-    { value: 'count', viewValue: 'Count'},
-    { value: 'findandcount', viewValue:'Find and Count'},
-    { value: 'findandcountwithoptions' , viewValue:'Find and Count with options'},
-    { value: 'findwithoptions' , viewValue:'Find with options'},
-    { value: 'findgenerated', viewValue:'Find generated' },
-    { value: 'findandcountgenerated', viewValue:'Find and count generated' }
+    { value: 'skiplimitbyfield', viewValue: 'Get skiplimit by field' },
+    { value: 'skiplimitfilter', viewValue: 'Get limit filter' },
+    { value: 'count', viewValue: 'Count' },
+    { value: 'findandcount', viewValue: 'Find and Count' },
+    { value: 'findandcountwithoptions', viewValue: 'Find and Count with options' },
+    { value: 'findwithoptions', viewValue: 'Find with options' },
+    { value: 'findgenerated', viewValue: 'Find generated' },
+    { value: 'findandcountgenerated', viewValue: 'Find and count generated' }
   ];
-  constructor(private fb: FormBuilder,private httpclient: HttpClient,private genoption:MatDialog, private configservice: ConfigService,private overlay: Overlay) { }
+  constructor(private fb: FormBuilder, private httpclient: HttpClient, private genoption: MatDialog, private configservice: ConfigService, private overlay: Overlay) { }
 
   ngOnInit(): void {
-    this.api = { id: 0, field: '', path: '', extfiles: '', type: '', roles: '', security: false, operation: '', options:'' ,parameters:[]};
+    this.api = { id: 0, field: '', path: '', extfiles: '', type: '', roles: '', security: false, operation: '', options: '', parameters: [] };
     this.host = '127.0.0.1';
     this.port = this.configservice.config.port.toString();
     if (this.configservice.config.enablehttps === false) {
@@ -86,9 +87,9 @@ export class TestapiComponent implements OnInit {
     });
   }
 
-  viewValue(value: string):string{
-    if(value==="") return "";
-    return this.operationarray.find(element=> element.value===value).viewValue
+  viewValue(value: string): string {
+    if (value === "") return "";
+    return this.operationarray.find(element => element.value === value).viewValue
   }
 
   onFileSelected(event) {
@@ -178,14 +179,15 @@ export class TestapiComponent implements OnInit {
     }
   }
 
-  opengenoption(){
+  opengenoption() {
     const dialogRef = this.genoption.open(GenoptionsComponent, {
       width: '500px',
-      autoFocus:false,
+      autoFocus: false,
       scrollStrategy: this.overlay.scrollStrategies.noop(),
       disableClose: false,
-      data: { fields: this.configservice.getfieldschemaswithid(this.profileForm.get('Schema').value) }});
-      dialogRef.afterClosed().subscribe(ret=>{ if (ret!==undefined) {this.profileForm.patchValue({'body':ret})}})
+      data: { fields: this.configservice.getfieldschemaswithid(this.profileForm.get('Schema').value) }
+    });
+    dialogRef.afterClosed().subscribe(ret => { if (ret !== undefined) { this.profileForm.patchValue({ 'body': ret }) } })
   }
 
   change() {
@@ -193,7 +195,7 @@ export class TestapiComponent implements OnInit {
     this.apis = [...this.configservice.getapis(this.profileForm.get('Schema').value)];
     this.schemastring = this.configservice.getschemaname(this.profileForm.get('Schema').value);
   }
-  get getlegtharray():number {
+  get getlegtharray(): number {
     return (this.profileForm.get('parameters') as FormArray).length;
   }
 
@@ -208,51 +210,51 @@ export class TestapiComponent implements OnInit {
     (this.profileForm.get('parameters') as FormArray).disable();
     switch (typea[0]) {
       case 'get':
-        if (typea[1]==='findgenerated' || typea[1]==='findandcountgenerated') {
+        if (typea[1] === 'findgenerated' || typea[1] === 'findandcountgenerated') {
           (this.profileForm.get('parameters') as FormArray).clear();
           (this.profileForm.get('parameters') as FormArray).enable();
           this.api.parameters.forEach(element => {
-            return (this.profileForm.get('parameters') as FormArray).push( this.fb.group({
+            return (this.profileForm.get('parameters') as FormArray).push(this.fb.group({
               type: element.type,
               name: this.fb.control(element.name),
-              value: this.fb.control('',Validators.required)
-            }) );
+              value: this.fb.control('', Validators.required)
+            }));
           });
         }
-        if (typea[1]='findwithoptions') {
-          this.profileForm.patchValue({ body:'{ "where": {"id": 1},"order": {"id": "ASC"},"skip": 0,"take": 10,"cache": true }' });
-         }
-        if (typea[1]='findandcountwithoptions') {
-         this.profileForm.patchValue({ body:'{ "where": {"id": 1},"order": {"id": "ASC"},"skip": 0,"take": 10,"cache": true }' });
+        if (typea[1] = 'findwithoptions') {
+          this.profileForm.patchValue({ body: '{ "where": {"id": 1},"order": {"id": "ASC"},"skip": 0,"take": 10,"cache": true }' });
         }
-       break;
+        if (typea[1] = 'findandcountwithoptions') {
+          this.profileForm.patchValue({ body: '{ "where": {"id": 1},"order": {"id": "ASC"},"skip": 0,"take": 10,"cache": true }' });
+        }
+        break;
       case 'uploadfile':
         break;
       case 'uploadfiles':
         break;
       case 'put':
         {
-        for (let index = 0; index < fields.length; index++) {
-          const element = fields[index];
-          switch (element.type) {
-            case 'number':
-              body += `"${element.name}"` + ':0,';
-              break;
-            case 'string':
-              body += `"${element.name}"` + ':"",';
-              break;
-            case 'date':
-              body += `"${element.name}"` + ':"2012-04-23T18:25:43.511Z",'
-              break;
-            default:
-              break;
+          for (let index = 0; index < fields.length; index++) {
+            const element = fields[index];
+            switch (element.type) {
+              case 'number':
+                body += `"${element.name}"` + ':0,';
+                break;
+              case 'string':
+                body += `"${element.name}"` + ':"",';
+                break;
+              case 'date':
+                body += `"${element.name}"` + ':"2012-04-23T18:25:43.511Z",'
+                break;
+              default:
+                break;
+            }
           }
+          body = body.substr(0, body.length - 1);
+          body += body = '}';
+          const jsonvar = JSON.parse(body)
+          this.profileForm.patchValue({ body: JSON.stringify(jsonvar, null, 4) });
         }
-        body = body.substr(0, body.length - 1);
-        body += body = '}';
-        const jsonvar = JSON.parse(body)
-        this.profileForm.patchValue({ body: JSON.stringify(jsonvar, null, 4) });
-      }
         break;
       case 'patch':
         {
@@ -310,6 +312,36 @@ export class TestapiComponent implements OnInit {
     this.url = this.urlpri + `/${this.schemastring}/getfile/${this.profileForm.get('field').value}`;
   }
 
+  ifarray(index: number) { 
+    if (this.api.parameters[index].type === "arraystring") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  addstringarray(index:number){
+    const dialogRef = this.genoption.open(AddarrayComponent, {
+      width: '500px',
+      autoFocus: false,
+      disableClose: false,
+      data: { values: (this.profileForm.get('parameters') as FormArray).at(index).get('value').value }
+    });
+    dialogRef.afterClosed().subscribe((ret: { values:[{ value:string}]  }) => {
+      let array:string='';
+      if (ret !== undefined) {
+        ret.values.forEach((element,index) => {
+          if (index===0){
+            array= `${element.value}` ;
+          }
+          else{
+            array+= ','+`${element.value}` ;
+          }
+        });
+        (this.profileForm.get('parameters') as FormArray).at(index).patchValue({ value: array })
+      }
+    });
+  }
+
   async send() {
     let httpOptions;
     let typea: string[];
@@ -364,10 +396,10 @@ export class TestapiComponent implements OnInit {
             })
           };
           this.url = this.urlpri + `/${this.schemastring}/${this.profileForm.get('record').value}`;
-          this.httpclient.patch(this.url,this.profileForm.get('body').value,httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+          this.httpclient.patch(this.url, this.profileForm.get('body').value, httpOptions).subscribe(res =>
+            this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
         }
-       break; 
+        break;
       case 'get':
         switch (typea[1]) {
           case 'findandcountgenerated':
@@ -379,15 +411,15 @@ export class TestapiComponent implements OnInit {
             };
             this.url = this.urlpri + `/${this.schemastring}/findandcountgenerated${this.api.path}`;
             (this.profileForm.get('parameters') as FormArray).value.forEach(element => {
-              if (element.type==='string' || element.type==='date')
-              this.url+=`/${encodeURI(element.value)}`
+              if (element.type === 'string' || element.type === 'date' || element.type === 'arraystring')
+                this.url += `/${encodeURI(element.value)}`
               else {
-                this.url+=`/${element.value}`;
+                this.url += `/${element.value}`;
               }
-            }); 
+            });
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
               this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
-          break;
+            break;
           case 'findgenerated':
             httpOptions = {
               headers: new HttpHeaders({
@@ -397,15 +429,15 @@ export class TestapiComponent implements OnInit {
             };
             this.url = this.urlpri + `/${this.schemastring}/findgenerated${this.api.path}`;
             (this.profileForm.get('parameters') as FormArray).value.forEach(element => {
-              if (element.type==='string' || element.type==='date')
-              this.url+=`/${encodeURI(element.value)}`
+              if (element.type === 'string' || element.type === 'date' || element.type === 'arraystring')
+                this.url += `/${encodeURI(element.value)}`
               else {
-                this.url+=`/${element.value}`;
+                this.url += `/${element.value}`;
               }
-            }); 
+            });
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
               this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
-          break;
+            break;
           case 'findwithoptions':
             httpOptions = {
               headers: new HttpHeaders({
@@ -449,7 +481,7 @@ export class TestapiComponent implements OnInit {
             this.url = this.urlpri + `/${this.schemastring}/count`;
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
               this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
-          break;
+            break;
           case 'getone':
             httpOptions = {
               headers: new HttpHeaders({
@@ -484,7 +516,7 @@ export class TestapiComponent implements OnInit {
               this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
             break
           case 'skiplimitbyfield':
-            console.log('api',this.api);
+            console.log('api', this.api);
             httpOptions = {
               headers: new HttpHeaders({
                 'Content-Type': 'application/json',
@@ -548,7 +580,7 @@ export class TestapiComponent implements OnInit {
     }
 
   }
-  get aliasesArrayControl():AbstractControl[] {
+  get aliasesArrayControl(): AbstractControl[] {
     return (this.profileForm.get('parameters') as FormArray).controls;
   }
   expand() {

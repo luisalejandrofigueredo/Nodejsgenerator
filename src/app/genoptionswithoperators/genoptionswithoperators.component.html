@@ -63,12 +63,18 @@
                     <div class='componentWraper'>
                         <p class='componentTitle'>Parameters or value</p>
                         <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-                            <mat-checkbox style="padding-top: 20px;" labelPosition="before" *ngIf="ifnot(this.profileFormWhere.get('operator').value)" formControlName="not">
-                                Not 
+                            <mat-checkbox style="padding-top: 20px;" labelPosition="before"
+                                *ngIf="ifnot(this.profileFormWhere.get('operator').value)" formControlName="not">
+                                Not
                             </mat-checkbox>
                             <mat-form-field style="padding-left: 10px;">
                                 <input matInput formControlName="value" placeholder="Value">
                             </mat-form-field>
+                            <button mat-icon-button matTooltip="Add array values" type="button"
+                                *ngIf="this.profileFormWhere.get('operator').value==='in' || this.profileFormWhere.get('operator').value==='any'"
+                                (click)="addarray()">
+                                <mat-icon>add</mat-icon>
+                            </button>
                             <button mat-icon-button matTooltip="Add parameter"
                                 (click)="addparameter(this.profileFormWhere.get('field').value)" type="button">
                                 <mat-icon>add</mat-icon>

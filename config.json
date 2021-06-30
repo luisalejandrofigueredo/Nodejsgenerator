@@ -352,11 +352,11 @@
 					"security": true,
 					"roles": "Admin User",
 					"extfiles": "",
-					"options": "{select:[\"Name\",\"login\"],where:{\"id\":MoreThan(`${LessThanP}`)}}",
+					"options": "{where:{\"Name\":Any(InName)}}",
 					"parameters": [
 						{
-							"name": "LessThanP",
-							"type": "number"
+							"name": "InName",
+							"type": "arraystring"
 						}
 					]
 				},
@@ -378,15 +378,11 @@
 					"security": true,
 					"roles": "Admin User",
 					"extfiles": "",
-					"options": "{where:{\"id\":Not(Between(`${desde}`,`${hasta}`))}}",
+					"options": "{where:{\"Name\":In(InPrueba)}}",
 					"parameters": [
 						{
-							"name": "desde",
-							"type": "number"
-						},
-						{
-							"name": "hasta",
-							"type": "number"
+							"name": "InPrueba",
+							"type": "arraystring"
 						}
 					]
 				}
