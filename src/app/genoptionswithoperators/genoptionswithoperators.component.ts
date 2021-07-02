@@ -77,6 +77,9 @@ export class GenoptionswithoperatorsComponent implements OnInit {
     this.profileFormWhere.patchValue({ value: '', value2: '' });
     this.profileFormWhere.get('value2').disable();
     switch (event.value) {
+      case 'raw':
+        this.profileFormWhere.patchValue({ value: '${alias} ' });
+        break;
       case 'in':
         this.profileFormWhere.patchValue({ value: '' });
         break;
@@ -354,6 +357,14 @@ export class GenoptionswithoperatorsComponent implements OnInit {
             textselect += ',' + `"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `Any(${element.value})`);
           }
           break;
+          case 'raw':
+            if (index === 0) {
+              textselect += `"${this.fields[element.field - 1].name}":` +  "Raw(alias =>"+"`"+element.value+"`)";
+            }
+            else {
+              textselect += `,"${this.fields[element.field - 1].name}":` +  "Raw(alias =>"+"`"+element.value+"`)";
+            }
+            break;  
         default:
           break;
       }

@@ -352,7 +352,7 @@
 					"security": true,
 					"roles": "Admin User",
 					"extfiles": "",
-					"options": "{where:{\"Name\":Any(InName)}}",
+					"options": "{where:{\"id\":Raw(alias =>`${alias} >2`)}}",
 					"parameters": [
 						{
 							"name": "InName",
