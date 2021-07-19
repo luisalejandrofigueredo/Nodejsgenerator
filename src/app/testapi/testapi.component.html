@@ -66,13 +66,14 @@
                         <span *ngIf='!(item.type==="uploadfile"||item.type==="uploadfiles")'>
                             {{(viewValue(item.operation)==="")? item.type : viewValue(item.operation)}}
                         </span>
-                         <span *ngIf="item.field!=='' && item.operation!=='skiplimitbyfield'" >Filter=>{{item.field}}</span>
+                         <span *ngIf="item.field!=='' && item.operation!=='skiplimitbyfield' && item.type!=='postonetoone'" >Filter=>{{item.field}}</span>
+                         <span *ngIf="item.type==='postonetoone'">Relation post=>{{item.field}}</span>
                          <span *ngIf="item.operation==='skiplimitbyfield'">Order by=>{{item.field}}</span>
                          {{item.path}}
                     </mat-option>
                 </mat-select>
                 <mat-form-field
-                    *ngIf="(api.type==='get' && api.operation==='getone') || (api.type==='delete') || (api.type==='patch')">
+                    *ngIf="(api.type==='get' && api.operation==='getone') || (api.type==='delete') || (api.type==='patch') || (api.type==='postonetoone')">
                     <input matInput type="number" placeholder="record id" formControlName="record">
                 </mat-form-field>
                 <mat-form-field

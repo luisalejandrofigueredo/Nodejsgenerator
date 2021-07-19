@@ -1,0 +1,14 @@
+<form [formGroup]="profileForm" (ngSubmit)="onYesClick()">
+    <mat-form-field>
+        <input matInput placeholder="Relation name" formControlName="relationname">
+    </mat-form-field>
+    <mat-select placeholder="Table" formControlName="table" >
+        <mat-option *ngFor="let item of tables" [value]="item.name">
+            {{item.name}} {{item.description}}
+        </mat-option>
+    </mat-select>
+    <div mat-dialog-actions style="justify-content: flex-end;">
+        <button mat-raised-button type="button" (click)="onNoClick()" cdkFocusInitial>No</button>
+        <button mat-raised-button type="submit" color="primary" mat-button [disabled]="!profileForm.valid">Yes</button>
+    </div>
+</form>

@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { GenoptionsComponent } from '../genoptions/genoptions.component';
 import { Overlay } from '@angular/cdk/overlay';
 import { AddarrayComponent } from '../addarray/addarray.component';
+import { Relations } from '../interfaces/relations';
 
 
 @Component({
@@ -204,6 +205,7 @@ export class TestapiComponent implements OnInit {
     const apinumber = event.value;
     this.profileForm.patchValue({ body: '', reponse: '', test: false });
     const fields: Schemaitem[] = this.configservice.getschematable(this.profileForm.get('Schema').value);
+    const relations: Relations = this.configservice.getrelations(this.profileForm.get('Schema').value);
     this.api = this.configservice.getapi(this.profileForm.get('Schema').value, apinumber);
     typea = [this.api.type, this.api.operation];
     let body = '{';
@@ -281,26 +283,55 @@ export class TestapiComponent implements OnInit {
         }
         break;
       case 'post':
-        for (let index = 0; index < fields.length; index++) {
-          const element = fields[index];
-          switch (element.type) {
-            case 'number':
-              body += `"${element.name}"` + ':0,';
-              break;
-            case 'string':
-              body += `"${element.name}"` + ':"",';
-              break;
-            case 'date':
-              body += `"${element.name}"` + ':"2012-04-23T18:25:43.511Z",'
-              break;
-            default:
-              break;
+        {
+          for (let index = 0; index < fields.length; index++) {
+            const element = fields[index];
+            switch (element.type) {
+              case 'number':
+                body += `"${element.name}"` + ':0,';
+                break;
+              case 'string':
+                body += `"${element.name}"` + ':"",';
+                break;
+              case 'date':
+                body += `"${element.name}"` + ':"2012-04-23T18:25:43.511Z",'
+                break;
+              default:
+                break;
+            }
           }
+          body = body.substr(0, body.length - 1);
+          body += body = '}';
+          const jsonvar = JSON.parse(body)
+          this.profileForm.patchValue({ body: JSON.stringify(jsonvar, null, 4) });
         }
-        body = body.substr(0, body.length - 1);
-        body += body = '}';
-        const jsonvar = JSON.parse(body)
-        this.profileForm.patchValue({ body: JSON.stringify(jsonvar, null, 4) });
+        break;
+      case 'postonetoone':
+        {
+          const onetoone = relations.OnetoOne.find(element => element.relationname = this.api.field);
+          const fieldrelation = this.configservice.getschematable(this.configservice.getschemawithname(onetoone.table));
+          fieldrelation.forEach((element, index) => {
+            if (element.name !== 'id') {
+              switch (element.type) {
+                case 'number':
+                  body += `"${element.name}"` + ':0,';
+                  break;
+                case 'string':
+                  body += `"${element.name}"` + ':"",';
+                  break;
+                case 'date':
+                  body += `"${element.name}"` + ':"2012-04-23T18:25:43.511Z",'
+                  break;
+                default:
+                  break;
+              }
+            }
+          });
+          body = body.substr(0, body.length - 1);
+          body += body = '}';
+          const jsonvar = JSON.parse(body)
+          this.profileForm.patchValue({ body: JSON.stringify(jsonvar, null, 4) });
+        }
         break;
       default:
         this.profileForm.patchValue({ body: "" });
@@ -312,29 +343,29 @@ export class TestapiComponent implements OnInit {
     this.url = this.urlpri + `/${this.schemastring}/getfile/${this.profileForm.get('field').value}`;
   }
 
-  ifarray(index: number) { 
+  ifarray(index: number) {
     if (this.api.parameters[index].type === "arraystring") {
       return true;
     } else {
       return false;
     }
   }
-  addstringarray(index:number){
+  addstringarray(index: number) {
     const dialogRef = this.genoption.open(AddarrayComponent, {
       width: '500px',
       autoFocus: false,
       disableClose: false,
       data: { values: (this.profileForm.get('parameters') as FormArray).at(index).get('value').value }
     });
-    dialogRef.afterClosed().subscribe((ret: { values:[{ value:string}]  }) => {
-      let array:string='';
+    dialogRef.afterClosed().subscribe((ret: { values: [{ value: string }] }) => {
+      let array: string = '';
       if (ret !== undefined) {
-        ret.values.forEach((element,index) => {
-          if (index===0){
-            array= `${element.value}` ;
+        ret.values.forEach((element, index) => {
+          if (index === 0) {
+            array = `${element.value}`;
           }
-          else{
-            array+= ','+`${element.value}` ;
+          else {
+            array += ',' + `${element.value}`;
           }
         });
         (this.profileForm.get('parameters') as FormArray).at(index).patchValue({ value: array })
@@ -542,6 +573,17 @@ export class TestapiComponent implements OnInit {
             break;
         }
         break;
+        case 'postonetoone':
+          httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type': 'application/json',
+              'authorization': 'Bearer ' + this.rtoken
+            })
+          };
+          this.url = this.urlpri + `/${this.schemastring}/${this.api.path}/${this.profileForm.get('record').value}`;
+          this.httpclient.post(this.url, this.profileForm.get('body').value, httpOptions).
+            subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }));
+          break;  
       case 'post':
         httpOptions = {
           headers: new HttpHeaders({

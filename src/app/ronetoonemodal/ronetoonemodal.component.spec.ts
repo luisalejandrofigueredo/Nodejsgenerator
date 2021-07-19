@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RelationdatamodalComponent } from './relationdatamodal.component';
+import { RonetoonemodalComponent } from './ronetoonemodal.component';
 
-describe('RelationdatamodalComponent', () => {
-  let component: RelationdatamodalComponent;
-  let fixture: ComponentFixture<RelationdatamodalComponent>;
+describe('RonetoonemodalComponent', () => {
+  let component: RonetoonemodalComponent;
+  let fixture: ComponentFixture<RonetoonemodalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RelationdatamodalComponent ]
+      declarations: [ RonetoonemodalComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RelationdatamodalComponent);
+    fixture = TestBed.createComponent(RonetoonemodalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

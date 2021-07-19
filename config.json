@@ -102,7 +102,14 @@
 					"index": false
 				}
 			],
-			"schemarelations": [],
+			"schemarelations": {
+				"OnetoOne": [
+					{
+						"relationname": "costumerdata",
+						"table": "Constumersdata"
+					}
+				]
+			},
 			"schemasapi": [
 				{
 					"id": 1,
@@ -378,15 +385,67 @@
 					"security": true,
 					"roles": "Admin User",
 					"extfiles": "",
-					"options": "{where:{\"Name\":In(InPrueba)}}",
-					"parameters": [
-						{
-							"name": "InPrueba",
-							"type": "arraystring"
-						}
-					]
+					"options": "{relations:[\"costumerdata\"]}",
+					"parameters": []
+				},
+				{
+					"idschema": "1",
+					"id": 21,
+					"type": "postonetoone",
+					"operation": "",
+					"path": "onetoone",
+					"field": "costumerdata",
+					"fields": [
+						"id",
+						"Name",
+						"login",
+						"password",
+						"roles",
+						"bearer"
+					],
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "",
+					"options": "",
+					"parameters": []
 				}
 			]
+		},
+		{
+			"id": 2,
+			"name": "Constumersdata",
+			"description": "Personal data costumer",
+			"imports": "",
+			"fields": "",
+			"security": true,
+			"classsecurity": "RolesGuard",
+			"filesecurity": "",
+			"mastersecurity": false,
+			"filesupload": true,
+			"schemastable": [
+				{
+					"id": 1,
+					"type": "number",
+					"name": "id",
+					"length": 10,
+					"keyautonumber": true,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 2,
+					"type": "string",
+					"name": "celular",
+					"length": 255,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				}
+			],
+			"schemarelations": {
+				"OnetoOne": []
+			},
+			"schemasapi": []
 		}
 	]
 }

@@ -37,7 +37,6 @@ import { ApiComponent } from './api/api.component';
 import { ApidatamodalComponent } from './apidatamodal/apidatamodal.component';
 import { GeneratorComponent } from './generator/generator.component';
 import { BrowserelationsComponent } from './browserelations/browserelations.component';
-import { RelationdatamodalComponent } from './relationdatamodal/relationdatamodal.component';
 import { RelationdatamodalonetomanyComponent } from './relationdatamodalonetomany/relationdatamodalonetomany.component';
 import { GensecurityComponent } from './gensecurity/gensecurity.component';
 import { LoggerComponent } from './config/logger/logger.component';
@@ -53,6 +52,8 @@ import { ParametersmodalComponent } from './parametersmodal/parametersmodal.comp
 import { GenoptionswithoperatorsComponent } from './genoptionswithoperators/genoptionswithoperators.component';
 import { ViewparametersComponent } from './viewparameters/viewparameters.component';
 import { AddarrayComponent } from './addarray/addarray.component';
+import { BrowseonetooneComponent } from './browseonetoone/browseonetoone.component';
+import { RonetoonemodalComponent } from './ronetoonemodal/ronetoonemodal.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -67,7 +68,6 @@ import { AddarrayComponent } from './addarray/addarray.component';
     ApidatamodalComponent,
     GeneratorComponent,
     BrowserelationsComponent,
-    RelationdatamodalComponent,
     RelationdatamodalonetomanyComponent,
     GensecurityComponent,
     LoggerComponent,
@@ -83,6 +83,8 @@ import { AddarrayComponent } from './addarray/addarray.component';
     GenoptionswithoperatorsComponent,
     ViewparametersComponent,
     AddarrayComponent,
+    BrowseonetooneComponent,
+    RonetoonemodalComponent,
   ],
   imports: [ 
     BrowserModule, 
@@ -115,6 +117,6 @@ import { AddarrayComponent } from './addarray/addarray.component';
   providers: [],
   bootstrap: [AppComponent],
   // tslint:disable-next-line: max-line-length
-  entryComponents: [DatamodalComponent, FormschemamodalComponent, ApidatamodalComponent, RelationdatamodalComponent, RelationdatamodalonetomanyComponent,GenoptionsComponent,ParametersmodalComponent,GenoptionswithoperatorsComponent,AddarrayComponent]
+  entryComponents: [DatamodalComponent, FormschemamodalComponent, ApidatamodalComponent, RelationdatamodalonetomanyComponent,GenoptionsComponent,ParametersmodalComponent,GenoptionswithoperatorsComponent,AddarrayComponent]
 })
 export class AppModule { }

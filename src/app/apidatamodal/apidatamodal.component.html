@@ -1,7 +1,7 @@
 <h4 mat-dialog-title>API</h4>
 <div mat-dialog-content>
     <form [formGroup]="profileForm">
-        <mat-select placeholder="verb" formControlName="selectedValue" name="verb">
+        <mat-select placeholder="verb" (selectionChange)="selectchange()" formControlName="selectedValue" name="verb">
             <mat-option *ngFor="let item of types" [value]="item.value">
                 {{item.viewValue}}
             </mat-option>
@@ -30,7 +30,14 @@
                 {{items}}
             </mat-option>
         </mat-select>
-        <mat-form-field *ngIf="profileForm.get('selectedValue').value==='get'">
+        <mat-form-field *ngIf="profileForm.get('selectedValue').value==='postonetoone'">
+            <mat-select placeholder="Relation one to one" formControlName="onetoone">
+                <mat-option *ngFor="let item of relonetoone"  [value]="item.relationname">
+                    {{item.relationname}} {{item.table}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="profileForm.get('selectedValue').value==='get' || profileForm.get('selectedValue').value==='postonetoone' ">
             <input matInput placeholder="path" formControlName="path">
         </mat-form-field>
         <mat-form-field *ngIf="profileForm.get('selectedValue').value==='uploadfile' || profileForm.get('selectedValue').value==='uploadfiles' || profileForm.get('selectedValue').value==='getfile'">

@@ -101,27 +101,17 @@ export class ConfigService {
     return fields;
   }
   // tslint:disable-next-line: variable-name
-  getrelations(_id: number): Relations[] {
-    if ( this.config.schemas[_id].schemarelations !== undefined){
-      return this.config.schemas[_id].schemarelations;
-    } else {return []; }
+  getrelations(_id: number): Relations {
+    if ( this.config.schemas[_id-1].schemarelations !== undefined){
+      return this.config.schemas[_id-1].schemarelations;
+    } else {return { OnetoOne:[]}; }
+  }
+  setrelations(_id:number,relations:Relations){
+    this.config.schemas[_id - 1 ].schemarelations=relations;
   }
 
-  getrelation(idschema: number, idrelation: number): Relations {
-    return this.config.schemas[idschema].schemarelations[idrelation];
-  }
-  // tslint:disable-next-line: variable-name
-  getrelationfilter(idschema: number, filter: string): Relations[] {
-    const filtera = [...this.getrelations(idschema)];
-    // tslint:disable-next-line: prefer-const
-    let filterb = [];
-    for (const iterator of filtera) {
-      if (iterator.type === filter) {
-        filterb.push(iterator);
-      }
-    }
-    return filterb;
-  }
+ 
+  
   // tslint:disable-next-line: variable-name
   addapi(_id: number, api: Api) {
     this.config.schemas[_id - 1].schemasapi.push(api);
@@ -190,6 +180,10 @@ export class ConfigService {
     return this.config.schemas[id - 1].schemastable;
   }
 
+    getschemawithname(name: string): number {
+    return this.config.schemas.find(element=> element.name===name).id;
+  }
+
   getschemaname(id: number): string {
     return this.config.schemas[id - 1].name;
   }
@@ -218,7 +212,7 @@ export class ConfigService {
       filesecurity: SchemaHead.filesecurity,
       mastersecurity: SchemaHead.mastersecurity,
       filesupload: SchemaHead.filesupload,
-      schemastable: [], schemarelations: [], schemasapi: []
+      schemastable: [], schemarelations: { OnetoOne:[]} as Relations, schemasapi: []
     });
   }
   // delete schema

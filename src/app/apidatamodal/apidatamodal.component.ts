@@ -17,10 +17,12 @@ interface Type {
   styleUrls: ['./apidatamodal.component.scss']
 })
 export class ApidatamodalComponent implements OnInit {
+  relonetoone:{relationname:string,table:string}[]=[];
   types: Type[] = [
     { value: 'get', viewValue: 'Get' },
     { value: 'put', viewValue: 'Put' },
     { value: 'post', viewValue: 'Post' },
+    { value :'postonetoone', viewValue: 'Post One to One'},
     { value: 'delete', viewValue: 'Delete'},
     { value: 'patch', viewValue: 'Patch'}
   ];
@@ -72,6 +74,7 @@ export class ApidatamodalComponent implements OnInit {
       selectedOperation: new FormControl(this.data.operation, Validators.required),
       path : new FormControl(this.data.path, Validators.required),
       selectedfield: new FormControl(this.data.field, Validators.required),
+      onetoone:new FormControl('',Validators.required),
       security: new FormControl(this.data.security, Validators.required),
       extfiles: new FormControl(this.data.extfiles, Validators.required),
       roles: new FormControl(this.data.roles, Validators.required),
@@ -80,12 +83,22 @@ export class ApidatamodalComponent implements OnInit {
     });
     this.profileForm.get('selectedOperation').disable;
     this.profileForm.get('parameters').disable;
+    this.profileForm.get('onetoone').disable;
+    if (this.data.type==='postonetoone'){
+      this.profileForm.get('onetoone').setValue(this.data.field);
+      this.profileForm.get('onetoone').enable; 
+      this.relonetoone=[];
+      const onetoone=this.configservice.getrelations(this.data.idschema).OnetoOne;
+      onetoone.forEach(element => {
+        this.relonetoone.push({relationname:element.relationname,table:element.table})
+      });
+    }
   }
   generatecode(){
     const dialogRef = this.dialog.open(GenoptionswithoperatorsComponent, {
       width: '100%',
       disableClose: true,
-      data: {fields: this.configservice.getfieldschemaswithid(this.idschema), parameters:JSON.parse(this.profileForm.get('parameters').value)}
+      data: {fields: this.configservice.getfieldschemaswithid(this.idschema),schemaid:this.idschema,parameters:JSON.parse(this.profileForm.get('parameters').value)}
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
@@ -115,6 +128,18 @@ export class ApidatamodalComponent implements OnInit {
       this.profileForm.get('parameters').disable;
     }
   }
+  selectchange(){
+    this.relonetoone=[];
+    this.profileForm.get('onetoone').setValue(this.data.field);
+    if (this.configservice.getrelations(this.data.idschema).OnetoOne===[]) return; 
+    this.profileForm.get('onetoone').enable;
+    if (this.profileForm.get('selectedValue').value==='postonetoone'){
+      const onetoone=this.configservice.getrelations(this.data.idschema).OnetoOne;
+      onetoone.forEach(element => {
+        this.relonetoone.push({relationname:element.relationname,table:element.table})
+      });
+    }
+  }
   onNoClick(){
     this.dialogRef.close();
   }
@@ -128,6 +153,9 @@ export class ApidatamodalComponent implements OnInit {
     this.data.roles = this.profileForm.get('roles').value;
     this.data.extfiles= this.profileForm.get('extfiles').value,
     this.data.options= this.profileForm.get('options').value;
+    if (this.profileForm.get('selectedValue').value=='postonetoone'){
+      this.data.field=this.profileForm.get('onetoone').value
+    }
     if (this.profileForm.get('selectedOperation').value==='findgenerated' || this.profileForm.get('selectedOperation').value==='findandcountgenerated'){
       this.data.parameters=JSON.parse(this.profileForm.get('parameters').value as string);
     }

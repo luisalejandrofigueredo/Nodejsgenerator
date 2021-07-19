@@ -1,8 +1,13 @@
+'use strict';
 const { app, BrowserWindow, ipcMain, Menu, screen, shell } = require('electron');
 const { spawn } = require('child_process');
 const url = require("url");
 const path = require("path");
 var fs = require('fs');
+const prettier = require("prettier");
+/*require('electron-reload')(__dirname, {
+  electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+});*/
 
 let mainWindow
 var menu = Menu.buildFromTemplate([
@@ -46,7 +51,7 @@ function createWindow() {
   })
 }
 ipcMain.on('helpoptions', (event, arg) => {
- shell.openExternal('https://typeorm.io/#/find-options');
+  shell.openExternal('https://typeorm.io/#/find-options');
 });
 
 ipcMain.on('savemain', (event, arg) => {
@@ -60,12 +65,13 @@ ipcMain.on('savemain', (event, arg) => {
     console.log('writing in unix...');
     filepath = arg.path + '/src/' + arg.name;
   }
-  writeFile(filepath, arg.file);
+  let textprettier=prettier.format(arg.file,{ semi: true,singleQuote:true, parser: "typescript" });
+  writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });
 
 ipcMain.on('loadtemplate', (event, arg) => {
-  fs.readFile(arg, 'utf-8',function (err, data) {
+  fs.readFile(arg, 'utf-8', function (err, data) {
     if (err) throw err;
     event.returnValue = data;
   });
@@ -84,19 +90,19 @@ ipcMain.on('openvisualcode', (event, arg) => {
   try {
     process.chdir(arg.path);
   }
-  catch(err){console.log('operative system error');}
+  catch (err) { console.log('operative system error'); }
   try {
-    if (process.platform==="win32") {
-        const visu=spawn('cmd.exe',['/c','code','.']);
+    if (process.platform === "win32") {
+      const visu = spawn('cmd.exe', ['/c', 'code', '.']);
     } else {
-        const visu=spawn('code',['.']);
+      const visu = spawn('code', ['.']);
     }
   }
-  catch(err){console.log('operative error open visual');}
+  catch (err) { console.log('operative error open visual'); }
   try {
-      process.chdir(__dirname);
+    process.chdir(__dirname);
   }
-  catch(err){console.log('operative system error');}
+  catch (err) { console.log('operative system error'); }
   event.returnValue = 'visual ready';
 });
 
@@ -132,7 +138,8 @@ ipcMain.on('saveutilmuter', (event, arg) => {
     dir = arg.path + '/src/controller'
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
-  writeFile(filepath, arg.file);
+  let textprettier=prettier.format(arg.file,{ semi: true,singleQuote:true, parser: "typescript" });
+  writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });
 
@@ -150,7 +157,8 @@ ipcMain.on('savemodule', (event, arg) => {
     dir = arg.path + '/src/module'
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
-  writeFile(filepath, arg.file);
+  let textprettier=prettier.format(arg.file,{ semi: true,singleQuote:true, parser: "typescript" });
+  writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });
 
@@ -168,7 +176,8 @@ ipcMain.on('saveentity', (event, arg) => {
     dir = arg.path + '/src/entitys'
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
-  writeFile(filepath, arg.file);
+  let textprettier=prettier.format(arg.file,{ semi: true,singleQuote:true, parser: "typescript" });
+  writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });
 
@@ -186,7 +195,12 @@ ipcMain.on('saveservice', (event, arg) => {
     dir = arg.path + '/src/service';
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
-  writeFile(filepath, arg.file);
+  if (arg.format){
+    let textprettier=prettier.format(arg.file,{ semi: true,singleQuote:true, parser: "typescript" });
+    writeFile(filepath, textprettier);
+  } else{
+    writeFile(filepath, arg.file)
+  }
   event.returnValue = filepath;
 });
 
@@ -219,7 +233,8 @@ ipcMain.on('savecanactivate', (event, arg) => {
     dir = arg.path + '/src/roles'
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
-  writeFile(filepath, arg.file);
+  let textprettier=prettier.format(arg.file,{ semi: true,singleQuote:true, parser: "typescript" });
+  writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });
 
@@ -237,7 +252,8 @@ ipcMain.on('saveController', (event, arg) => {
     dir = arg.path + '/src/controller'
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
-  writeFile(filepath, arg.file);
+  let textprettier=prettier.format(arg.file,{ semi: true, singleQuote:true, parser: "typescript" });
+  writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });
 

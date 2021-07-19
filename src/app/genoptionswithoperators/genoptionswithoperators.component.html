@@ -144,6 +144,33 @@
     </mat-expansion-panel>
     <mat-expansion-panel>
         <mat-expansion-panel-header>
+            Relation
+        </mat-expansion-panel-header>
+        <form [formGroup]="profileFormRelation" (ngSubmit)="genRelation()">
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                <mat-select placeholder="Select relation" formControlName="relationname" name="item">
+                    <mat-option *ngFor="let item of relationsarray" [value]="item">
+                        {{item}}
+                    </mat-option>
+                </mat-select>
+                <button mat-icon-button [disabled]="this.profileFormRelation.get('relationname').value===''"
+                    (click)="addrelation()" type="button">
+                    <mat-icon>add</mat-icon>
+                </button>
+                <button [disabled]="this.relationsselected.length===0" mat-icon-button matTooltip="Delete relation"
+                    (click)="removerelation()" type="button">
+                    <mat-icon>remove</mat-icon>
+                </button>
+            </div>
+            <mat-form-field>
+                <input matInput placeholder="selected" formControlName="textselect">
+            </mat-form-field>
+            <button mat-raised-button type="submit" color="primary" mat-button
+                [disabled]="!profileFormRelation.valid">Ready</button>
+        </form>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
             Skip Limit
         </mat-expansion-panel-header>
         <form [formGroup]="profileFormskiplimit" (ngSubmit)="genskiplimit()">

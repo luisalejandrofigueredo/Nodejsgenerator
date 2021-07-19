@@ -8,6 +8,8 @@ import { ConfigService } from '../service/config.service';
 import { ViewparametersComponent } from '../viewparameters/viewparameters.component';
 import { YesnoComponent } from '../yesno/yesno.component';
 import { AddarrayComponent } from '../addarray/addarray.component';
+import { Schemahead, Schemaheaditems } from '../interfaces/schemahead';
+import { Relations } from '../interfaces/relations';
 
 @Component({
   selector: 'app-genoptionswithoperators',
@@ -17,6 +19,8 @@ import { AddarrayComponent } from '../addarray/addarray.component';
 export class GenoptionswithoperatorsComponent implements OnInit {
   fields: { id: number; type: string; name: string }[] = [];
   api: Api;
+  relationsarray: string[] = [];
+  relationsselected: string[] = [];
   selected: number[] = [];
   selectedorder: { field: number, order: string }[] = [];
   selectedwhere: { operation: string; field: number, type: string, value: string; value2?: string; not?: boolean }[] = [];
@@ -37,11 +41,14 @@ export class GenoptionswithoperatorsComponent implements OnInit {
   profileForm: FormGroup;
   profileFormOrder: FormGroup;
   profileFormWhere: FormGroup;
+  profileFormRelation: FormGroup;
   profileFormskiplimit: FormGroup;
+  relations: Relations;
   gensel: boolean = false;
   genwhe: boolean = false;
   genord: boolean = false;
   genskip: boolean = false;
+  genrelation: boolean = false;
   optiongenerated: string = "";
   overlay: any;
   constructor(private electron: ElectronService, public dialogRefYes: MatDialog, public dialogRef: MatDialogRef<GenoptionswithoperatorsComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private configservice: ConfigService) { }
@@ -50,6 +57,10 @@ export class GenoptionswithoperatorsComponent implements OnInit {
     this.fields = this.data.fields;
     this.profileForm = new FormGroup({
       field: new FormControl(0, Validators.required),
+      textselect: new FormControl('')
+    });
+    this.profileFormRelation = new FormGroup({
+      relationname: new FormControl(''),
       textselect: new FormControl('')
     });
     this.profileFormOrder = new FormGroup({
@@ -71,7 +82,45 @@ export class GenoptionswithoperatorsComponent implements OnInit {
       textselect: new FormControl('')
     });
     this.profileFormWhere.get('value2').disable();
+    this.fillrelations(this.configservice.getrelations(this.data.schemaid));
   }
+
+  fillrelations(relations: Relations) {
+    relations.OnetoOne.forEach(item => {
+      this.relationsarray.push(item.relationname)
+    })
+  }
+
+  addrelation() {
+    if (this.relationsselected.some((element) => element === this.profileFormRelation.get('relationname').value)) { return }
+    this.relationsselected.push(this.profileFormRelation.get('relationname').value);
+    this.genrelationfields();
+  }
+
+  removerelation(){
+    if (this.relationsselected.some((element) => element === this.profileForm.get('relationname').value)) {
+      let index = this.selected.findIndex(element => element === this.profileForm.get('relationname').value);
+      this.relationsselected.splice(index, 1);
+      this.genrelationfields();
+      return;
+    }
+    this.genrelationfields();
+  }
+
+  genrelationfields() {
+    let relstring="";
+    if (this.relationsselected.length===0) {return};
+    relstring='relations:[';
+    this.relationsselected.forEach((element,index)=>{
+      if (index===0){
+        relstring+='"'+element+'"';
+      } else {
+        relstring+=','+'"'+element+'"';
+      }
+    });
+    relstring+=']';
+    this.profileFormRelation.patchValue({ textselect:relstring});
+}
 
   selectoperator(event) {
     this.profileFormWhere.patchValue({ value: '', value2: '' });
@@ -126,28 +175,28 @@ export class GenoptionswithoperatorsComponent implements OnInit {
     }
   }
 
-  addarray(){
+  addarray() {
     const dialogRef = this.dialogRefYes.open(AddarrayComponent, {
       width: '500px',
       autoFocus: false,
       disableClose: false,
       data: { values: this.profileFormWhere.get('value').value }
     });
-    dialogRef.afterClosed().subscribe((ret: { values:[{ value:string}]  }) => {
-      let array:string='';
+    dialogRef.afterClosed().subscribe((ret: { values: [{ value: string }] }) => {
+      let array: string = '';
       if (ret !== undefined) {
-        ret.values.forEach((element,index) => {
-          if (index===0){
-            array= `"${element.value}"` ;
+        ret.values.forEach((element, index) => {
+          if (index === 0) {
+            array = `"${element.value}"`;
           }
-          else{
-            array+= ',"'+`${element.value}"` ;
+          else {
+            array += ',"' + `${element.value}"`;
           }
         });
         this.profileFormWhere.patchValue({ value: array })
       }
     });
-    
+
   }
   ifnot(oper: string): boolean {
     if (oper === "") return false;
@@ -168,7 +217,7 @@ export class GenoptionswithoperatorsComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((ret: { name: string, type: string }) => {
       if (ret !== undefined) {
-        this.profileFormWhere.patchValue({ value:  `${ret.name}` })
+        this.profileFormWhere.patchValue({ value: `${ret.name}` })
       }
     });
   }
@@ -357,14 +406,14 @@ export class GenoptionswithoperatorsComponent implements OnInit {
             textselect += ',' + `"${this.fields[element.field - 1].name}":` + this.notinwhere(element.not, `Any(${element.value})`);
           }
           break;
-          case 'raw':
-            if (index === 0) {
-              textselect += `"${this.fields[element.field - 1].name}":` +  "Raw(alias =>"+"`"+element.value+"`)";
-            }
-            else {
-              textselect += `,"${this.fields[element.field - 1].name}":` +  "Raw(alias =>"+"`"+element.value+"`)";
-            }
-            break;  
+        case 'raw':
+          if (index === 0) {
+            textselect += `"${this.fields[element.field - 1].name}":` + "Raw(alias =>" + "`" + element.value + "`)";
+          }
+          else {
+            textselect += `,"${this.fields[element.field - 1].name}":` + "Raw(alias =>" + "`" + element.value + "`)";
+          }
+          break;
         default:
           break;
       }
@@ -437,6 +486,11 @@ export class GenoptionswithoperatorsComponent implements OnInit {
     this.panels.toArray().forEach(p => p.close());
   }
 
+  genRelation(){
+    this.genrelation=true;
+    this.panels.toArray().forEach(p => p.close());
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
   }
@@ -447,8 +501,12 @@ export class GenoptionswithoperatorsComponent implements OnInit {
       if (this.gensel === true) { this.optiongenerated += "," }
       this.optiongenerated += this.profileFormWhere.get('textselect').value;
     };
-    if (this.genord) {
+    if (this.genrelation) {
       if (this.gensel === true || this.genwhe === true) { this.optiongenerated += "," }
+      this.optiongenerated += this.profileFormRelation.get('textselect').value;
+    }
+    if (this.genord) {
+      if (this.gensel === true || this.genwhe === true || this.genrelation === true) { this.optiongenerated += "," }
       this.optiongenerated += this.profileFormOrder.get('textselect').value;
     };
     if (this.genskip) {

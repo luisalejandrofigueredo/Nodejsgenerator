@@ -26,7 +26,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
   fileapigenerating = '';
   reltables: string[] = [];
   editorOptions = { theme: 'vs-dark', language: 'typescript' };
-  ormj = { PrimaryGeneratedColumn: false, OneToMany: false, ManyToOne: false, Index: false };
+  ormj = { PrimaryGeneratedColumn: false, OnetoOne: false, OneToMany: false, ManyToOne: false, Index: false };
   ngOnInit(): void {
   }
 
@@ -162,7 +162,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     for (let index = 0; index < schemas.length; index++) {
       const element = schemas[index].name;
       this.generatingline += 'schema:' + element + '\n';
-      this.ormj = { PrimaryGeneratedColumn: false, OneToMany: false, ManyToOne: false, Index: false };
+      this.ormj = { PrimaryGeneratedColumn: false, OnetoOne: false, OneToMany: false, ManyToOne: false, Index: false };
       this.reltables = [];
       this.entitygenerator(index);
       this.apigenerator(index, schemas[index].name, schemas[index].mastersecurity, schemas[index].filesupload);
@@ -188,9 +188,10 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating += "import { WinstonModule } from 'nest-winston';\n"
     this.filegenerating += `import { ${mastersec.name}Service } from '../service/${mastersec.name}.service';\n`;
     this.filegenerating += `import { ${mastersec.name} } from '../entitys/${mastersec.name}.entity';\n`;
+    this.importrelation(this.configservice.getschemaid(mastersec.name)-1);
     this.filegenerating += `import { LoginController } from '../controller/Login.controller';\n`;
     this.filegenerating += "@Module({\n";
-    this.filegenerating += `imports: [TypeOrmModule.forFeature([${mastersec.name}]),\n`;
+    this.filegenerating += `imports: [TypeOrmModule.forFeature([${mastersec.name} ${this.relationsname(mastersec.name)}]),\n`;
     this.filegenerating += `JwtModule.register({  secret: '${this.configservice.config.jwtsk}' }),\n`;
     this.generatewinston();
     this.filegenerating += `providers:[${mastersec.name}Service],\n`;
@@ -220,6 +221,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating += `import { ${schema}Service } from '../service/${schema}.service'\n`;
     this.filegenerating += `import { ${schema}Controller } from '../controller/${schema}.controller';\n`;
     this.filegenerating += `import { ${schema} } from '../entitys/${schema}.entity';\n`;
+    this.importrelation(index);
     if (mastersecurity === false) {
       this.filegenerating += `import { ${mastersec.name}Service } from '../service/${mastersec.name}.service'\n`;
       this.filegenerating += `import { ${mastersec.name}Controller } from '../controller/${mastersec.name}.controller';\n`;
@@ -227,6 +229,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     }
     this.filegenerating += '@Module({\n';
     this.filegenerating += `imports:[TypeOrmModule.forFeature([${schema}`;
+    this.filegenerating += this.relationsmodule(index);
     if (mastersecurity === false) {
       this.filegenerating += `,${mastersec.name}`;
     }
@@ -548,11 +551,11 @@ export class GeneratorComponent implements OnInit, OnChanges {
                   if (index === 0) {
                     this.filegenerating += `@Param('${elempar.name}') `;
                     this.filegenerating += ` ${elempar.name}`;
-                    this.filegenerating += (elempar.type === "string" || elempar.type === 'date' || elempar.type === 'arraystring' ) ? ':string' : ':number';
+                    this.filegenerating += (elempar.type === "string" || elempar.type === 'date' || elempar.type === 'arraystring') ? ':string' : ':number';
                   } else {
                     this.filegenerating += `,@Param('${elempar.name}')`;
                     this.filegenerating += ` ${elempar.name}`;
-                    this.filegenerating += (elempar.type === "string" || elempar.type === 'date' || elempar.type === 'arraystring' ) ? ':string' : ':number';
+                    this.filegenerating += (elempar.type === "string" || elempar.type === 'date' || elempar.type === 'arraystring') ? ':string' : ':number';
                   }
                 });
                 this.filegenerating += ` ){\n`;
@@ -602,6 +605,14 @@ export class GeneratorComponent implements OnInit, OnChanges {
           this.filegenerating += `patch(@Param() params,@Body() patchbody:any)`;
           this.filegenerating += `{\n\t return this.service.patch(+params.id,patchbody);\n}\n`;
           break;
+        case 'postonetoone':
+          this.addgenrartinline('\tadding postonetoone');
+          this.filegenerating += `@Post('${element.path}/:id')\n`;
+          this.generatesecurity(element);
+          this.filegenerating += `post${element.path}(@Param('id') id: number,@Body() reg: any) {\n`;
+          this.filegenerating += `\t return this.service.post${element.field}(id,reg);\n`;
+          this.filegenerating += `}\n`;
+          break;
         default:
           break;
       }
@@ -628,9 +639,54 @@ export class GeneratorComponent implements OnInit, OnChanges {
 
   }
 
+  relationsname(table: string): string {
+    return this.relationsmodule(this.configservice.getschemaid(table) - 1);
+  }
+
+  relationsmodule(index): string {
+    let ret = ''
+    let modulearray: string[] = [];
+    const element: Relations = this.config.schemas[index].schemarelations;
+    element.OnetoOne.forEach(element => {
+      if (modulearray.find(item => item === element.table) === undefined) {
+        modulearray.push(element.table);
+      }
+    });
+    modulearray.forEach(element => {
+      ret += `, ${element}`;
+    });
+    return ret;
+  }
+  importrepository(index: number): string {
+    let ret = ''
+    let repositoryarray: string[] = [];
+    const element: Relations = this.config.schemas[index].schemarelations;
+    element.OnetoOne.forEach(element => {
+      if (repositoryarray.find(item => item === element.table) === undefined) {
+        repositoryarray.push(element.table);
+      }
+    });
+    repositoryarray.forEach(element => {
+      ret += `, @InjectRepository(${element}) private ${element}Repository: Repository<${element}>`;
+    });
+    return ret;
+  }
+
+  importrelation(index: number) {
+    let relationsarray: string[] = [];
+    const element: Relations = this.config.schemas[index].schemarelations;
+    element.OnetoOne.forEach(element => {
+      if (relationsarray.find(item => item === element.table) === undefined) {
+        relationsarray.push(element.table);
+      }
+    });
+    relationsarray.forEach(element => {
+      this.filegenerating += `import { ${element} } from '../entitys/${element}.entity';\n`;
+    });
+  }
   //generando servicio
   servicegenerator(index: number, schema: string, mastersecurity: boolean) {
-    let options="";
+    let options = "";
     const schemalower = schema.toLowerCase();
     const sec = this.configservice.getsecurity();
     this.filegenerating = '';
@@ -639,9 +695,10 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating += `import { Repository, Not, MoreThanOrEqual, MoreThan, Equal, Like, ILike, Between, LessThan ,In, Any, IsNull, Raw } from 'typeorm';\n`;
     this.filegenerating += `import * as bcrypt from 'bcrypt';\n`;
     this.filegenerating += `import { ${this.config.schemas[index].name} } from '../entitys/${this.config.schemas[index].name}.entity';\n`;
+    this.importrelation(index);
     this.filegenerating += `@Injectable()\n`;
     this.filegenerating += `export class ${schema}Service {\n`;
-    this.filegenerating += `constructor(@InjectRepository(${schema}) private ${schema}Repository: Repository<${schema}>) { }\n`;
+    this.filegenerating += `constructor(@InjectRepository(${schema}) private ${schema}Repository: Repository<${schema}> ${this.importrepository(index)}) { }\n`;
     // tslint:disable-next-line: prefer-for-of
     if (mastersecurity === true) {
       this.filegenerating += '// get for security\n';
@@ -654,6 +711,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
       this.filegenerating += '// get for security\n';
     }
     for (let ind = 0; ind < this.config.schemas[index].schemasapi.length; ind++) {
+      const relations: Relations = this.config.schemas[index].schemarelations;
       const element: Api = this.config.schemas[index].schemasapi[ind];
       switch (element.type) {
         case 'changepassword':
@@ -672,7 +730,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
         case 'get':
           switch (element.operation) {
             case 'findandcountgenerated':
-              options=element.options;
+              options = element.options;
               this.addgenrartinline('\tadding find and count generated');
               this.filegenerating += `async getfindandcountgenerated${element.path}( `
               element.parameters.forEach((elementpar, index) => {
@@ -686,17 +744,17 @@ export class GeneratorComponent implements OnInit, OnChanges {
               });
               this.filegenerating += `):Promise<any[]> {\n`;
               element.parameters.forEach((elementpar, index) => {
-                if (elementpar.type==='arraystring'){
+                if (elementpar.type === 'arraystring') {
                   this.filegenerating += `const arraystring${elementpar.name}:string[]=${elementpar.name}.split(',');\n`;
-                  const regex=new RegExp(elementpar.name,'g');
-                  options=options.replace(regex ,'arraystring'+elementpar.name);
+                  const regex = new RegExp(elementpar.name, 'g');
+                  options = options.replace(regex, 'arraystring' + elementpar.name);
                 }
               });
               this.filegenerating += `\treturn await this.${schema}Repository.findAndCount(${options});\n`;
               this.filegenerating += `}\n`;
               break;
             case 'findgenerated':
-              options=element.options;
+              options = element.options;
               this.addgenrartinline('\tadding find generated');
               this.filegenerating += `async getfindgenerated${element.path}( `
               element.parameters.forEach((elementpar, index) => {
@@ -705,15 +763,15 @@ export class GeneratorComponent implements OnInit, OnChanges {
                   this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date' || elementpar.type === 'arraystring') ? ':string' : ':number';
                 } else {
                   this.filegenerating += ', ' + elementpar.name;
-                  this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date' || elementpar.type === 'arraystring' ) ? ':string' : ':number';
+                  this.filegenerating += (elementpar.type === 'string' || elementpar.type === 'date' || elementpar.type === 'arraystring') ? ':string' : ':number';
                 }
               });
               this.filegenerating += `):Promise<any[]> {\n`;
               element.parameters.forEach((elementpar, index) => {
-                if (elementpar.type==='arraystring'){
+                if (elementpar.type === 'arraystring') {
                   this.filegenerating += `const arraystring${elementpar.name}:string[]=${elementpar.name}.split(',');\n`;
-                  const regex=new RegExp(elementpar.name,'g');
-                  options=options.replace(regex ,'arraystring'+elementpar.name);
+                  const regex = new RegExp(elementpar.name, 'g');
+                  options = options.replace(regex, 'arraystring' + elementpar.name);
                 }
               });
               this.filegenerating += `\treturn await this.${schema}Repository.find(${options});\n`;
@@ -817,22 +875,47 @@ export class GeneratorComponent implements OnInit, OnChanges {
           this.filegenerating += `return await this.${schema}Repository.createQueryBuilder().update(${schema}).set(patchbody).where("id = :id", { id:_id }).execute();`;
           this.filegenerating += '}\n';
           break;
+        case 'postonetoone':
+          this.addgenrartinline('\tadding postonetoone service');
+          this.filegenerating += `async post${element.field}(id:number,reg:any): Promise<any> {\n`;
+          this.filegenerating += ` let register:any= await this.${schema}Repository.findOne({where:{'id':id},relations:['${element.field}']})\n`;
+          this.createfieldrelationsonetoone(schema, element);
+          this.filegenerating += `\t return await this.${schema}Repository.save(register);\n`;
+          this.filegenerating += `}\n`;
+          break;
         default:
           break;
       }
     }
     this.filegenerating += `}\n`;
-    const args = { path: this.config.filePath, name: schema, file: this.filegenerating };
+    const args = { path: this.config.filePath, name: schema, file: this.filegenerating, format: false };
     const end = this.electronservice.ipcRenderer.sendSync('saveservice', args);
     this.addgenrartinlinefile(end);
+  }
+
+  createfieldrelationsonetoone(schema: string, api: Api) {
+    const relations: Relations = this.configservice.getrelations(this.configservice.getschemawithname(schema));
+    const onetoone = relations.OnetoOne.find(element => element.relationname = api.field);
+    const fieldrelation = this.configservice.getschematable(this.configservice.getschemawithname(onetoone.table));
+    this.filegenerating += `let  ${onetoone.table.toLowerCase()}:${onetoone.table} = new ${onetoone.table}();\n`;
+    fieldrelation.forEach((element, index) => {
+      if (element.name !== 'id') {
+        this.filegenerating += `${onetoone.table.toLowerCase()}.${element.name}` + `=reg.${element.name};\n`;
+      }
+    });
+    this.filegenerating += `await this.${onetoone.table}Repository.save(${onetoone.table.toLowerCase()});\n`;
+    this.filegenerating += `register.${onetoone.relationname}=${onetoone.table.toLowerCase()};\n`;
   }
 
   entitygenerator(ind: number) {
     this.addgenrartinline('Entity generator ... ');
     const fields = this.config.schemas[ind].schemastable;
     const relations = this.config.schemas[ind].schemarelations;
-    // tslint:disable-next-line: quotemark
     this.filegenerating = "";
+    if (relations !== undefined) {
+      this.addrelationsentity(relations);
+    }
+    // tslint:disable-next-line: quotemark
     this.generatingline += '\t adding imports ...';
     this.filegenerating += this.config.schemas[ind].imports + '\n';
     this.filegenerating += '@Entity()\n';
@@ -843,49 +926,42 @@ export class GeneratorComponent implements OnInit, OnChanges {
       this.generatecolumn(element);
     }
     // tslint:disable-next-line: prefer-for-of
-    for (let index = 0; index < relations.length; index++) {
-      const element = relations[index];
-      this.generaterelation(element);
-    }
+    this.generaterelationbody(relations);
     this.addgenrartinline('\t adding extra fields ...\n');
     this.filegenerating += this.config.schemas[ind].fields + '\n';
     this.filegenerating += '}\n';
-    this.filegenerating = this.generateimports(this.reltables) + this.filegenerating;
+    this.filegenerating = this.generateimports(relations) + this.filegenerating;
     this.addgenrartinline('saving entity');
     const args = { path: this.config.filePath, name: this.config.schemas[ind].name, file: this.filegenerating };
     const end = this.electronservice.ipcRenderer.sendSync('saveentity', args);
     this.addgenrartinlinefile(end);
 
   }
-
-  generaterelation(element: Relations) {
-    this.addgenrartinline('Relations generator ... /n');
-    switch (element.type) {
-      case 'onetomany':
-        this.addgenrartinline(`\tadding relation @OneToMany table ${element.tablename}... /n`);
-        this.ormj.OneToMany = true;
-        this.filegenerating += '@OneToMany(type =>' + element.tablename + ',' + element.fieldc;
-        this.filegenerating += ' =>' + element.fieldc + '.' + element.field + ' )\n';
-        this.filegenerating += element.fieldr + ':' + element.tablename + '[];';
-        this.reltables.push(element.tablename);
-        break;
-      case 'manytoone':
-        this.ormj.ManyToOne = true; // ss
-        this.addgenrartinline(`\tadding relation @ManytoOne table ${element.tablename}... /n`);
-        this.filegenerating += '@ManyToOne (type =>' + element.tablename + ',' + element.fieldc + '=>' + element.fieldc +
-          '.' + element.fieldr + ' )\n';
-        this.filegenerating += element.fieldc + ':' + element.tablename + ';';
-        this.reltables.push(element.tablename);
-        break;
-      default:
-        break;
-    }
+  addrelationsentity(relations: Relations) {
+    relations.OnetoOne.forEach(element => {
+      this.filegenerating += `import {${element.table}} from "./${element.table}.entity";`;
+    });
   }
 
-  generateimports(reltables: string[]): string {
+  generaterelationbody(relations: Relations) {
+    relations.OnetoOne.forEach(element => {
+      this.filegenerating += ` @OneToOne(() => ${element.table}, {
+        cascade: true
+    })\n`;
+      this.filegenerating += ` @JoinColumn()\n`;
+      this.filegenerating += `${element.relationname}:${element.table}`;
+    });
+    this.addgenrartinline('Relations generator ... /n');
+  }
+
+  generateimports(relations: Relations): string {
     let importorm = 'import { Entity, Column ';
-    let importclass = '';
+    let joincolummn = false;
     let insertstr = '';
+    if (relations.OnetoOne !== []) {
+      insertstr += ', OneToOne';
+      joincolummn = true;
+    }
     if (this.ormj.OneToMany === true) {
       insertstr += ', OneToMany';
     }
@@ -898,14 +974,13 @@ export class GeneratorComponent implements OnInit, OnChanges {
     if (this.ormj.Index === true) {
       insertstr += ', Index';
     }
+    if (joincolummn) {
+      insertstr += ', JoinColumn';
+    }
     // tslint:disable-next-line: quotemark
     importorm += insertstr + "} from 'typeorm';\n";
     // tslint:disable-next-line: prefer-for-of
-    for (let index = 0; index < this.reltables.length; index++) {
-      const element = this.reltables[index];
-      importclass = `import {${element}} from "./${element}.entity"`;
-    }
-    return importorm + importclass;
+    return importorm;
   }
 
   generatecolumn(fieldcolumn: Schemaitem) {
