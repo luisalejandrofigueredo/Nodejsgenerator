@@ -86,9 +86,26 @@ export class GenoptionswithoperatorsComponent implements OnInit {
   }
 
   fillrelations(relations: Relations) {
-    relations.OnetoOne.forEach(item => {
-      this.relationsarray.push(item.relationname)
-    })
+    if (relations.OnetoOne !== undefined) {
+      relations.OnetoOne.forEach(item => {
+        this.relationsarray.push(item.relationname)
+      })
+    }
+    if (relations.Onetomany !== undefined) {
+      relations.Onetomany.forEach(item => {
+        this.relationsarray.push(item.relationname)
+      })
+    }
+    if (relations.Manytoone !== undefined) {
+      relations.Manytoone.forEach(item => {
+        this.relationsarray.push(item.relationname)
+      })
+    }
+    if (relations.Manytomany !== undefined) {
+      relations.Manytomany.forEach(item => {
+        this.relationsarray.push(item.relationname)
+      })
+    }
   }
 
   addrelation() {
@@ -97,7 +114,7 @@ export class GenoptionswithoperatorsComponent implements OnInit {
     this.genrelationfields();
   }
 
-  removerelation(){
+  removerelation() {
     if (this.relationsselected.some((element) => element === this.profileForm.get('relationname').value)) {
       let index = this.selected.findIndex(element => element === this.profileForm.get('relationname').value);
       this.relationsselected.splice(index, 1);
@@ -108,19 +125,19 @@ export class GenoptionswithoperatorsComponent implements OnInit {
   }
 
   genrelationfields() {
-    let relstring="";
-    if (this.relationsselected.length===0) {return};
-    relstring='relations:[';
-    this.relationsselected.forEach((element,index)=>{
-      if (index===0){
-        relstring+='"'+element+'"';
+    let relstring = "";
+    if (this.relationsselected.length === 0) { return };
+    relstring = 'relations:[';
+    this.relationsselected.forEach((element, index) => {
+      if (index === 0) {
+        relstring += '"' + element + '"';
       } else {
-        relstring+=','+'"'+element+'"';
+        relstring += ',' + '"' + element + '"';
       }
     });
-    relstring+=']';
-    this.profileFormRelation.patchValue({ textselect:relstring});
-}
+    relstring += ']';
+    this.profileFormRelation.patchValue({ textselect: relstring });
+  }
 
   selectoperator(event) {
     this.profileFormWhere.patchValue({ value: '', value2: '' });
@@ -486,8 +503,8 @@ export class GenoptionswithoperatorsComponent implements OnInit {
     this.panels.toArray().forEach(p => p.close());
   }
 
-  genRelation(){
-    this.genrelation=true;
+  genRelation() {
+    this.genrelation = true;
     this.panels.toArray().forEach(p => p.close());
   }
 

@@ -54,6 +54,7 @@ import { ViewparametersComponent } from './viewparameters/viewparameters.compone
 import { AddarrayComponent } from './addarray/addarray.component';
 import { BrowseonetooneComponent } from './browseonetoone/browseonetoone.component';
 import { RonetoonemodalComponent } from './ronetoonemodal/ronetoonemodal.component';
+import { BrowseonetomanyComponent } from './browseonetomany/browseonetomany.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -85,6 +86,7 @@ import { RonetoonemodalComponent } from './ronetoonemodal/ronetoonemodal.compone
     AddarrayComponent,
     BrowseonetooneComponent,
     RonetoonemodalComponent,
+    BrowseonetomanyComponent,
   ],
   imports: [ 
     BrowserModule, 

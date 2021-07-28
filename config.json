@@ -108,6 +108,13 @@
 						"relationname": "costumerdata",
 						"table": "Constumersdata"
 					}
+				],
+				"Onetomany": [
+					{
+						"relationname": "documents",
+						"table": "Documents",
+						"manytoone": "document"
+					}
 				]
 			},
 			"schemasapi": [
@@ -385,7 +392,7 @@
 					"security": true,
 					"roles": "Admin User",
 					"extfiles": "",
-					"options": "{relations:[\"costumerdata\"]}",
+					"options": "{relations:[\"costumerdata\",\"documents\"]}",
 					"parameters": []
 				},
 				{
@@ -403,6 +410,18 @@
 						"roles",
 						"bearer"
 					],
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "",
+					"options": "",
+					"parameters": []
+				},
+				{
+					"id": 22,
+					"type": "postonetomany",
+					"operation": "",
+					"path": "onetomany",
+					"field": "documents",
 					"security": true,
 					"roles": "Admin User",
 					"extfiles": "",
@@ -446,6 +465,71 @@
 				"OnetoOne": []
 			},
 			"schemasapi": []
+		},
+		{
+			"id": 3,
+			"name": "Documents",
+			"description": "documente",
+			"imports": "",
+			"fields": "",
+			"security": true,
+			"classsecurity": "RolesGuard",
+			"filesecurity": "",
+			"mastersecurity": false,
+			"filesupload": true,
+			"schemastable": [
+				{
+					"id": 1,
+					"type": "number",
+					"name": "id",
+					"length": 20,
+					"keyautonumber": true,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 2,
+					"type": "string",
+					"name": "name",
+					"length": 50,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 3,
+					"type": "string",
+					"name": "file",
+					"length": 50,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				}
+			],
+			"schemarelations": {
+				"OnetoOne": [],
+				"Onetomany": [],
+				"Manytoone": [
+					{
+						"relationname": "document",
+						"table": "Costumers"
+					}
+				]
+			},
+			"schemasapi": [
+				{
+					"id": 1,
+					"type": "get",
+					"operation": "getall",
+					"path": "getall",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "",
+					"options": "",
+					"parameters": []
+				}
+			]
 		}
 	]
 }

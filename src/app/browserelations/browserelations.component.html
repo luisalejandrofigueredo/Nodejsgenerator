@@ -1,4 +1,7 @@
 
 <h1>Select your type relation configure</h1>
 <h3>Schema:{{ schemaname}}</h3>
-<button type="button" (click)="browseonetoone()" mat-raised-button color="primary">One to one</button>
+<div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+    <button type="button" (click)="browseonetoone()" mat-raised-button color="primary">One to one</button>
+    <button type="button" (click)="browseonetomany()" mat-raised-button color="primary">One to Many/Many to One</button>
+</div>

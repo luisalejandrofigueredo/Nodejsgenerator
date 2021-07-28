@@ -5,6 +5,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ElectronService } from 'ngx-electron';
 import { Selectvalues } from '../selectvalues';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Security } from '../interfaces/security';
 @Component({
   selector: 'app-gensecurity',
   templateUrl: './gensecurity.component.html',
@@ -84,7 +85,7 @@ export class GensecurityComponent implements OnInit {
       password: this.fields[this.profileForm.get('selectedFieldpassword').value-1].viewValue,
       bearertoken: this.fields[this.profileForm.get('selectedFieldtoken').value-1].viewValue,
       roles: this.fields[this.profileForm.get('selectedFieldroles').value-1].viewValue,
-    };
+    } as Security;
     this.configservice.setsecurity(sec);
     this.matsnackbar.open('security update  ','Action update',{
       duration: 2000,

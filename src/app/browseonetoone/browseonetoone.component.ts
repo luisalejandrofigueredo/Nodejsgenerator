@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConfigService } from '../service/config.service';
 import {RelationsService} from '../service/relations.service';
 import {Onetoone} from '../interfaces/onetoone';
@@ -19,7 +19,7 @@ export class BrowseonetooneComponent implements OnInit {
   schemaname:string;
   dataSource: Onetoone[];
 
-  constructor(private dialog:MatDialog,private relations:RelationsService,private activerouter:ActivatedRoute,private configservice:ConfigService) { }
+  constructor(private router:Router,private dialog:MatDialog,private relations:RelationsService,private activerouter:ActivatedRoute,private configservice:ConfigService) { }
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   ngOnInit(): void {
@@ -57,5 +57,8 @@ export class BrowseonetooneComponent implements OnInit {
       this.dataSource = this.relations.getrelationsonetone(this.id);
       this.table.renderRows();
     }});
+  }
+  gotorelations(){
+    this.router.navigate(['browserelations',this.id]); 
   }
 }

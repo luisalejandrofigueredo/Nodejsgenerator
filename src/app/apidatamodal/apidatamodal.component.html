@@ -30,14 +30,14 @@
                 {{items}}
             </mat-option>
         </mat-select>
-        <mat-form-field *ngIf="profileForm.get('selectedValue').value==='postonetoone'">
-            <mat-select placeholder="Relation one to one" formControlName="onetoone">
-                <mat-option *ngFor="let item of relonetoone"  [value]="item.relationname">
+        <mat-form-field *ngIf="profileForm.get('selectedValue').value==='postonetoone' || profileForm.get('selectedValue').value==='postonetomany' || profileForm.get('selectedValue').value==='postmanytoone' || profileForm.get('selectedValue').value==='postmanytomany'">
+            <mat-select [placeholder]="placeholder" formControlName="relations">
+                <mat-option *ngFor="let item of relations"  [value]="item.relationname">
                     {{item.relationname}} {{item.table}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-form-field *ngIf="profileForm.get('selectedValue').value==='get' || profileForm.get('selectedValue').value==='postonetoone' ">
+        <mat-form-field *ngIf="profileForm.get('selectedValue').value==='get' || profileForm.get('selectedValue').value==='postonetoone' || profileForm.get('selectedValue').value==='postonetomany' || profileForm.get('selectedValue').value==='postmanytoone' || profileForm.get('selectedValue').value==='postmanytomany'">
             <input matInput placeholder="path" formControlName="path">
         </mat-form-field>
         <mat-form-field *ngIf="profileForm.get('selectedValue').value==='uploadfile' || profileForm.get('selectedValue').value==='uploadfiles' || profileForm.get('selectedValue').value==='getfile'">

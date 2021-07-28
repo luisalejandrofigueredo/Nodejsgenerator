@@ -4,6 +4,7 @@ import { Schemahead, Schemaheaditems } from '../interfaces/schemahead';
 import { Schemaitem } from '../interfaces/schema';
 import { Relations } from '../interfaces/relations';
 import { Api } from '../interfaces/api';
+import { Security } from '../interfaces/security'
 @Injectable({
   providedIn: 'root'
 })
@@ -18,7 +19,7 @@ export class ConfigService {
     port:3000,
     jwtsk:'',
     logger:{ type:0,file:'info.log',maxsize:50000,typewarn:0,filewarn:'warn.log',maxsizewarn:10000,typeerror:0,fileerror:'error.log',maxsizeerror:10000},
-    security: {},
+    security: {bearertoken:"", login:"",password:"",roles:"",table:"",logger:false,path:"",rolesclass:""} as Security,
     schemas: [],
   };
   /* schemas[id:number,name:string,description:string,schemastable[schemas],
@@ -52,11 +53,11 @@ export class ConfigService {
     return this.config.dbconf;
   }
 
-  setsecurity(set: any) {
+  setsecurity(set: Security) {
     this.config.security = set;
   }
 
-  getsecurity(): any{
+  getsecurity(): Security{
     return this.config.security;
   }
 
@@ -104,7 +105,7 @@ export class ConfigService {
   getrelations(_id: number): Relations {
     if ( this.config.schemas[_id-1].schemarelations !== undefined){
       return this.config.schemas[_id-1].schemarelations;
-    } else {return { OnetoOne:[]}; }
+    } else {return { OnetoOne:[],Onetomany:[],Manytomany:[],Manytoone:[]}; }
   }
   setrelations(_id:number,relations:Relations){
     this.config.schemas[_id - 1 ].schemarelations=relations;
@@ -212,7 +213,7 @@ export class ConfigService {
       filesecurity: SchemaHead.filesecurity,
       mastersecurity: SchemaHead.mastersecurity,
       filesupload: SchemaHead.filesupload,
-      schemastable: [], schemarelations: { OnetoOne:[]} as Relations, schemasapi: []
+      schemastable: [], schemarelations: { OnetoOne:[],Onetomany:[]} as Relations, schemasapi: []
     });
   }
   // delete schema

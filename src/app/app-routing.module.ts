@@ -14,6 +14,7 @@ import { ConfigloggerComponent } from './help/helpconfig/configlogger/configlogg
 import { ConfigdatabaseComponent } from './help/helpconfig/configdatabase/configdatabase.component';
 import { TestapiComponent } from './testapi/testapi.component';
 import { BrowseonetooneComponent } from './browseonetoone/browseonetoone.component';
+import { BrowseonetomanyComponent } from './browseonetomany/browseonetomany.component';
 const routes: Routes = [{
   path: 'schematics/:id',
   component: SchematicsComponent
@@ -65,6 +66,10 @@ const routes: Routes = [{
 {
   path: 'browseonetoone/:id',
   component: BrowseonetooneComponent
+},
+{
+  path: 'browseonetomany/:id',
+  component: BrowseonetomanyComponent
 }
 
 ];

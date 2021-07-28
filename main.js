@@ -65,7 +65,7 @@ ipcMain.on('savemain', (event, arg) => {
     console.log('writing in unix...');
     filepath = arg.path + '/src/' + arg.name;
   }
-  let textprettier=prettier.format(arg.file,{ semi: true,singleQuote:true, parser: "typescript" });
+  let textprettier = prettier.format(arg.file, { semi: true, singleQuote: true, parser: "typescript" });
   writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });
@@ -138,7 +138,7 @@ ipcMain.on('saveutilmuter', (event, arg) => {
     dir = arg.path + '/src/controller'
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
-  let textprettier=prettier.format(arg.file,{ semi: true,singleQuote:true, parser: "typescript" });
+  let textprettier = prettier.format(arg.file, { semi: true, singleQuote: true, parser: "typescript" });
   writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });
@@ -157,7 +157,7 @@ ipcMain.on('savemodule', (event, arg) => {
     dir = arg.path + '/src/module'
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
-  let textprettier=prettier.format(arg.file,{ semi: true,singleQuote:true, parser: "typescript" });
+  let textprettier = prettier.format(arg.file, { semi: true, singleQuote: true, parser: "typescript" });
   writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });
@@ -176,8 +176,7 @@ ipcMain.on('saveentity', (event, arg) => {
     dir = arg.path + '/src/entitys'
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
-  let textprettier=prettier.format(arg.file,{ semi: true,singleQuote:true, parser: "typescript" });
-  writeFile(filepath, textprettier);
+  writeFile(filepath, arg.file);
   event.returnValue = filepath;
 });
 
@@ -195,10 +194,10 @@ ipcMain.on('saveservice', (event, arg) => {
     dir = arg.path + '/src/service';
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
-  if (arg.format){
-    let textprettier=prettier.format(arg.file,{ semi: true,singleQuote:true, parser: "typescript" });
+  if (arg.format) {
+    let textprettier = prettier.format(arg.file, { semi: true, singleQuote: true, parser: "typescript" });
     writeFile(filepath, textprettier);
-  } else{
+  } else {
     writeFile(filepath, arg.file)
   }
   event.returnValue = filepath;
@@ -233,7 +232,7 @@ ipcMain.on('savecanactivate', (event, arg) => {
     dir = arg.path + '/src/roles'
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
-  let textprettier=prettier.format(arg.file,{ semi: true,singleQuote:true, parser: "typescript" });
+  let textprettier = prettier.format(arg.file, { semi: true, singleQuote: true, parser: "typescript" });
   writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });
@@ -252,7 +251,7 @@ ipcMain.on('saveController', (event, arg) => {
     dir = arg.path + '/src/controller'
   }
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
-  let textprettier=prettier.format(arg.file,{ semi: true, singleQuote:true, parser: "typescript" });
+  let textprettier = prettier.format(arg.file, { semi: true, singleQuote: true, parser: "typescript" });
   writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });

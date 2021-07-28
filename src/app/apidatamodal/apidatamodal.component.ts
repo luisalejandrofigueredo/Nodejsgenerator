@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Typeoperation } from '../interfaces/typeoperation';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import {ConfigService} from '../service/config.service';
+import { ConfigService } from '../service/config.service';
 import { Schemahead } from '../interfaces/schemahead';
 import { ParametersmodalComponent } from '../parametersmodal/parametersmodal.component';
 import { GenoptionswithoperatorsComponent } from '../genoptionswithoperators/genoptionswithoperators.component';
@@ -17,30 +17,29 @@ interface Type {
   styleUrls: ['./apidatamodal.component.scss']
 })
 export class ApidatamodalComponent implements OnInit {
-  relonetoone:{relationname:string,table:string}[]=[];
+  relations: { relationname: string, table: string }[] = [];
   types: Type[] = [
     { value: 'get', viewValue: 'Get' },
     { value: 'put', viewValue: 'Put' },
     { value: 'post', viewValue: 'Post' },
-    { value :'postonetoone', viewValue: 'Post One to One'},
-    { value: 'delete', viewValue: 'Delete'},
-    { value: 'patch', viewValue: 'Patch'}
+    { value: 'delete', viewValue: 'Delete' },
+    { value: 'patch', viewValue: 'Patch' }
   ];
 
   operation: Type[] = [
     { value: 'getall', viewValue: 'Get All' },
     { value: 'getone', viewValue: 'Get One' },
     { value: 'skiplimit', viewValue: 'Get skiplimit by key' },
-    { value: 'skiplimitbyfield' , viewValue: 'Get skiplimit by field' },
-    { value: 'skiplimitfilter', viewValue: 'Get limit filter'},
-    { value: 'count', viewValue: 'Count'},
-    { value: 'findandcount', viewValue:'Find and Count'},
-    { value: 'findandcountwithoptions' , viewValue:'Find and Count with options'},
-    { value: 'findwithoptions' , viewValue:'Find with options'},
-    { value: 'findgenerated', viewValue:'Find generated' },
-    { value: 'findandcountgenerated', viewValue:'Find and count generated' }
+    { value: 'skiplimitbyfield', viewValue: 'Get skiplimit by field' },
+    { value: 'skiplimitfilter', viewValue: 'Get limit filter' },
+    { value: 'count', viewValue: 'Count' },
+    { value: 'findandcount', viewValue: 'Find and Count' },
+    { value: 'findandcountwithoptions', viewValue: 'Find and Count with options' },
+    { value: 'findwithoptions', viewValue: 'Find with options' },
+    { value: 'findgenerated', viewValue: 'Find generated' },
+    { value: 'findandcountgenerated', viewValue: 'Find and count generated' }
   ];
-
+  placeholder = 'Relation one to one'
   fields: string[];
   path: string;
   selectedValue: string;
@@ -49,118 +48,148 @@ export class ApidatamodalComponent implements OnInit {
   security: boolean;
   roles: string;
   profileForm: FormGroup;
-  idschema:number;
-  schema:Schemahead;
-  constructor(private dialog:MatDialog,private configservice:ConfigService ,public dialogRef: MatDialogRef<ApidatamodalComponent>, @Inject(MAT_DIALOG_DATA) public data: Typeoperation) { }
+  idschema: number;
+  schema: Schemahead;
+  constructor(private dialog: MatDialog, private configservice: ConfigService, public dialogRef: MatDialogRef<ApidatamodalComponent>, @Inject(MAT_DIALOG_DATA) public data: Typeoperation) { }
 
   ngOnInit(): void {
-    this.idschema=this.data.idschema;
-    this.schema=this.configservice.getschemawithid(this.idschema);
-    if (this.schema.mastersecurity===true){
-      this.types.push({value:'changepassword', viewValue: 'Put change password'});
+    this.idschema = this.data.idschema;
+    this.schema = this.configservice.getschemawithid(this.idschema);
+    const onetoone = (this.configservice.getrelations(this.data.idschema).OnetoOne !== undefined) ? this.configservice.getrelations(this.data.idschema).OnetoOne : [];
+    const onetomany = (this.configservice.getrelations(this.data.idschema).Onetomany !== undefined) ? this.configservice.getrelations(this.data.idschema).Onetomany : [];
+    const manytoone = (this.configservice.getrelations(this.data.idschema).Manytoone !== undefined) ? this.configservice.getrelations(this.data.idschema).Manytoone : [];
+    const manytomany = (this.configservice.getrelations(this.data.idschema).Manytomany !== undefined) ? this.configservice.getrelations(this.data.idschema).Manytomany : [];
+    if (onetoone.length !== 0) {
+      this.types.splice(3, 0, { value: 'postonetoone', viewValue: 'Post One to One' });
     }
-    if (this.schema.filesupload==true){
-      this.types.push({value:'uploadfile', viewValue: 'Up load file'});
+    if (onetomany.length !== 0) {
+      this.types.splice(3, 0, { value: 'postonetomany', viewValue: 'Post One to Many' });
     }
-    if (this.schema.filesupload==true){
-      this.types.push({value:'uploadfiles', viewValue: 'Up load multiple files'});
+    if (manytoone.length !== 0) {
+      this.types.splice(3, 0, { value: 'postmanytoone', viewValue: 'Post Many to one' });
     }
-    if (this.schema.filesupload==true){
-      this.types.push({value:'getfile', viewValue: 'Get file'});
+    if (manytomany.length !== 0) {
+      this.types.splice(3, 0, { value: 'postmanytomany', viewValue: 'Post Many to many' });
     }
-    this.fields=this.data.fields;
+    if (this.schema.mastersecurity === true) {
+      this.types.push({ value: 'changepassword', viewValue: 'Put change password' });
+    }
+    if (this.schema.filesupload == true) {
+      this.types.push({ value: 'uploadfile', viewValue: 'Up load file' });
+    }
+    if (this.schema.filesupload == true) {
+      this.types.push({ value: 'uploadfiles', viewValue: 'Up load multiple files' });
+    }
+    if (this.schema.filesupload == true) {
+      this.types.push({ value: 'getfile', viewValue: 'Get file' });
+    }
+    this.fields = this.data.fields;
     this.profileForm = new FormGroup({
       selectedValue: new FormControl(this.data.type, Validators.required),
       selectedOperation: new FormControl(this.data.operation, Validators.required),
-      path : new FormControl(this.data.path, Validators.required),
+      path: new FormControl(this.data.path, Validators.required),
       selectedfield: new FormControl(this.data.field, Validators.required),
-      onetoone:new FormControl('',Validators.required),
+      relations: new FormControl('', Validators.required),
       security: new FormControl(this.data.security, Validators.required),
       extfiles: new FormControl(this.data.extfiles, Validators.required),
       roles: new FormControl(this.data.roles, Validators.required),
-      options: new FormControl(this.data.options,Validators.required),
-      parameters: new FormControl(JSON.stringify(this.data.parameters),Validators.required)
+      options: new FormControl(this.data.options, Validators.required),
+      parameters: new FormControl(JSON.stringify(this.data.parameters), Validators.required)
     });
     this.profileForm.get('selectedOperation').disable;
     this.profileForm.get('parameters').disable;
-    this.profileForm.get('onetoone').disable;
-    if (this.data.type==='postonetoone'){
-      this.profileForm.get('onetoone').setValue(this.data.field);
-      this.profileForm.get('onetoone').enable; 
-      this.relonetoone=[];
-      const onetoone=this.configservice.getrelations(this.data.idschema).OnetoOne;
-      onetoone.forEach(element => {
-        this.relonetoone.push({relationname:element.relationname,table:element.table})
-      });
-    }
+    this.profileForm.get('relations').disable;
+    this.chargerelations();
   }
-  generatecode(){
+  generatecode() {
     const dialogRef = this.dialog.open(GenoptionswithoperatorsComponent, {
       width: '100%',
       disableClose: true,
-      data: {fields: this.configservice.getfieldschemaswithid(this.idschema),schemaid:this.idschema,parameters:JSON.parse(this.profileForm.get('parameters').value)}
+      data: { fields: this.configservice.getfieldschemaswithid(this.idschema), schemaid: this.idschema, parameters: JSON.parse(this.profileForm.get('parameters').value) }
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
-       this.profileForm.patchValue({options: result.options});
+        this.profileForm.patchValue({ options: result.options });
       }
     });
   }
-  generateparameters(){
+  generateparameters() {
     const dialogRef = this.dialog.open(ParametersmodalComponent, {
       width: '500px',
       disableClose: true,
-      data: (this.profileForm.get('parameters').value!=="") ? JSON.parse(this.profileForm.get('parameters').value as string): []
+      data: (this.profileForm.get('parameters').value !== "") ? JSON.parse(this.profileForm.get('parameters').value as string) : []
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
-       this.profileForm.patchValue({parameters: JSON.stringify(result.parameters)});
+        this.profileForm.patchValue({ parameters: JSON.stringify(result.parameters) });
       }
     });
   }
-  operationchange(){
-    if(this.profileForm.get('selectedOperation').value==='findgenerated'){
+  operationchange() {
+    if (this.profileForm.get('selectedOperation').value === 'findgenerated') {
       this.profileForm.get('selectedOperation').enable;
       this.profileForm.get('parameters').enable;
     }
-    else{
+    else {
       this.profileForm.get('selectedOperation').disable;
       this.profileForm.get('parameters').disable;
     }
   }
-  selectchange(){
-    this.relonetoone=[];
-    this.profileForm.get('onetoone').setValue(this.data.field);
-    if (this.configservice.getrelations(this.data.idschema).OnetoOne===[]) return; 
-    this.profileForm.get('onetoone').enable;
-    if (this.profileForm.get('selectedValue').value==='postonetoone'){
-      const onetoone=this.configservice.getrelations(this.data.idschema).OnetoOne;
+  selectchange() {
+    this.relations = [];
+    this.chargerelations();
+  }
+
+  chargerelations(){
+    if (this.profileForm.get('selectedValue').value === 'postonetoone') {
+      this.profileForm.get('relations').setValue(this.data.field);
+      this.profileForm.get('relations').enable;
+      this.placeholder = 'Relation one to one';
+      const onetoone = this.configservice.getrelations(this.data.idschema).OnetoOne;
       onetoone.forEach(element => {
-        this.relonetoone.push({relationname:element.relationname,table:element.table})
+        this.relations.push({ relationname: element.relationname, table: element.table })
+      });
+    }
+    if (this.profileForm.get('selectedValue').value === 'postmanytoone') {
+      this.placeholder = 'Relation many to one';
+      this.profileForm.get('relations').setValue(this.data.field);
+      this.profileForm.get('relations').enable;
+      const manytoone = this.configservice.getrelations(this.data.idschema).Manytoone;
+      manytoone.forEach(element => {
+        this.relations.push({ relationname: element.relationname, table: element.table })
+      });
+    }
+    if (this.profileForm.get('selectedValue').value === 'postonetomany') {
+      this.placeholder = 'Relation one to many';
+      this.profileForm.get('relations').setValue(this.data.field);
+      this.profileForm.get('relations').enable;
+      const onetomany = this.configservice.getrelations(this.data.idschema).Onetomany;
+      onetomany.forEach(element => {
+        this.relations.push({ relationname: element.relationname, table: element.table })
       });
     }
   }
-  onNoClick(){
+  onNoClick() {
     this.dialogRef.close();
   }
 
-  onYesClick(){
+  onYesClick() {
     this.data.type = this.profileForm.get('selectedValue').value;
     this.data.path = this.profileForm.get('path').value;
     this.data.operation = this.profileForm.get('selectedOperation').value;
     this.data.field = this.profileForm.get('selectedfield').value;
     this.data.security = this.profileForm.get('security').value;
     this.data.roles = this.profileForm.get('roles').value;
-    this.data.extfiles= this.profileForm.get('extfiles').value,
-    this.data.options= this.profileForm.get('options').value;
-    if (this.profileForm.get('selectedValue').value=='postonetoone'){
-      this.data.field=this.profileForm.get('onetoone').value
+    this.data.extfiles = this.profileForm.get('extfiles').value,
+      this.data.options = this.profileForm.get('options').value;
+    if (this.profileForm.get('selectedValue').value == 'postonetoone' || this.profileForm.get('selectedValue').value == 'postonetomany' || this.profileForm.get('selectedValue').value == 'postmanytoone') {
+      this.data.field = this.profileForm.get('relations').value
     }
-    if (this.profileForm.get('selectedOperation').value==='findgenerated' || this.profileForm.get('selectedOperation').value==='findandcountgenerated'){
-      this.data.parameters=JSON.parse(this.profileForm.get('parameters').value as string);
+    if (this.profileForm.get('selectedOperation').value === 'findgenerated' || this.profileForm.get('selectedOperation').value === 'findandcountgenerated') {
+      this.data.parameters = JSON.parse(this.profileForm.get('parameters').value as string);
     }
-    else{
-      this.data.parameters=[];
+    else {
+      this.data.parameters = [];
     }
     this.dialogRef.close(this.data);
   }
