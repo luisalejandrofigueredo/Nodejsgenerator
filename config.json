@@ -115,6 +115,13 @@
 						"table": "Documents",
 						"manytoone": "document"
 					}
+				],
+				"Manytomany": [
+					{
+						"relationname": "promotions",
+						"table": "Promotions",
+						"manytomany": "costumers"
+					}
 				]
 			},
 			"schemasapi": [
@@ -392,7 +399,7 @@
 					"security": true,
 					"roles": "Admin User",
 					"extfiles": "",
-					"options": "{relations:[\"costumerdata\",\"documents\"]}",
+					"options": "{relations:[\"promotions\"]}",
 					"parameters": []
 				},
 				{
@@ -424,6 +431,18 @@
 					"field": "documents",
 					"security": true,
 					"roles": "Admin User",
+					"extfiles": "",
+					"options": "",
+					"parameters": []
+				},
+				{
+					"id": 23,
+					"type": "postmanytomany",
+					"operation": "",
+					"path": "documents",
+					"field": "promotions",
+					"security": true,
+					"roles": "User Admin",
 					"extfiles": "",
 					"options": "",
 					"parameters": []
@@ -530,6 +549,50 @@
 					"parameters": []
 				}
 			]
+		},
+		{
+			"id": 4,
+			"name": "Promotions",
+			"description": "promotions",
+			"imports": "",
+			"fields": "",
+			"security": true,
+			"classsecurity": "RolesGuard",
+			"filesecurity": "",
+			"mastersecurity": false,
+			"filesupload": false,
+			"schemastable": [
+				{
+					"id": 1,
+					"type": "number",
+					"name": "id",
+					"length": 40,
+					"keyautonumber": true,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 2,
+					"type": "string",
+					"name": "description",
+					"length": 255,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				}
+			],
+			"schemarelations": {
+				"OnetoOne": [],
+				"Onetomany": [],
+				"Manytomany": [
+					{
+						"relationname": "costumers",
+						"table": "Costumers",
+						"manytomany": "promotions"
+					}
+				]
+			},
+			"schemasapi": []
 		}
 	]
 }

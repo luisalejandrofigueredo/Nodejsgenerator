@@ -360,6 +360,33 @@ export class TestapiComponent implements OnInit {
           this.profileForm.patchValue({ body: JSON.stringify(jsonvar, null, 4) });
         }
         break;
+        case 'postmanytomany':
+        {
+          const manytomany = relations.Manytomany.find(element => element.relationname = this.api.field);
+          const fieldrelation = this.configservice.getschematable(this.configservice.getschemawithname(manytomany.table));
+          fieldrelation.forEach((element, index) => {
+            if (element.name !== 'id') {
+              switch (element.type) {
+                case 'number':
+                  body += `"${element.name}"` + ':0,';
+                  break;
+                case 'string':
+                  body += `"${element.name}"` + ':"",';
+                  break;
+                case 'date':
+                  body += `"${element.name}"` + ':"2012-04-23T18:25:43.511Z",'
+                  break;
+                default:
+                  break;
+              }
+            }
+          });
+          body = body.substr(0, body.length - 1);
+          body += body = '}';
+          const jsonvar = JSON.parse(body)
+          this.profileForm.patchValue({ body: JSON.stringify(jsonvar, null, 4) });
+        }
+        break;
       default:
         this.profileForm.patchValue({ body: "" });
         break;
@@ -612,6 +639,17 @@ export class TestapiComponent implements OnInit {
           subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }));
         break;
         case 'postonetomany':
+        httpOptions = {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer ' + this.rtoken
+          })
+        };
+        this.url = this.urlpri + `/${this.schemastring}/${this.api.path}/${this.profileForm.get('record').value}`;
+        this.httpclient.post(this.url, this.profileForm.get('body').value, httpOptions).
+          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }));
+        break;
+        case 'postmanytomany':
         httpOptions = {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',

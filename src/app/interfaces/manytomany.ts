@@ -1,3 +1,5 @@
 export interface Manytomany {
-    relationname:string;
+        relationname:string;
+        manytomany:string;
+        table:string;
 }

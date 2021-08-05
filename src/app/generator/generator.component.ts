@@ -4,10 +4,9 @@ import { Schemaitem } from '../interfaces/schema';
 import { Relations } from '../interfaces/relations';
 import { ConfigService } from '../service/config.service';
 import { Api } from '../interfaces/api';
-import { realpath } from 'fs';
 import { RelationsService } from '../service/relations.service';
-import { registerLocaleData } from '@angular/common';
 import { Manytoone } from '../interfaces/manytoone';
+import { Manytomany } from '../interfaces/manytomany';
 
 
 @Component({
@@ -293,6 +292,15 @@ export class GeneratorComponent implements OnInit, OnChanges {
     }
     if (relations.Manytoone !== undefined) {
       relations.Manytoone.forEach(element => {
+        if (element.table !== mastersec) {
+          if (modulearray.find(item => item === element.table) === undefined) {
+            modulearray.push(element.table);
+          }
+        }
+      });
+    }
+    if (relations.Manytomany !== undefined) {
+      relations.Manytomany.forEach(element => {
         if (element.table !== mastersec) {
           if (modulearray.find(item => item === element.table) === undefined) {
             modulearray.push(element.table);
@@ -663,14 +671,16 @@ export class GeneratorComponent implements OnInit, OnChanges {
           this.filegenerating += `{\n\t return this.service.patch(+params.id,patchbody);\n}\n`;
           break;
         case 'postonetoone':
-          this.addgenrartinline('\tadding postonetoone');
-          this.filegenerating += `@Post('${element.path}/:id')\n`;
-          this.generatesecurity(element);
-          this.filegenerating += `post${element.path}(@Param('id') id: number,@Body() reg: any) {\n`;
-          this.filegenerating += `\t return this.service.post${element.field}(id,reg);\n`;
-          this.filegenerating += `}\n`;
+          {
+            this.addgenrartinline('\tadding postonetoone');
+            this.filegenerating += `@Post('${element.path}/:id')\n`;
+            this.generatesecurity(element);
+            this.filegenerating += `post${element.path}(@Param('id') id: number,@Body() reg: any) {\n`;
+            this.filegenerating += `\t return this.service.post${element.field}(id,reg);\n`;
+            this.filegenerating += `}\n`;
+          }
           break;
-          case 'postonetomany':
+        case 'postonetomany': {
           this.addgenrartinline('\tadding postonetomany');
           this.filegenerating += `@Post('${element.path}/:id')\n`;
           const relations: Relations = this.configservice.getrelations(this.configservice.getschemawithname(schema));
@@ -679,6 +689,18 @@ export class GeneratorComponent implements OnInit, OnChanges {
           this.filegenerating += `post${element.path}(@Param('id') id: number,@Body() reg: ${onetomany.table}) {\n`;
           this.filegenerating += `\t return this.service.post${element.field}(id,reg);\n`;
           this.filegenerating += `}\n`;
+        }
+          break;
+        case 'postmanytomany': {
+          this.addgenrartinline('\tadding postmanytomany');
+          this.filegenerating += `@Post('${element.path}/:id')\n`;
+          const relations: Relations = this.configservice.getrelations(this.configservice.getschemawithname(schema));
+          const manytomany = relations.Manytomany.find(elementotm => elementotm.relationname = element.field);
+          this.generatesecurity(element);
+          this.filegenerating += `post${element.path}(@Param('id') id: number,@Body() reg: ${manytomany.table}) {\n`;
+          this.filegenerating += `\t return this.service.post${element.field}(id,reg);\n`;
+          this.filegenerating += `}\n`;
+        }
           break;
         default:
           break;
@@ -766,12 +788,19 @@ export class GeneratorComponent implements OnInit, OnChanges {
       });
     }
     if (relations.Manytoone !== undefined) {
-       relations.Manytoone.forEach(element => {
-         if (repositoryarray.find(item => item === element.table) === undefined) {
-           repositoryarray.push(element.table);
-         }
-       });
-     }
+      relations.Manytoone.forEach(element => {
+        if (repositoryarray.find(item => item === element.table) === undefined) {
+          repositoryarray.push(element.table);
+        }
+      });
+    }
+    if (relations.Manytomany !== undefined) {
+      relations.Manytomany.forEach(element => {
+        if (repositoryarray.find(item => item === element.table) === undefined) {
+          repositoryarray.push(element.table);
+        }
+      });
+    }
     repositoryarray.forEach(element => {
       ret += `,  @Inject(forwardRef(() => ${element}Service)) private ${element.toLocaleLowerCase()}Service: ${element}Service`;
     });
@@ -802,6 +831,15 @@ export class GeneratorComponent implements OnInit, OnChanges {
     }
     if (relations.Manytoone !== undefined) {
       relations.Manytoone.forEach(element => {
+        if (relationsarray.find(item => item === element.table) === undefined) {
+          if (element.table !== mastersec) {
+            relationsarray.push(element.table);
+          }
+        }
+      });
+    }
+    if (relations.Manytomany !== undefined) {
+      relations.Manytomany.forEach(element => {
         if (relationsarray.find(item => item === element.table) === undefined) {
           if (element.table !== mastersec) {
             relationsarray.push(element.table);
@@ -844,6 +882,15 @@ export class GeneratorComponent implements OnInit, OnChanges {
         }
       });
     }
+    if (relations.Manytomany !== undefined) {
+      relations.Manytomany.forEach(element => {
+        if (relationsarray.find(item => item === element.table) === undefined) {
+          if (mastersec !== element.table) {
+            relationsarray.push(element.table);
+          }
+        }
+      });
+    }
     relationsarray.forEach(table => {
       this.filegenerating += `import { ${table}Service } from '../service/${table}.service';\n`;
       this.filegenerating += `import { ${table}Module } from '../module/${table}.module';\n`;
@@ -874,9 +921,36 @@ export class GeneratorComponent implements OnInit, OnChanges {
         }
       });
     }
+    if (relations.Manytomany !== undefined) {
+      relations.Manytomany.forEach(element => {
+        if (relationsarray.find(item => item === element.table) === undefined) {
+          relationsarray.push(element.table);
+        }
+      });
+    }
     relationsarray.forEach(table => {
       this.filegenerating += `import { ${table}Service } from '../service/${table}.service';\n`;
     });
+  }
+  manytomanyservice(schema: string): string {
+    const schemas = this.configservice.getschema();
+    const schemalower = schema.toLocaleLowerCase();
+    let ret: string = '';
+    schemas.forEach(element => {
+      if (element.name !== schema) {
+        const relations = this.configservice.getrelations(element.id);
+        if (relations.Manytomany !== undefined) {
+          relations.Manytomany.forEach(relmanytomany => {
+            if (relmanytomany.table === schema) {
+              ret += `async createmanytomany${element.name}(${schemalower}: any ): Promise<${schema}> {\n`;
+              ret += `\t return await this.${schema}Repository.save(${schemalower});\n`;
+              ret += `}\n`;
+            }
+          });
+        }
+      }
+    });
+    return ret;
   }
   onetomanyservice(schema: string): string {
     const schemas = this.configservice.getschema();
@@ -947,6 +1021,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     }
     this.filegenerating += this.onetooneservice(schema);
     this.filegenerating += this.onetomanyservice(schema);
+    this.filegenerating += this.manytomanyservice(schema);
     for (let ind = 0; ind < this.config.schemas[index].schemasapi.length; ind++) {
       const relations: Relations = this.config.schemas[index].schemarelations;
       const element: Api = this.config.schemas[index].schemasapi[ind];
@@ -1120,7 +1195,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
           this.filegenerating += `\t return await this.${schema}Repository.save(register);\n`;
           this.filegenerating += `}\n`;
           break;
-          case 'postonetomany':
+        case 'postonetomany': {
           const relations: Relations = this.configservice.getrelations(this.configservice.getschemawithname(schema));
           const onetomany = relations.Onetomany.find(elementotm => elementotm.relationname = element.field);
           const invrelations: Relations = this.configservice.getrelations(this.configservice.getschemawithname(onetomany.table));
@@ -1129,8 +1204,24 @@ export class GeneratorComponent implements OnInit, OnChanges {
           this.filegenerating += `async post${element.field}(id:number,reg:${onetomany.table}): Promise<${onetomany.table}> {\n`;
           this.filegenerating += `let ${onetomany.table.toLowerCase()}:${onetomany.table};\n`;
           this.filegenerating += `const register:any= await this.${schema}Repository.findOne({where:{'id':id}});\n`;
-          this.createfieldrelationsonetomany(schema, element,manytoone);
+          this.createfieldrelationsonetomany(schema, element, manytoone);
           this.filegenerating += `}\n`;
+        }
+          break;
+        case 'postmanytomany': {
+          const relations: Relations = this.configservice.getrelations(this.configservice.getschemawithname(schema));
+          const manytomany = relations.Manytomany.find(elementotm => elementotm.relationname = element.field);
+          const invrelations: Relations = this.configservice.getrelations(this.configservice.getschemawithname(manytomany.table));
+          const rmanytomany = invrelations.Manytomany.find(elementmtoo => elementmtoo.table = schema);
+          this.addgenrartinline('\tadding postmanytomany service');
+          this.filegenerating += `async post${element.field}(id:number,reg:${manytomany.table}): Promise<${schema}> {\n`;
+          this.filegenerating += `\tlet ${manytomany.table.toLowerCase()}:${manytomany.table};\n`;
+          this.filegenerating += `\tlet register:${schema}= await this.${schema}Repository.findOne({where:{'id':id},relations:["${manytomany.relationname}"]});\n`;
+          this.createfieldrelationsmanytomany(schema, element, rmanytomany);
+          this.filegenerating += `\tregister.${manytomany.relationname}.push(save);\n`;
+          this.filegenerating += `\treturn await this.${schema}Repository.save(register);\n`;
+          this.filegenerating += `}\n`;
+        }
           break;
         default:
           break;
@@ -1142,7 +1233,20 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.addgenrartinlinefile(end);
   }
 
-  createfieldrelationsonetomany(schema: string, api: Api,mamytoone:Manytoone) {
+  createfieldrelationsmanytomany(schema: string, api: Api, pammanytomany: Manytomany) {
+    const relations: Relations = this.configservice.getrelations(this.configservice.getschemawithname(schema));
+    const manytomany = relations.Manytomany.find(element => element.relationname = api.field);
+    const fieldrelation = this.configservice.getschematable(this.configservice.getschemawithname(manytomany.table));
+    this.filegenerating += `${manytomany.table.toLowerCase()} = new ${manytomany.table}();\n`;
+    fieldrelation.forEach((element, index) => {
+      if (element.name !== 'id') {
+        this.filegenerating += `${manytomany.table.toLowerCase()}.${element.name}` + `=reg.${element.name};\n`;
+      }
+    });
+    this.filegenerating += `const save=await this.${manytomany.table.toLocaleLowerCase()}Service.createmanytomany${schema}(${manytomany.table.toLowerCase()});\n`;
+  }
+
+  createfieldrelationsonetomany(schema: string, api: Api, mamytoone: Manytoone) {
     const relations: Relations = this.configservice.getrelations(this.configservice.getschemawithname(schema));
     const onetomany = relations.Onetomany.find(element => element.relationname = api.field);
     const fieldrelation = this.configservice.getschematable(this.configservice.getschemawithname(onetomany.table));
@@ -1215,6 +1319,11 @@ export class GeneratorComponent implements OnInit, OnChanges {
         this.filegenerating += `import {${element.table}} from "./${element.table}.entity";`;
       });
     }
+    if (relations.Manytomany !== undefined) {
+      relations.Manytomany.forEach(element => {
+        this.filegenerating += `import {${element.table}} from "./${element.table}.entity";`;
+      });
+    }
   }
 
   generaterelationbody(relations: Relations, table: string) {
@@ -1239,6 +1348,13 @@ export class GeneratorComponent implements OnInit, OnChanges {
         this.filegenerating += `${element.relationname}:${element.table}\n`;
       });
     }
+    if (relations.Manytomany !== undefined) {
+      relations.Manytomany.forEach(element => {
+        this.filegenerating += ` @ManyToMany(() => ${element.table},${element.table.toLowerCase()}=>${element.table.toLowerCase()}.${element.manytomany})\n`;
+        this.filegenerating += ` @JoinTable()\n`;
+        this.filegenerating += `${element.relationname}:${element.table}[]\n`;
+      });
+    }
     this.addgenrartinline('Relations generator ... /n');
   }
 
@@ -1255,6 +1371,9 @@ export class GeneratorComponent implements OnInit, OnChanges {
     }
     if (relations.Manytoone !== undefined && relations.Manytoone.length !== 0) {
       insertstr += ', ManyToOne';
+    }
+    if (relations.Manytomany !== undefined && relations.Manytomany.length !== 0) {
+      insertstr += ', ManyToMany, JoinTable';
     }
     if (this.ormj.PrimaryGeneratedColumn === true) {
       insertstr += ', PrimaryGeneratedColumn';

@@ -4,13 +4,41 @@ import { Relations } from '../interfaces/relations';
 import { Onetoone } from '../interfaces/onetoone';
 import { Onetomany } from '../interfaces/onetomany';
 import { Manytoone } from '../interfaces/manytoone';
+import { Manytomany } from '../interfaces/manytomany';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RelationsService {
-
+  
+  
   constructor(private config: ConfigService) { }
+
+  editrelationmanytomany(schemaid: number, id: number, reg: Manytomany) {
+    let relations: Relations = this.config.getrelations(schemaid);
+    relations.Manytomany.splice(id, 1, reg);
+    this.config.setrelations(schemaid, relations);
+  }
+  
+  deleterelationmanytomany(schemaid: number, id: number) {
+    let relations: Relations = this.config.getrelations(schemaid);
+    relations.Manytomany.splice(id, 1);
+    this.config.setrelations(schemaid, relations);
+  }
+  
+  addrelationmanytomany(id: number, data: Manytomany) {
+    let relations: Relations = this.config.getrelations(id);
+    if (relations.Manytomany===undefined) relations.Manytomany=[] as Manytomany[];
+    relations.Manytomany.push(data);
+    this.config.setrelations(id, relations);
+  }
+
+  getrelationsmanytomany(schemaid: number): Manytomany[] {
+    if (this.config.getrelations(schemaid).Manytomany!==undefined)
+    return this.config.getrelations(schemaid).Manytomany
+    else
+    return [];
+  }
 
   getrelationsonetone(schemaid: number): Onetoone[] {
     if (this.config.getrelations(schemaid).OnetoOne!==undefined)

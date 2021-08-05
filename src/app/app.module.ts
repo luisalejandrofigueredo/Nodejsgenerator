@@ -55,6 +55,8 @@ import { AddarrayComponent } from './addarray/addarray.component';
 import { BrowseonetooneComponent } from './browseonetoone/browseonetoone.component';
 import { RonetoonemodalComponent } from './ronetoonemodal/ronetoonemodal.component';
 import { BrowseonetomanyComponent } from './browseonetomany/browseonetomany.component';
+import { BrowsemanytomanyComponent } from './browsemanytomany/browsemanytomany.component';
+import { RealtiondatamodalmanytomanyComponent } from './realtiondatamodalmanytomany/realtiondatamodalmanytomany.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -87,6 +89,8 @@ import { BrowseonetomanyComponent } from './browseonetomany/browseonetomany.comp
     BrowseonetooneComponent,
     RonetoonemodalComponent,
     BrowseonetomanyComponent,
+    BrowsemanytomanyComponent,
+    RealtiondatamodalmanytomanyComponent,
   ],
   imports: [ 
     BrowserModule, 

@@ -1,4 +1,3 @@
-'use strict';
 const { app, BrowserWindow, ipcMain, Menu, screen, shell } = require('electron');
 const { spawn } = require('child_process');
 const url = require("url");
@@ -33,7 +32,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true
     },
-    icon: path.join(__dirname, `/dist/generador/assets/logo.svg`)
+    icon: path.join(__dirname, `/dist/generador/assets/icons/win/icon.ico`)
   })
 
   mainWindow.loadURL(
@@ -44,7 +43,7 @@ function createWindow() {
     })
   );
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
     mainWindow = null

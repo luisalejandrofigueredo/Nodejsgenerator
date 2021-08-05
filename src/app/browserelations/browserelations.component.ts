@@ -34,5 +34,8 @@ export class BrowserelationsComponent implements OnInit {
   browseonetomany(){
     this.router.navigate(['browseonetomany',this.id]);
   }
+  browsemanytomany(){
+    this.router.navigate(['browsemanytomany',this.id]);
+  }
 
 }

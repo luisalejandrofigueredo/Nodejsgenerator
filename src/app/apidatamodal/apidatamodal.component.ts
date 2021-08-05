@@ -168,6 +168,15 @@ export class ApidatamodalComponent implements OnInit {
         this.relations.push({ relationname: element.relationname, table: element.table })
       });
     }
+    if (this.profileForm.get('selectedValue').value === 'postmanytomany') {
+      this.placeholder = 'Relation many to many';
+      this.profileForm.get('relations').setValue(this.data.field);
+      this.profileForm.get('relations').enable;
+      const manytomany = this.configservice.getrelations(this.data.idschema).Manytomany;
+      manytomany.forEach(element => {
+        this.relations.push({ relationname: element.relationname, table: element.table })
+      });
+    }
   }
   onNoClick() {
     this.dialogRef.close();
@@ -182,7 +191,7 @@ export class ApidatamodalComponent implements OnInit {
     this.data.roles = this.profileForm.get('roles').value;
     this.data.extfiles = this.profileForm.get('extfiles').value,
       this.data.options = this.profileForm.get('options').value;
-    if (this.profileForm.get('selectedValue').value == 'postonetoone' || this.profileForm.get('selectedValue').value == 'postonetomany' || this.profileForm.get('selectedValue').value == 'postmanytoone') {
+    if (this.profileForm.get('selectedValue').value == 'postonetoone' || this.profileForm.get('selectedValue').value == 'postonetomany' || this.profileForm.get('selectedValue').value == 'postmanytoone' || this.profileForm.get('selectedValue').value == 'postmanytomany') {
       this.data.field = this.profileForm.get('relations').value
     }
     if (this.profileForm.get('selectedOperation').value === 'findgenerated' || this.profileForm.get('selectedOperation').value === 'findandcountgenerated') {

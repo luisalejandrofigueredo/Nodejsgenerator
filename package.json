@@ -1,10 +1,10 @@
 {
   "name": "generator",
-  "version": "0.0.16",
+  "version": "0.0.20",
   "author": "Luis Alejandro Figueredo Casadei",
   "description": "Generator for Nestjs",
   "main": "main.js",
-  "icon": "dist/generador/assets/logo.svg",
+  "icon": "dist/generador/assets/icons/win/icon.ico",
   "build": {
     "appId": "generador",
     "files": [
@@ -14,7 +14,8 @@
       "main.js"
     ],
     "win": {
-      "icon": "dist/generador/logo.ico"
+      "icon": "dist/generador/assets/icons/win/icon.ico",
+      "target":["msi","nsis"]
     }
   },
   "scripts": {
@@ -46,6 +47,7 @@
     "electron-builder-squirrel-windows": "^22.10.5",
     "electron-reload": "^1.5.0",
     "ngx-electron": "^2.2.0",
+    "prettier": "^2.3.2",
     "rxjs": "~6.5.4",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
@@ -69,7 +71,6 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "~3.3.0",
     "karma-jasmine-html-reporter": "^1.5.0",
-    "prettier": "2.3.2",
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
