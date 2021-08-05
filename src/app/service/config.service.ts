@@ -164,7 +164,7 @@ export class ConfigService {
     return this.config.schemas as Schemahead[];
   }
 
-  getschemasname(): any[] {
+  getschemasname(): {id:number;name:string}[] {
     // tslint:disable-next-line: prefer-const
     let names = [];
     this.config.schemas.forEach(element => {
