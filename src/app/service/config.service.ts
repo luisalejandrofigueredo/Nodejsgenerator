@@ -9,46 +9,64 @@ import { Security } from '../interfaces/security'
   providedIn: 'root'
 })
 export class ConfigService {
-  config = {
+  public config = {
     version: 0.3,
+    projectname: '',
+    schemapath: '',
     filePath: '',
     enableCors: false,
-    dbconf:{ selecteddatabase:0,host:'',port:0,username:'',password:'',database:''},
+    dbconf: { selecteddatabase: 0, host: '', port: 0, username: '', password: '', database: '' },
     enablehttps: false,
-    enableuploadfiles:false,
-    port:3000,
-    jwtsk:'',
-    logger:{ type:0,file:'info.log',maxsize:50000,typewarn:0,filewarn:'warn.log',maxsizewarn:10000,typeerror:0,fileerror:'error.log',maxsizeerror:10000},
-    security: {bearertoken:"", login:"",password:"",roles:"",table:"",logger:false,path:"",rolesclass:""} as Security,
+    enableuploadfiles: false,
+    port: 3000,
+    jwtsk: '',
+    logger: { type: 0, file: 'info.log', maxsize: 50000, typewarn: 0, filewarn: 'warn.log', maxsizewarn: 10000, typeerror: 0, fileerror: 'error.log', maxsizeerror: 10000 },
+    security: { bearertoken: "", login: "", password: "", roles: "", table: "", logger: false, path: "", rolesclass: "" } as Security,
     schemas: [],
   };
   /* schemas[id:number,name:string,description:string,schemastable[schemas],
   schemasrelations[],schemasapi[]] */
   constructor(private electron: ElectronService) { }
-
-  getschemawithid(id:number): Schemahead{
-    return this.config.schemas[id-1];
+  new() {
+    this.config = {
+      version: 0.3,
+      schemapath: '',
+      filePath: '',
+      projectname: '',
+      enableCors: false,
+      dbconf: { selecteddatabase: 0, host: '', port: 0, username: '', password: '', database: '' },
+      enablehttps: false,
+      enableuploadfiles: false,
+      port: 3000,
+      jwtsk: '',
+      logger: { type: 0, file: 'info.log', maxsize: 50000, typewarn: 0, filewarn: 'warn.log', maxsizewarn: 10000, typeerror: 0, fileerror: 'error.log', maxsizeerror: 10000 },
+      security: { bearertoken: "", login: "", password: "", roles: "", table: "", logger: false, path: "", rolesclass: "" } as Security,
+      schemas: [],
+    };
+  }
+  getschemawithid(id: number): Schemahead {
+    return this.config.schemas[id - 1];
   }
 
-  getschemamastersecurity(){
-    let array : Schemahead[];
-    array=this.getschema();
+  getschemamastersecurity() {
+    let array: Schemahead[];
+    array = this.getschema();
     for (let index = 0; index < array.length; index++) {
       const element = array[index];
-      if (element.mastersecurity===true){
-        return(element)
+      if (element.mastersecurity === true) {
+        return (element)
       }
     }
-    return(undefined);
+    return (undefined);
   }
   setdatabase(set: any) {
     this.config.dbconf = set;
   }
 
-  getdatabase(): any{
-    if (this.config.dbconf===undefined) // for version conf compatibitili
+  getdatabase(): any {
+    if (this.config.dbconf === undefined) // for version conf compatibitili
     {
-     this.config.dbconf={ selecteddatabase:0,host:'',port:0,username:'',password:'',database:''};
+      this.config.dbconf = { selecteddatabase: 0, host: '', port: 0, username: '', password: '', database: '' };
     }
     return this.config.dbconf;
   }
@@ -57,7 +75,7 @@ export class ConfigService {
     this.config.security = set;
   }
 
-  getsecurity(): Security{
+  getsecurity(): Security {
     return this.config.security;
   }
 
@@ -65,7 +83,7 @@ export class ConfigService {
     this.config.filePath = filePath;
   }
 
-  getfilepath():string  {
+  getfilepath(): string {
     return this.config.filePath;
   }
 
@@ -79,15 +97,15 @@ export class ConfigService {
     let fields = [];
     const columns = this.getschematable(_id);
     for (const iterator of columns) {
-      fields.push({ id: iterator.id,type:iterator.type,name: iterator.name });
+      fields.push({ id: iterator.id, type: iterator.type, name: iterator.name });
     }
     return fields;
   }
 
-  getfieldid(table:number,namefield:string): number {
+  getfieldid(table: number, namefield: string): number {
     const columns: Schemaitem[] = this.getschematable(table);
     for (let index = 0; index < columns.length; index++) {
-      if (namefield===columns[index].name) return(columns[index].id);
+      if (namefield === columns[index].name) return (columns[index].id);
     }
     return 0;
   }
@@ -103,16 +121,16 @@ export class ConfigService {
   }
   // tslint:disable-next-line: variable-name
   getrelations(_id: number): Relations {
-    if ( this.config.schemas[_id-1].schemarelations !== undefined){
-      return this.config.schemas[_id-1].schemarelations;
-    } else {return { OnetoOne:[],Onetomany:[],Manytomany:[],Manytoone:[]}; }
+    if (this.config.schemas[_id - 1].schemarelations !== undefined) {
+      return this.config.schemas[_id - 1].schemarelations;
+    } else { return { OnetoOne: [], Onetomany: [], Manytomany: [], Manytoone: [] }; }
   }
-  setrelations(_id:number,relations:Relations){
-    this.config.schemas[_id - 1 ].schemarelations=relations;
+  setrelations(_id: number, relations: Relations) {
+    this.config.schemas[_id - 1].schemarelations = relations;
   }
 
- 
-  
+
+
   // tslint:disable-next-line: variable-name
   addapi(_id: number, api: Api) {
     this.config.schemas[_id - 1].schemasapi.push(api);
@@ -152,6 +170,10 @@ export class ConfigService {
     }
   }
 
+  savefile() {
+    this.electron.ipcRenderer.send('save', { path: this.config.schemapath, file: JSON.stringify(this.config, null, '\t') });
+
+  }
   save() {
     this.electron.ipcRenderer.send('saveconfig', JSON.stringify(this.config, null, '\t'));
   }
@@ -160,11 +182,24 @@ export class ConfigService {
     this.config = this.electron.ipcRenderer.sendSync('loadconfig', 'config.json');
   }
 
+  loadfile(file: string) {
+    this.config.schemapath = file;
+    this.config = this.electron.ipcRenderer.sendSync('load', file);
+    this.electron.ipcRenderer.send('setdisable');
+  }
+
+  saveas(file: string) {
+    this.config.schemapath = file;
+    console.log('save as file', file);
+    this.electron.ipcRenderer.sendSync('saveas', { path: file, file: JSON.stringify(this.config, null, '\t') });
+    this.electron.ipcRenderer.send('setdisable');
+  }
+
   getschema(): Schemahead[] {
     return this.config.schemas as Schemahead[];
   }
 
-  getschemasname(): {id:number;name:string}[] {
+  getschemasname(): { id: number; name: string }[] {
     // tslint:disable-next-line: prefer-const
     let names = [];
     this.config.schemas.forEach(element => {
@@ -181,24 +216,24 @@ export class ConfigService {
     return this.config.schemas[id - 1].schemastable;
   }
 
-    getschemawithname(name: string): number {
-    return this.config.schemas.find(element=> element.name===name).id;
+  getschemawithname(name: string): number {
+    return this.config.schemas.find(element => element.name === name).id;
   }
 
   getschemaname(id: number): string {
     return this.config.schemas[id - 1].name;
   }
 
-  getschemaid(name:string): number {
-    var array : Schemahead[];
+  getschemaid(name: string): number {
+    var array: Schemahead[];
     array = this.getschemawithtable();
     for (let index = 0; index < array.length; index++) {
       const element = array[index];
-      if (element.name === name){
+      if (element.name === name) {
         return element.id;
       }
     };
-    return(0);
+    return (0);
   }
 
   addschema(SchemaHead: Schemahead) {
@@ -213,7 +248,7 @@ export class ConfigService {
       filesecurity: SchemaHead.filesecurity,
       mastersecurity: SchemaHead.mastersecurity,
       filesupload: SchemaHead.filesupload,
-      schemastable: [], schemarelations: { OnetoOne:[],Onetomany:[]} as Relations, schemasapi: []
+      schemastable: [], schemarelations: { OnetoOne: [], Onetomany: [] } as Relations, schemasapi: []
     });
   }
   // delete schema

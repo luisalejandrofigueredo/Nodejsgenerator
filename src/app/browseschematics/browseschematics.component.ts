@@ -16,11 +16,13 @@ import { Schemahead } from '../interfaces/schemahead';
 })
 export class BrowseschematicsComponent implements OnInit {
   dataSource = new MatTableDataSource<Schemahead>([]);
+  projectname:string;
   schema: Schemahead[] = [];
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   constructor(private route: Router, public dialog: MatDialog, private configservice: ConfigService) { }
   ngOnInit(): void {
+    this.projectname=(this.configservice.config.projectname!==undefined) ? this.configservice.config.projectname : "";
     this.schema = [ ...this.configservice.getschema()];
     this.dataSource.data = this.schema;
     this.dataSource.paginator = this.paginator;
@@ -42,7 +44,6 @@ export class BrowseschematicsComponent implements OnInit {
         this.schema.push(data);
         this.dataSource.data = this.schema;
         this.table.renderRows();
-        console.log('schema:', this.schema);
         this.configservice.addschema(data);
       }
     });

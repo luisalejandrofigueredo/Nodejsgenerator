@@ -57,6 +57,8 @@ import { RonetoonemodalComponent } from './ronetoonemodal/ronetoonemodal.compone
 import { BrowseonetomanyComponent } from './browseonetomany/browseonetomany.component';
 import { BrowsemanytomanyComponent } from './browsemanytomany/browsemanytomany.component';
 import { RealtiondatamodalmanytomanyComponent } from './realtiondatamodalmanytomany/realtiondatamodalmanytomany.component';
+import { ProjectmodalComponent } from './projectmodal/projectmodal.component';
+import { AboutComponent } from './about/about.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -91,6 +93,8 @@ import { RealtiondatamodalmanytomanyComponent } from './realtiondatamodalmanytom
     BrowseonetomanyComponent,
     BrowsemanytomanyComponent,
     RealtiondatamodalmanytomanyComponent,
+    ProjectmodalComponent,
+    AboutComponent,
   ],
   imports: [ 
     BrowserModule, 

@@ -1496,7 +1496,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
   generate(event: Event) {
     this.progressbar = true;
     this.generatingline = 'reading json file generator ...\n';
-    this.config = this.electronservice.ipcRenderer.sendSync('loadconfig', 'config.json');
+    this.config = this.configservice.config;
     this.addingPath();
     this.progressbar = false;
     this.container.nativeElement.scrollTop = this.container.nativeElement.scrollHeight;

@@ -1,26 +1,198 @@
+const prettier = require("prettier");
 const { app, BrowserWindow, ipcMain, Menu, screen, shell } = require('electron');
 const { spawn } = require('child_process');
+const { ElementRef } = require("@angular/core");
 const url = require("url");
 const path = require("path");
 var fs = require('fs');
-const prettier = require("prettier");
-/*require('electron-reload')(__dirname, {
-  electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
-});*/
-
-let mainWindow
-var menu = Menu.buildFromTemplate([
+var saveenabled = false;
+var arraysubmenu = [];
+var recent = [];
+var template = [
   {
     label: 'Menu',
     submenu: [
+      {
+        label: 'New', click() {
+          newfile();
+        }
+      },
+      {
+        label: 'Load', click() {
+          load();
+        }
+      },
+      {
+        id: 'save',
+        enabled: false,
+        label: 'Save', click() {
+          save();
+        }
+      },
+      {
+        label: 'Save as', click() {
+          saveas();
+        }
+      },
+      {
+        id: 'recent',
+        submenu: arraysubmenu,
+        label: 'Open recent', click() {
+        }
+      },
       {
         label: 'Exit', click() {
           app.quit()
         }
       }
     ]
+  }, {
+    label: 'execute',
+    submenu: [{
+      label: 'clear recent',
+      click() {
+        clearrecent()
+      }
+    },
+    {
+      label: 'Open dev tools',
+      click() {
+        opendevtools()
+      }
+    }
+    ]
+  },
+  {
+    label: 'Help',
+    submenu: [{
+      label: 'About',
+      click() {
+        about()
+      }
+    },
+    {
+      label: 'Tutorial',
+      click() {
+        tutorial()
+      }
+    }
+    ]
   }
-])
+];
+var mainWindow;
+var menu = Menu.buildFromTemplate(template);
+/*require('electron-reload')(__dirname, {
+  electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+});*/
+function about() {
+  mainWindow.webContents.send("about");
+}
+function tutorial() {
+  mainWindow.webContents.send("tutorial");
+}
+function newfile() {
+  mainWindow.webContents.send("new");
+  let itemmenu = menu.getMenuItemById('save');
+  itemmenu.enabled = true;
+}
+function settemplate() {
+  const itemmenu = menu.getMenuItemById('save');
+  const saveenable = itemmenu.enabled;
+  template = [
+    {
+      label: 'Menu',
+      submenu: [
+        {
+          label: 'New', click() {
+            newfile();
+          }
+        },
+        {
+          label: 'Load', click() {
+            load();
+          }
+        },
+        {
+          id: 'save',
+          enabled: saveenable,
+          label: 'Save', click() {
+            save();
+          }
+        },
+        {
+          label: 'Save as', click() {
+            saveas();
+          }
+        },
+        {
+          id: 'recent',
+          submenu: arraysubmenu,
+          label: 'Open recent', click() {
+          }
+        },
+        {
+          label: 'Exit', click() {
+            app.quit()
+          }
+        }
+      ]
+    }, {
+      label: 'execute',
+      submenu: [{
+        label: 'Clear recent',
+        click() {
+          clearrecent()
+        }
+      },
+      {
+        label: 'Open dev tools',
+        click() {
+          opendevtools()
+        }
+      }
+      ]
+    },
+    {
+      label: 'Help',
+      submenu: [{
+        label: 'About',
+        click() {
+          about()
+        }
+      },
+      {
+        label: 'Tutorial',
+        click() {
+          tutorial()
+        }
+      }]
+    }
+  ]
+}
+function opendevtools() {
+  mainWindow.webContents.openDevTools();
+}
+function clearrecent() {
+  mainWindow.webContents.send("clearrecent");
+  recent = [];
+  arraysubmenu = [];
+  settemplate();
+  menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+}
+
+function save() {
+  mainWindow.webContents.send("save");
+}
+function load() {
+  mainWindow.webContents.send("load file");
+  saveenabled = true;
+}
+
+function saveas() {
+  mainWindow.webContents.send("saveas");
+  saveenabled = true;
+}
 
 function createWindow() {
   Menu.setApplicationMenu(menu);
@@ -43,13 +215,50 @@ function createWindow() {
     })
   );
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
     mainWindow = null
   })
 }
-ipcMain.on('helpoptions', (event, arg) => {
+
+function recentclick(nameclick, pathclick) {
+  let recentfind = recent.find((item) => item.name === nameclick && item.path === pathclick);
+  loadrecent(recentfind.path);
+}
+
+function loadrecent(recentfnd) {
+  mainWindow.webContents.send("loadrecent", recentfnd);
+};
+
+ipcMain.on('setrecent', (event, recentpar) => {
+  recent.splice(0, recent.length);
+  arraysubmenu = [];
+  recentpar.forEach(element => {
+    arraysubmenu.push(
+      {
+        id: element.name,
+        label: element.name + ' ' + element.path,
+        click() {
+          recentclick(element.name, element.path);
+        }
+      });
+    recent.push({ name: element.name, path: element.path });
+  });
+  settemplate();
+  menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+});
+
+ipcMain.on('setdisable', () => {
+  let itemmenu = menu.getMenuItemById('save');
+  itemmenu.enabled = true;
+})
+
+ipcMain.on('setdisablefalse', () => {
+  let itemmenu = menu.getMenuItemById('save');
+  itemmenu.enabled = false;
+})
+ipcMain.on('helpoptions', () => {
   shell.openExternal('https://typeorm.io/#/find-options');
 });
 
@@ -82,6 +291,25 @@ ipcMain.on('loadconfig', (event, arg) => {
     const json = JSON.parse(data);
     event.returnValue = json;
   });
+});
+
+ipcMain.on('save', (event, arg) => {
+  writeFile(arg.path, arg.file);
+  return event.returnValue = "save file ready";
+});
+
+ipcMain.on('load', (event, arg) => {
+  fs.readFile(arg, function (err, data) {
+    if (err) throw err;
+    const json = JSON.parse(data);
+    saveenabled = true;
+    event.returnValue = json;
+  });
+});
+
+ipcMain.on('saveas', (event, arg) => {
+  writeFile(arg.path, arg.file);
+  return event.returnValue = "fileas ready";
 });
 
 ipcMain.on('openvisualcode', (event, arg) => {
@@ -256,8 +484,10 @@ ipcMain.on('saveController', (event, arg) => {
 });
 
 function writeFile(filepath, file) {
-  fs.writeFileSync(filepath, file);
-  console.log('writed', filepath);
+  fs.writeFile(filepath, file, function (err) {
+    if (err) throw err;
+    console.log(`Writed:${filepath}`);
+  });
 }
 
 ipcMain.on('saveconfig', (event, arg) => {
@@ -277,3 +507,4 @@ app.on('window-all-closed', function () {
 app.on('activate', function () {
   if (mainWindow === null) createWindow()
 })
+
