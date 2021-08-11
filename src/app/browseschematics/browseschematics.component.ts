@@ -81,24 +81,6 @@ export class BrowseschematicsComponent implements OnInit {
     }});
   }
 
-  save() {
-    const dialogRef = this.dialog.open(YesnoComponent, { width: '300px',
-    disableClose: true, data: 'Save file'});
-    dialogRef.afterClosed().subscribe( data => { if (data !== undefined){
-    this.configservice.save(); }});
-  }
-
-  load(){
-    const dialogRef = this.dialog.open(YesnoComponent, { width: '300px',
-    disableClose: true, data: 'Load file and lose data'});
-    dialogRef.afterClosed().subscribe( data => { if (data !== undefined){
-      this.configservice.load();
-      this.schema = [ ...this.configservice.getschema()];
-      this.dataSource.data = this.schema;
-      this.table.renderRows();
-    }});
-  }
-
   // tslint:disable-next-line: variable-name
   edit_data(_id: number){
     this.route.navigate(['/schematics', _id]);

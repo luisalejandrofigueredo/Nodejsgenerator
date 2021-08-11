@@ -38,5 +38,3 @@
     <tr mat-row *matRowDef="let row; columns: ['id','name','description','delete','edit','data','api','relations'];"></tr>
 </table>
 <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-<button matTooltip="Save Schema" (click)="save()" mat-icon-button><mat-icon>save</mat-icon>Save</button>
-<button style="padding-left: 40px;" matTooltip="Load Schema" (click)="load()" mat-icon-button><mat-icon>save</mat-icon>Load</button>  
