@@ -47,7 +47,39 @@ var template = [
       }
     ]
   }, {
-    label: 'execute',
+    label: 'Windows',
+    submenu: [{
+      label: 'Config',
+      click() {
+        navigate('config')
+      }
+    },
+    {
+      label: 'Browse schematics',
+      click() {
+        navigate('browseschematics')
+      }
+    },
+    {
+      label: 'Generator',
+      click() {
+        navigate('generator')
+      }
+    }, {
+      label: 'Config security',
+      click() {
+        navigate('gensecurity')
+      }
+    },
+    {
+      label: 'Test Api',
+      click() {
+        navigate('testapi')
+      }
+    }
+    ]
+  }, {
+    label: 'Execute',
     submenu: [{
       label: 'clear recent',
       click() {
@@ -84,6 +116,28 @@ var menu = Menu.buildFromTemplate(template);
 /*require('electron-reload')(__dirname, {
   electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
 });*/
+
+function navigate(moveto) {
+  switch (moveto) {
+    case 'config':
+      mainWindow.webContents.send("navigate", 'config');
+      break;
+    case 'browseschematics':
+      mainWindow.webContents.send("navigate", 'browseschematics');
+      break;
+    case 'generator':
+      mainWindow.webContents.send("navigate", 'generator');
+      break;
+    case 'gensecurity':
+      mainWindow.webContents.send("navigate", 'gensecurity');
+      break;
+    case 'testapi':
+      mainWindow.webContents.send("navigate", 'testapi');
+      break;
+    default:
+      break;
+  }
+}
 function about() {
   mainWindow.webContents.send("about");
 }
@@ -137,7 +191,40 @@ function settemplate() {
         }
       ]
     }, {
-      label: 'execute',
+      label: 'Windows',
+      submenu: [{
+        label: 'Config',
+        click() {
+          navigate('config')
+        }
+      },
+      {
+        label: 'Browse schematics',
+        click() {
+          navigate('browseschematics')
+        }
+      },
+      {
+        label: 'Generator',
+        click() {
+          navigate('generator')
+        }
+      },
+      {
+        label: 'Config security',
+        click() {
+          navigate('gensecurity')
+        }
+      },
+      {
+        label: 'Test Api',
+        click() {
+          navigate('testapi')
+        }
+      }
+      ]
+    }, {
+      label: 'Execute',
       submenu: [{
         label: 'Clear recent',
         click() {

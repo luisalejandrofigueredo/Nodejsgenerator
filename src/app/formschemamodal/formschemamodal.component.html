@@ -33,17 +33,6 @@
           <mat-checkbox formControlName="security">Enable security</mat-checkbox>
           <mat-checkbox style="padding-left: 10px;" formControlName="mastersecurity">Is master security</mat-checkbox>
         </div>
-        <mat-form-field *ngIf="Userdata.get('security').value===true">
-          <input matInput formControlName="classsecurity" placeholder="security class">
-          <mat-icon matSuffix>code</mat-icon>
-        </mat-form-field>
-        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-          <mat-form-field *ngIf="Userdata.get('security').value===true">
-            <input matInput formControlName="filesecurity" placeholder="security file">
-            <mat-icon matSuffix>attachment</mat-icon>
-          </mat-form-field>
-          <button *ngIf="Userdata.get('security').value===true"  mat-raised-button type="button" (click)="getfile()">select file</button>
-        </div>
       </div>
     </mat-expansion-panel>
   </div>

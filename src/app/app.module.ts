@@ -59,6 +59,7 @@ import { BrowsemanytomanyComponent } from './browsemanytomany/browsemanytomany.c
 import { RealtiondatamodalmanytomanyComponent } from './realtiondatamodalmanytomany/realtiondatamodalmanytomany.component';
 import { ProjectmodalComponent } from './projectmodal/projectmodal.component';
 import { AboutComponent } from './about/about.component';
+import { FastprojectComponent } from './fastproject/fastproject.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -95,6 +96,7 @@ import { AboutComponent } from './about/about.component';
     RealtiondatamodalmanytomanyComponent,
     ProjectmodalComponent,
     AboutComponent,
+    FastprojectComponent,
   ],
   imports: [ 
     BrowserModule, 

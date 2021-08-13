@@ -2,11 +2,10 @@ import { Component, NgZone, } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ElectronService } from 'ngx-electron';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 import { ProjectmodalComponent } from './projectmodal/projectmodal.component';
 import { ConfigService } from './service/config.service';
 import { YesnoComponent } from './yesno/yesno.component';
-import {AboutComponent} from './about/about.component';
+import { AboutComponent } from './about/about.component';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +27,7 @@ export class AppComponent {
       this.recent = JSON.parse(localStorage.getItem('recent'));
       this.electron.ipcRenderer.send('setrecent', this.recent);
     }
+    this.electron.ipcRenderer.on("navigate", (event, path) => this.navigate(path));
     this.electron.ipcRenderer.on("about", (event, file) => this.about());
     this.electron.ipcRenderer.on("tutorial", (event, file) => this.tutorial());
     this.electron.ipcRenderer.on("clearrecent", (event, file) => this.clearrecent());
@@ -37,17 +37,39 @@ export class AppComponent {
     this.electron.ipcRenderer.on("save", () => this.save());
     this.electron.ipcRenderer.on("new", () => this.new());
   }
-  about(){
-    this.ngzone.run(()=>{
+  navigate(path: string) {
+    switch (path) {
+      case 'config':
+        this.ngzone.run(() => { this.router.navigate(['config']); });
+        break;
+        case 'browseschematics':
+        this.ngzone.run(() => { this.router.navigate(['browse']); });
+        break;
+        case 'generator':
+        this.ngzone.run(() => { this.router.navigate(['generator']); });
+        break;
+        case 'gensecurity':
+        this.ngzone.run(() => { this.router.navigate(['gensecurity']); });
+        break;
+        case 'testapi':
+        this.ngzone.run(() => { this.router.navigate(['testapi']); });
+        break;
+      default:
+        break;
+    }
+
+  }
+  about() {
+    this.ngzone.run(() => {
       const dialogRef = this.dialog.open(AboutComponent, {
         width: '300px',
-        disableClose: true, data: 'New file and lose data'
+        disableClose: true, data: ''
       });
       dialogRef.afterClosed().subscribe(data => {
       });
     });
   }
-  tutorial(){
+  tutorial() {
     this.ngzone.run(() => { this.router.navigate(['help']); });
   }
   loadrecent(file: string) {
