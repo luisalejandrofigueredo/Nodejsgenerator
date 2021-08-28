@@ -1,11 +1,10 @@
 const prettier = require("prettier");
 const { app, BrowserWindow, ipcMain, Menu, screen, shell } = require('electron');
 const { spawn } = require('child_process');
-const { ElementRef } = require("@angular/core");
 const url = require("url");
 const path = require("path");
 var fs = require('fs');
-var saveenabled = false;
+const { electron } = require("process");
 var arraysubmenu = [];
 var recent = [];
 var template = [
@@ -15,6 +14,11 @@ var template = [
       {
         label: 'New', click() {
           newfile();
+        }
+      },
+      {
+        label: 'Fast project', click() {
+          fastproject();
         }
       },
       {
@@ -138,6 +142,142 @@ function navigate(moveto) {
       break;
   }
 }
+function processinstall(state) {
+  switch (state) {
+    case 'installnestjs':
+      mainWindow.webContents.send("state", 'installnestjs');
+      break;
+    case 'createproject':
+      mainWindow.webContents.send("state", 'createproject');
+      break;
+    case 'loadsampleproject':
+      mainWindow.webContents.send("state", 'loadsampleproject');
+      break;
+    case 'load':
+      mainWindow.webContents.send("state", 'load');
+      break;
+    case 'exit':
+      mainWindow.webContents.send("state", 'exit');
+      break;
+    default:
+      break;
+  }
+}
+ipcMain.on('getpath', (event, _arg) => {
+  event.returnValue = path.join(__dirname, `/dist/generador/assets`);
+})
+
+ipcMain.on('loadsampledata', (_event, arg) => {
+  if (arg.loadsampleproject === true) {
+    let dest;
+    let filedest;
+    console.log('process:', process.platform);
+    if (process.platform === "win32") {
+      console.log('copy in windows...');
+      dest = '\\sample'
+      filedest = '\\sample.json';
+    } else {
+      console.log('copy in unix...');
+      dest = '/sample';
+      filedest = '/sample.json';
+    }
+    if (!fs.existsSync(arg.paths.home + dest)) {
+      fs.mkdirSync(arg.paths.home + dest);
+    }
+    fs.readFile(path.join(__dirname, `/dist/generador/assets/sample/sample.json`), 'utf-8', function (err, data) {
+      if (err) throw err;
+      writeFileSync(arg.paths.home + dest + filedest, data);
+      processinstall('load');
+    });
+  } else {
+    processinstall('exit');
+  }
+});
+
+function Callback(err, stdout, stderr) {
+  if (err) {
+    console.log(`exec error: ${err}`);
+    return;
+  } else {
+    mainWindow.webContents.send("addtext", stdout.toString());
+  }
+}
+
+ipcMain.on('installnestjs', (_event, arg) => {
+  processinstall('installnestjs');
+  let dest;
+  let filedest;
+  console.log('process:', process.platform);
+  if (process.platform === "win32") {
+    console.log('copy in windows...');
+    dest = '\\batchs'
+    filedest = '\\installnestjs.bat';
+  } else {
+    console.log('copy in unix...');
+    dest = '/batchs';
+    filedest = '/installnestjs.sh';
+  }
+  if (!fs.existsSync(arg.home + dest)) {
+    fs.mkdirSync(arg.home + dest);
+  }
+  fs.readFile(path.join(__dirname, `/dist/generador/assets/batchs/installnestjs.bat`), { encoding: 'utf-8' }, function (err, data) {
+    if (err) throw err;
+    try {
+      writeFileSync(arg.home + dest + filedest, data)
+      const res = spawn(arg.home + dest + filedest);
+      res.stdout.on('data', (data) => {
+        mainWindow.webContents.send("addtext", data.toString());
+      });
+      res.on('exit', (code, sig) => {
+        processinstall('createproject');
+      });
+      res.on('error', (error) => {
+        console.log('error:', error)
+      });
+    } catch(error) {
+      mainWindow.webContents.send("error", { message: 'Error runing batch file ', error: error });
+    }
+  });
+});
+;
+
+ipcMain.on('createproject', (_event, arg) => {
+  let dest;
+  let filedest;
+  if (process.platform === "win32") {
+    console.log('copy in windows...');
+    dest = '\\batchs'
+    filedest = '\\createproject.bat';
+  } else {
+    console.log('copy in unix...');
+    dest = '/batchs';
+    filedest = '/createproject.sh';
+  }
+  if (!fs.existsSync(arg.paths.home + dest)) {
+    fs.mkdirSync(arg.paths.home + dest);
+  }
+  fs.readFile(path.join(__dirname, `/dist/generador/assets/batchs/createproject.bat`), 'utf-8', function (err, data) {
+    if (err) throw err;
+    console.log('write create projects:', arg.paths.home + dest + filedest);
+    writeFileSync(arg.paths.home + dest + filedest, data);
+    const createproject = spawn(`${arg.paths.home + dest + filedest}`, [`${arg.paths.home}`, `${arg.projectname}`, arg.package]);
+    createproject.stdout.on('data', (data) => {
+      mainWindow.webContents.send("addtext", data.toString());
+    });
+    createproject.on('exit', (code, sig) => {
+      processinstall('loadsampleproject');
+    })
+    createproject.on('error', (error) => {
+      console.log('error:', error)
+    })
+  });
+});
+
+ipcMain.on('userpath', (event) => {
+  const homePath = app.getPath('home');
+  const programPath = app.getPath('userData');
+  event.returnValue = { home: homePath, programPath: programPath };
+});
 function about() {
   mainWindow.webContents.send("about");
 }
@@ -159,6 +299,11 @@ function settemplate() {
         {
           label: 'New', click() {
             newfile();
+          }
+        },
+        {
+          label: 'Fast project', click() {
+            fastproject();
           }
         },
         {
@@ -268,6 +413,9 @@ function clearrecent() {
   Menu.setApplicationMenu(menu);
 }
 
+function fastproject() {
+  mainWindow.webContents.send("fastproject");
+}
 function save() {
   mainWindow.webContents.send("save");
 }
@@ -317,7 +465,7 @@ function loadrecent(recentfnd) {
   mainWindow.webContents.send("loadrecent", recentfnd);
 };
 
-ipcMain.on('setrecent', (event, recentpar) => {
+ipcMain.on('setrecent', (_event, recentpar) => {
   recent.splice(0, recent.length);
   arraysubmenu = [];
   recentpar.forEach(element => {
@@ -366,10 +514,12 @@ ipcMain.on('savemain', (event, arg) => {
 });
 
 ipcMain.on('loadtemplate', (event, arg) => {
-  fs.readFile(arg, 'utf-8', function (err, data) {
-    if (err) throw err;
+  try {
+    const data = fs.readFileSync(arg, { encoding: 'utf-8' })
     event.returnValue = data;
-  });
+  } catch (error) {
+    mainWindow.webContents.send("error", { message: 'error loading template', error: error });
+  }
 });
 
 ipcMain.on('loadconfig', (event, arg) => {
@@ -536,6 +686,7 @@ ipcMain.on('savecanactivate', (event, arg) => {
   console.log('writing files os:', process.platform);
   let dir = '';
   let filepath = '';
+  console.log('arg path', arg.path);
   if (process.platform === "win32") {
     console.log('writing in windows...');
     filepath = arg.path + '\\src\\roles\\' + arg.name + '.guard.ts';
@@ -545,7 +696,14 @@ ipcMain.on('savecanactivate', (event, arg) => {
     filepath = arg.path + '/src/roles/' + arg.name + '.guard.ts';
     dir = arg.path + '/src/roles'
   }
-  if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
+  if (!fs.existsSync(dir)) {
+    try {
+      fs.mkdirSync(dir)
+    }
+    catch (e) {
+      console.log('error:', e);
+    }
+  }
   let textprettier = prettier.format(arg.file, { semi: true, singleQuote: true, parser: "typescript" });
   writeFile(filepath, textprettier);
   event.returnValue = filepath;
@@ -570,6 +728,10 @@ ipcMain.on('saveController', (event, arg) => {
   event.returnValue = filepath;
 });
 
+function writeFileSync(filepath, file) {
+  try { fs.writeFileSync(filepath, file), console.log('Writed:', filepath); }
+  catch { alert('Failed to save the file !'); }
+}
 function writeFile(filepath, file) {
   fs.writeFile(filepath, file, function (err) {
     if (err) throw err;
@@ -595,3 +757,20 @@ app.on('activate', function () {
   if (mainWindow === null) createWindow()
 })
 
+function getAppDataPath() {
+  switch (process.platform) {
+    case "darwin": {
+      return path.join(process.env.HOME, "Library", "Application Support", "myApp");
+    }
+    case "win32": {
+      return path.join(process.env.APPDATA, "myApp");
+    }
+    case "linux": {
+      return path.join(process.env.HOME, ".myApp");
+    }
+    default: {
+      console.log("Unsupported platform!");
+      process.exit(1);
+    }
+  }
+}

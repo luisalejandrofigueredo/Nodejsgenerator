@@ -1,0 +1,600 @@
+{
+	"version": 0.3,
+	"filePath": "C:\\Users\\luisa\\pepe4",
+	"enableCors": true,
+	"dbconf": {
+		"selecteddatabase": 0,
+		"host": "127.0.0.1",
+		"port": 3306,
+		"username": "root",
+		"password": "root",
+		"database": "projectcostumers"
+	},
+	"enablehttps": false,
+	"enableuploadfiles": true,
+	"port": 3000,
+	"jwtsk": "hoalmundo",
+	"logger": {
+		"type": 0,
+		"file": "info.log",
+		"maxsize": 50000,
+		"typewarn": 0,
+		"filewarn": "warn.log",
+		"maxsizewarn": 10000,
+		"typeerror": 0,
+		"fileerror": "error.log",
+		"maxsizeerror": 10000
+	},
+	"security": {
+		"table": "Costumers",
+		"login": "login",
+		"password": "password",
+		"bearertoken": "bearer",
+		"roles": "roles",
+		"rolesclass": "RolesGuard",
+		"logger": true
+	},
+	"schemas": [
+		{
+			"id": 1,
+			"name": "Costumers",
+			"description": "Costumers",
+			"imports": "",
+			"fields": "",
+			"security": true,
+			"classsecurity": "RolesGuard",
+			"filesecurity": "",
+			"mastersecurity": true,
+			"filesupload": true,
+			"schemastable": [
+				{
+					"id": 1,
+					"type": "number",
+					"name": "id",
+					"length": 10,
+					"keyautonumber": true,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 2,
+					"type": "string",
+					"name": "Name",
+					"length": 50,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 3,
+					"type": "string",
+					"name": "login",
+					"length": 25,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 4,
+					"type": "string",
+					"name": "password",
+					"length": 10,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 5,
+					"type": "string",
+					"name": "roles",
+					"length": 255,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 6,
+					"type": "string",
+					"name": "bearer",
+					"length": 255,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				}
+			],
+			"schemarelations": {
+				"OnetoOne": [
+					{
+						"relationname": "costumerdata",
+						"table": "Constumersdata"
+					}
+				],
+				"Onetomany": [
+					{
+						"relationname": "documents",
+						"table": "Documents",
+						"manytoone": "document"
+					}
+				],
+				"Manytomany": [
+					{
+						"relationname": "promotions",
+						"table": "Promotions",
+						"manytomany": "costumers"
+					}
+				]
+			},
+			"schemasapi": [
+				{
+					"id": 1,
+					"type": "put",
+					"operation": "",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 2,
+					"type": "post",
+					"operation": "",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"idschema": "1",
+					"id": 3,
+					"type": "uploadfile",
+					"operation": "",
+					"path": "uploadfile",
+					"field": "",
+					"fields": [
+						"id",
+						"Name",
+						"login",
+						"password",
+						"roles",
+						"bearer"
+					],
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "jpg jpeg gif"
+				},
+				{
+					"id": 4,
+					"type": "uploadfiles",
+					"operation": "",
+					"path": "multiplefiles",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "jpg jpeg gif"
+				},
+				{
+					"id": 5,
+					"type": "getfile",
+					"operation": "",
+					"path": "getfile",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 6,
+					"type": "get",
+					"operation": "getall",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 7,
+					"type": "get",
+					"operation": "getone",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 8,
+					"type": "get",
+					"operation": "skiplimit",
+					"path": "getskiplimit",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 9,
+					"type": "get",
+					"operation": "skiplimitbyfield",
+					"path": "getskiplimitbyname",
+					"field": "Name",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"idschema": "1",
+					"id": 10,
+					"type": "get",
+					"operation": "skiplimitfilter",
+					"path": "getskiplimitfilter",
+					"field": "Name",
+					"fields": [
+						"id",
+						"Name",
+						"login",
+						"password",
+						"roles",
+						"bearer"
+					],
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 11,
+					"type": "changepassword",
+					"operation": "",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"idschema": "1",
+					"id": 12,
+					"type": "patch",
+					"operation": "",
+					"path": "",
+					"field": "",
+					"fields": [
+						"id",
+						"Name",
+						"login",
+						"password",
+						"roles",
+						"bearer"
+					],
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 13,
+					"type": "get",
+					"operation": "count",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 14,
+					"type": "get",
+					"operation": "findandcount",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 15,
+					"type": "get",
+					"operation": "findandcountwithoptions",
+					"path": "options",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"id": 16,
+					"type": "get",
+					"operation": "findwithoptions",
+					"path": "findoptions",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": ""
+				},
+				{
+					"idschema": "1",
+					"id": 17,
+					"type": "get",
+					"operation": "findgenerated",
+					"path": "findwithname",
+					"field": "",
+					"fields": [
+						"id",
+						"Name",
+						"login",
+						"password",
+						"roles",
+						"bearer"
+					],
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "",
+					"options": "{select:[\"Name\",\"login\"],where:{\"Name\":`${nombre}`},\"order\":{\"Name\":\"ASC\"},skip:0,take:10}",
+					"parameters": [
+						{
+							"name": "nombre",
+							"type": "number"
+						}
+					]
+				},
+				{
+					"id": 18,
+					"type": "get",
+					"operation": "findandcountgenerated",
+					"path": "gwoptions",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "",
+					"options": "{select:[\"Name\",\"login\"],where:{\"Name\":`${name}`},\"order\":{\"Name\":\"ASC\"},skip:0,take:10}",
+					"parameters": [
+						{
+							"name": "name",
+							"type": "string"
+						}
+					]
+				},
+				{
+					"idschema": "1",
+					"id": 19,
+					"type": "get",
+					"operation": "findandcountgenerated",
+					"path": "prueba",
+					"field": "",
+					"fields": [
+						"id",
+						"Name",
+						"login",
+						"password",
+						"roles",
+						"bearer"
+					],
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "",
+					"options": "{where:{\"id\":Raw(alias =>`${alias} >2`)}}",
+					"parameters": [
+						{
+							"name": "InName",
+							"type": "arraystring"
+						}
+					]
+				},
+				{
+					"idschema": "1",
+					"id": 20,
+					"type": "get",
+					"operation": "findgenerated",
+					"path": "prueba2",
+					"field": "",
+					"fields": [
+						"id",
+						"Name",
+						"login",
+						"password",
+						"roles",
+						"bearer"
+					],
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "",
+					"options": "{relations:[\"promotions\"]}",
+					"parameters": []
+				},
+				{
+					"idschema": "1",
+					"id": 21,
+					"type": "postonetoone",
+					"operation": "",
+					"path": "onetoone",
+					"field": "costumerdata",
+					"fields": [
+						"id",
+						"Name",
+						"login",
+						"password",
+						"roles",
+						"bearer"
+					],
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "",
+					"options": "",
+					"parameters": []
+				},
+				{
+					"id": 22,
+					"type": "postonetomany",
+					"operation": "",
+					"path": "onetomany",
+					"field": "documents",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "",
+					"options": "",
+					"parameters": []
+				},
+				{
+					"id": 23,
+					"type": "postmanytomany",
+					"operation": "",
+					"path": "documents",
+					"field": "promotions",
+					"security": true,
+					"roles": "User Admin",
+					"extfiles": "",
+					"options": "",
+					"parameters": []
+				}
+			]
+		},
+		{
+			"id": 2,
+			"name": "Constumersdata",
+			"description": "Personal data costumer",
+			"imports": "",
+			"fields": "",
+			"security": true,
+			"classsecurity": "RolesGuard",
+			"filesecurity": "",
+			"mastersecurity": false,
+			"filesupload": true,
+			"schemastable": [
+				{
+					"id": 1,
+					"type": "number",
+					"name": "id",
+					"length": 10,
+					"keyautonumber": true,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 2,
+					"type": "string",
+					"name": "celular",
+					"length": 255,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				}
+			],
+			"schemarelations": {
+				"OnetoOne": []
+			},
+			"schemasapi": []
+		},
+		{
+			"id": 3,
+			"name": "Documents",
+			"description": "documente",
+			"imports": "",
+			"fields": "",
+			"security": true,
+			"classsecurity": "RolesGuard",
+			"filesecurity": "",
+			"mastersecurity": false,
+			"filesupload": true,
+			"schemastable": [
+				{
+					"id": 1,
+					"type": "number",
+					"name": "id",
+					"length": 20,
+					"keyautonumber": true,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 2,
+					"type": "string",
+					"name": "name",
+					"length": 50,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 3,
+					"type": "string",
+					"name": "file",
+					"length": 50,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				}
+			],
+			"schemarelations": {
+				"OnetoOne": [],
+				"Onetomany": [],
+				"Manytoone": [
+					{
+						"relationname": "document",
+						"table": "Costumers"
+					}
+				]
+			},
+			"schemasapi": [
+				{
+					"id": 1,
+					"type": "get",
+					"operation": "getall",
+					"path": "getall",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
+					"extfiles": "",
+					"options": "",
+					"parameters": []
+				}
+			]
+		},
+		{
+			"id": 4,
+			"name": "Promotions",
+			"description": "promotions",
+			"imports": "",
+			"fields": "",
+			"security": true,
+			"classsecurity": "RolesGuard",
+			"filesecurity": "",
+			"mastersecurity": false,
+			"filesupload": false,
+			"schemastable": [
+				{
+					"id": 1,
+					"type": "number",
+					"name": "id",
+					"length": 40,
+					"keyautonumber": true,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 2,
+					"type": "string",
+					"name": "description",
+					"length": 255,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				}
+			],
+			"schemarelations": {
+				"OnetoOne": [],
+				"Onetomany": [],
+				"Manytomany": [
+					{
+						"relationname": "costumers",
+						"table": "Costumers",
+						"manytomany": "promotions"
+					}
+				]
+			},
+			"schemasapi": []
+		}
+	],
+	"schemapath": "C:\\Users\\luisa\\cmder\\generador\\sample\\sample.json",
+	"projectname": "Sample"
+}

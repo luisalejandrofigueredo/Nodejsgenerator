@@ -30,8 +30,11 @@ export class GeneratorComponent implements OnInit, OnChanges {
   fileapigenerating = '';
   reltables: string[] = [];
   editorOptions = { theme: 'vs-dark', language: 'typescript' };
+  appPath:string;
   ormj = { PrimaryGeneratedColumn: false, OnetoOne: false, OneToMany: false, ManyToOne: false, Index: false };
   ngOnInit(): void {
+    this.appPath = this.electronservice.ipcRenderer.sendSync('getpath');
+    console.log('getpath',this.appPath);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -229,7 +232,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.importrelationservicemodules(index);
     this.importrelationentity(index);
     if (mastersecurity === false) {
-      this.filegenerating += `import { ${mastersec.name}Service } from '../service/${mastersec.name}.service'\n`;
+      this.filegenerating += `import { ${mastersec.name}ice } from '../service/${mastersec.name}.service'\n`;
       this.filegenerating += `import { ${mastersec.name}Controller } from '../controller/${mastersec.name}.controller';\n`;
       this.filegenerating += `import { ${mastersec.name}Module } from '../module/${mastersec.name}.module';\n`;
       this.filegenerating += `import { ${mastersec.name} } from '../entitys/${mastersec.name}.entity';\n`;
@@ -1463,8 +1466,9 @@ export class GeneratorComponent implements OnInit, OnChanges {
   }
 
   loadtemplate(filetemplate: string, loginfiletemplate: string) {
+    console.log('App path',this.appPath);
     this.addgenrartinline('load templates for can activate...');
-    let template = this.electronservice.ipcRenderer.sendSync('loadtemplate', `./templates/${filetemplate}`);
+    let template = this.electronservice.ipcRenderer.sendSync('loadtemplate', `${this.appPath}/templates/${filetemplate}`);
     template = this.replacetemplate(template);
     this.addgenrartinline('end generate templates can activate...');
     this.addgenrartinline('begin save  can activate..');
@@ -1474,7 +1478,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.addgenrartinlinefile(end);
     /*generate login*/
     this.addgenrartinline('load templates for login..');
-    template = this.electronservice.ipcRenderer.sendSync('loadtemplate', `./templates/${loginfiletemplate}`);
+    template = this.electronservice.ipcRenderer.sendSync('loadtemplate', `${this.appPath}/templates/${loginfiletemplate}`);
     this.addgenrartinline('end load templates for login');
     template = this.replacetemplate(template);
     args = { path: this.configservice.config.filePath, name: 'Login', file: template };

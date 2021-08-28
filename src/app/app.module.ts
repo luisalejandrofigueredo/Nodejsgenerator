@@ -23,6 +23,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatRadioModule} from '@angular/material/radio';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {  MatSortModule } from '@angular/material/sort';
 import {ClipboardModule} from '@angular/cdk/clipboard';
@@ -60,6 +61,8 @@ import { RealtiondatamodalmanytomanyComponent } from './realtiondatamodalmanytom
 import { ProjectmodalComponent } from './projectmodal/projectmodal.component';
 import { AboutComponent } from './about/about.component';
 import { FastprojectComponent } from './fastproject/fastproject.component';
+import { ErrorComponent } from './error/error.component';
+import { EndComponent } from './end/end.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -97,6 +100,8 @@ import { FastprojectComponent } from './fastproject/fastproject.component';
     ProjectmodalComponent,
     AboutComponent,
     FastprojectComponent,
+    ErrorComponent,
+    EndComponent,
   ],
   imports: [ 
     BrowserModule, 
@@ -124,6 +129,7 @@ import { FastprojectComponent } from './fastproject/fastproject.component';
     MatTooltipModule,
     MatProgressBarModule,
     MatSortModule,
+    MatRadioModule,
     ClipboardModule,
     NgxElectronModule ],
   providers: [],

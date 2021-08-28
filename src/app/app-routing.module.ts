@@ -16,6 +16,7 @@ import { TestapiComponent } from './testapi/testapi.component';
 import { BrowseonetooneComponent } from './browseonetoone/browseonetoone.component';
 import { BrowseonetomanyComponent } from './browseonetomany/browseonetomany.component';
 import { BrowsemanytomanyComponent } from './browsemanytomany/browsemanytomany.component';
+import { FastprojectComponent } from './fastproject/fastproject.component';
 const routes: Routes = [{
   path: 'schematics/:id',
   component: SchematicsComponent
@@ -63,7 +64,7 @@ const routes: Routes = [{
 {
   path: 'testapi',
   component: TestapiComponent,
-}, 
+},
 {
   path: 'browseonetoone/:id',
   component: BrowseonetooneComponent
@@ -75,13 +76,14 @@ const routes: Routes = [{
 {
   path: 'browsemanytomany/:id',
   component: BrowsemanytomanyComponent
+}, {
+  path: 'fastproject',
+  component: FastprojectComponent
 }
-
-
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes,{onSameUrlNavigation: 'reload'})],
+  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
