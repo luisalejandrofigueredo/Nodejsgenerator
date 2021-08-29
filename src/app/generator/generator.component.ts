@@ -232,7 +232,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.importrelationservicemodules(index);
     this.importrelationentity(index);
     if (mastersecurity === false) {
-      this.filegenerating += `import { ${mastersec.name}ice } from '../service/${mastersec.name}.service'\n`;
+      this.filegenerating += `import { ${mastersec.name}Service } from '../service/${mastersec.name}.service'\n`;
       this.filegenerating += `import { ${mastersec.name}Controller } from '../controller/${mastersec.name}.controller';\n`;
       this.filegenerating += `import { ${mastersec.name}Module } from '../module/${mastersec.name}.module';\n`;
       this.filegenerating += `import { ${mastersec.name} } from '../entitys/${mastersec.name}.entity';\n`;

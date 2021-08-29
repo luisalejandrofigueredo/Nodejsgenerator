@@ -94,7 +94,7 @@ export class FastprojectComponent implements OnInit {
   close(){
     this.ngzone.run(() => {
       const dialogRefe = this.dialog.open(EndComponent, {
-        disableClose: true, data: ''
+        disableClose: true, data: {directory:this.filePath + '\\'+this.Fastproject.get('projectname').value}
       });
       dialogRefe.afterClosed().subscribe(data => {
         this.dialogRef.close('true');
