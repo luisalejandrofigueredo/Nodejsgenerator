@@ -1,7 +1,7 @@
 {
   "name": "generator",
   "productName": "Nestjs Generator",
-  "version": "0.0.26",
+  "version": "0.0.28",
   "author": "Luis Alejandro Figueredo Casadei",
   "description": "Generator for Nestjs",
   "main": "main.js",
@@ -16,7 +16,10 @@
     ],
     "win": {
       "icon": "dist/generador/assets/icons/win/icon.ico",
-      "target":["msi","nsis"]
+      "target": [
+        "msi",
+        "nsis"
+      ]
     }
   },
   "scripts": {
@@ -45,6 +48,7 @@
     "@angular/platform-browser-dynamic": "~10.0.2",
     "@angular/router": "~10.0.2",
     "@materia-ui/ngx-monaco-editor": "^4.0.2",
+    "@nestjs/cli": "^7.6.0",
     "electron-builder-squirrel-windows": "^22.10.5",
     "electron-reload": "^1.5.0",
     "ngx-electron": "^2.2.0",

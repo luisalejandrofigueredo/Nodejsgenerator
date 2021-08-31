@@ -259,8 +259,9 @@ ipcMain.on('createproject', (_event, arg) => {
   fs.readFile(path.join(__dirname, `/dist/generador/assets/batchs/createproject.bat`), 'utf-8', function (err, data) {
     if (err) throw err;
     console.log('write create projects:', arg.paths.home + dest + filedest);
+    console.log('package:',arg.package);
     writeFileSync(arg.paths.home + dest + filedest, data);
-    const createproject = spawn(`${arg.paths.home + dest + filedest}`, [`${arg.paths.home}`, `${arg.projectname}`, arg.package]);
+    const createproject = spawn(`${arg.paths.home + dest + filedest}`, [`${arg.paths.home}`, `${arg.projectname}`, `${arg.package}`],{});
     createproject.stdout.on('data', (data) => {
       mainWindow.webContents.send("addtext", data.toString());
     });

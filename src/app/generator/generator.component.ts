@@ -91,20 +91,20 @@ export class GeneratorComponent implements OnInit, OnChanges {
       this.filegenerating += "import { MulterModule } from '@nestjs/platform-express';\n";
     }
     const schemas = this.configservice.getschema();
-    for (let index = 0; index < schemas.length; index++) {
-      const element = schemas[index].name;
-      this.filegenerating += `import {${element}Module} from './module/${element}.module';\n`;
-    }
+    schemas.forEach(element=>{
+      const elementname = element.name;
+      this.filegenerating += `import {${elementname}Module} from './module/${elementname}.module';\n`
+    });
     this.filegenerating += `import {LoginModule} from './module/Login.module';\n`;
     this.filegenerating += '@Module({\n';
     this.filegenerating += 'imports:[TypeOrmModule.forRoot()';
     if (this.configservice.config.enableuploadfiles === true) {
       this.filegenerating += ",MulterModule.register({\n dest: './uploads',\n})\n";
     }
-    for (let index = 0; index < schemas.length; index++) {
-      const element = schemas[index].name;
-      this.filegenerating += `,forwardRef(() =>${element}Module)`;
-    }
+    schemas.forEach(element=>{
+      const elementname = element.name;
+      this.filegenerating += `,forwardRef(() =>${elementname}Module)`;
+    });
     this.filegenerating += ',forwardRef(()=>LoginModule)';
     this.filegenerating += '],\n';
     this.filegenerating += 'controllers:[AppController],\n';
@@ -1291,10 +1291,9 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.filegenerating += '@Entity()\n';
     this.filegenerating += 'export class ' + this.config.schemas[ind].name + ' {\n';
     // tslint:disable-next-line: prefer-for-of
-    for (let index = 0; index < fields.length; index++) {
-      const element = fields[index];
+    fields.forEach(element => {
       this.generatecolumn(element);
-    }
+    }); 
     // tslint:disable-next-line: prefer-for-of
     this.generaterelationbody(relations, this.config.schemas[ind].name);
     this.addgenrartinline('\t adding extra fields ...\n');

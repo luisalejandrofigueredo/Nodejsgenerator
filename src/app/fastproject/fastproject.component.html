@@ -13,8 +13,6 @@
         <label class="example-margin">Package:</label>
         <mat-radio-group formControlName="package">
             <mat-radio-button class="example-margin" value="npm">NPM</mat-radio-button>
-            <mat-radio-button class="example-margin" value="yarn">YARN</mat-radio-button>
-            <mat-radio-button class="example-margin" value="pnpm">PNPM</mat-radio-button>
         </mat-radio-group>
     </section>
     <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
@@ -29,7 +27,7 @@
           </mat-form-field>
         </div>
 </form>
-<p>if your create a samle data after ending goto config open database config and configure Mysql driver not forget create your database in Mysql (projectcostumers) is defalult name</p>
+<p>if your create a sample data after ending goto config open database config and configure Mysql driver not forget create your database in Mysql (projectcostumers) is default name</p>
 <div mat-dialog-actions style="justify-content: flex-end;">
     <button mat-raised-button [disabled]="disable" cdkFocusInitial (click)="onNoClick()">No</button>
     <button mat-raised-button [disabled]="disable || !Fastproject.valid" color="warn" (click)="onYesClick()">Yes</button>
