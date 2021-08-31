@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RonetoonemodalComponent } from './ronetoonemodal.component';
 
@@ -6,7 +6,7 @@ describe('RonetoonemodalComponent', () => {
   let component: RonetoonemodalComponent;
   let fixture: ComponentFixture<RonetoonemodalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ RonetoonemodalComponent ]
     })

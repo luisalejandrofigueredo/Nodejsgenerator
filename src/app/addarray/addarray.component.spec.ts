@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AddarrayComponent } from './addarray.component';
 
@@ -6,7 +6,7 @@ describe('AddarrayComponent', () => {
   let component: AddarrayComponent;
   let fixture: ComponentFixture<AddarrayComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ AddarrayComponent ]
     })

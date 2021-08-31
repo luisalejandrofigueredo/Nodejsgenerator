@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RelationdatamodalonetomanyComponent } from './relationdatamodalonetomany.component';
 
@@ -6,7 +6,7 @@ describe('RelationdatamodalonetomanyComponent', () => {
   let component: RelationdatamodalonetomanyComponent;
   let fixture: ComponentFixture<RelationdatamodalonetomanyComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ RelationdatamodalonetomanyComponent ]
     })
