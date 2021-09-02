@@ -1,3 +1,7 @@
 {
-    "spellright.configurationScope": "user"
+    "spellright.configurationScope": "user",
+    "cSpell.words": [
+        "gappx",
+        "nestjs"
+    ]
 }
