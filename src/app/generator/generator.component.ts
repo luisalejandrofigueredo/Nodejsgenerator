@@ -7,7 +7,8 @@ import { Api } from '../interfaces/api';
 import { RelationsService } from '../service/relations.service';
 import { Manytoone } from '../interfaces/manytoone';
 import { Manytomany } from '../interfaces/manytomany';
-
+import { EntitiesService } from '../service/entities.service';
+import { ServiceGeneratorService } from "../service/service-generator.service";
 
 @Component({
   selector: 'app-generator',
@@ -21,7 +22,13 @@ export class GeneratorComponent implements OnInit, OnChanges {
   keyfield = '';
   @ViewChild('textgenerating', { static: false }) container: ElementRef;
   @ViewChild('fileswriting', { static: false }) containerfiles: ElementRef;
-  constructor(private configservice: ConfigService, private relationservice: RelationsService, private ngzone: NgZone, private electronservice: ElectronService) { }
+  constructor(private entities_service: EntitiesService,
+    private configservice: ConfigService,
+    private generator_service:ServiceGeneratorService,
+    private relationservice: RelationsService,
+    private ngzone: NgZone,
+    private electronservice: ElectronService,
+    ) { }
   config: any;
   filePath: string;
   line: string;
@@ -29,12 +36,12 @@ export class GeneratorComponent implements OnInit, OnChanges {
   generatingfile = '';
   fileapigenerating = '';
   reltables: string[] = [];
-  editorOptions = { theme: 'vs-dark', language: 'typescript' };
-  appPath:string;
+  appPath: string;
   ormj = { PrimaryGeneratedColumn: false, OnetoOne: false, OneToMany: false, ManyToOne: false, Index: false };
   ngOnInit(): void {
-    this.appPath = this.electronservice.ipcRenderer.sendSync('getpath');
-    console.log('getpath',this.appPath);
+    if (this.electronservice.isElectronApp) {
+      this.appPath = this.electronservice.ipcRenderer.sendSync('getpath');
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -45,12 +52,12 @@ export class GeneratorComponent implements OnInit, OnChanges {
   addingPath() {
     this.addgenrartinline('reading file path ...');
     this.filePath = this.configservice.config.filePath;
-    this.loadtemplate('roles.guard.ts', 'login.controller.ts');
-    this.generatedatabaseconfig();
-    this.generateenablecors();
-    this.generateschemas();
-    this.generateappmodule();
-    this.addgenrartinline('End generate');
+    this.addgenrartinline('generating  entities...');
+    this.entities_service.generate_entities();
+    this.addgenrartinline('End generate entities');
+    this.addgenrartinline('Begin generate service...');
+    this.generator_service.begin_generate();
+    this.addgenrartinline('End generate  service...');
   }
   generateenablecors() {
     this.addgenrartinline('begin generating main module ...');
@@ -91,7 +98,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
       this.filegenerating += "import { MulterModule } from '@nestjs/platform-express';\n";
     }
     const schemas = this.configservice.getschema();
-    schemas.forEach(element=>{
+    schemas.forEach(element => {
       const elementname = element.name;
       this.filegenerating += `import {${elementname}Module} from './module/${elementname}.module';\n`
     });
@@ -101,7 +108,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     if (this.configservice.config.enableuploadfiles === true) {
       this.filegenerating += ",MulterModule.register({\n dest: './uploads',\n})\n";
     }
-    schemas.forEach(element=>{
+    schemas.forEach(element => {
       const elementname = element.name;
       this.filegenerating += `,forwardRef(() =>${elementname}Module)`;
     });
@@ -1147,9 +1154,9 @@ export class GeneratorComponent implements OnInit, OnChanges {
               this.addgenrartinline('\tadding service get skiplimit filter');
               this.filegenerating += `async skiplimitfilter${element.field}(skip: number, limit: number, order: string, ${element.field}:string): Promise<${schema}[]> {\n`;
               this.filegenerating += `if (order === "ASC") {\n`;
-              this.filegenerating += `\treturn await this.${schema}Repository.createQueryBuilder("${schema}").orderBy('${element.field}', 'ASC').offset(skip).limit(limit).where("${schema}.${element.field} like :${element.field}",{ ${element.field}: ${element.field}+'%'}).getMany();\n`;
+              this.filegenerating += `\treturn await ${schema}Repository.createQueryBuilder("${schema}").orderBy('${element.field}', 'ASC').offset(skip).limit(limit).where("${schema}.${element.field} like :${element.field}",{ ${element.field}: ${element.field}+'%'}).getMany();\n`;
               this.filegenerating += `} else {\n`;
-              this.filegenerating += `\treturn await this.${schema}Repository.createQueryBuilder("${schema}").orderBy('${element.field}', 'DESC').offset(skip).limit(limit).where("${schema}.${element.field} like :${element.field}",{ ${element.field}: ${element.field}+'%'}).getMany();\n`;
+              this.filegenerating += `\treturn await ${schema}Repository.createQueryBuilder("${schema}").orderBy('${element.field}', 'DESC').offset(skip).limit(limit).where("${schema}.${element.field} like :${element.field}",{ ${element.field}: ${element.field}+'%'}).getMany();\n`;
               this.filegenerating += `}\n}\n`;
               break;
             case 'count':
@@ -1293,7 +1300,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     // tslint:disable-next-line: prefer-for-of
     fields.forEach(element => {
       this.generatecolumn(element);
-    }); 
+    });
     // tslint:disable-next-line: prefer-for-of
     this.generaterelationbody(relations, this.config.schemas[ind].name);
     this.addgenrartinline('\t adding extra fields ...\n');
@@ -1465,7 +1472,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
   }
 
   loadtemplate(filetemplate: string, loginfiletemplate: string) {
-    console.log('App path',this.appPath);
+    console.log('App path', this.appPath);
     this.addgenrartinline('load templates for can activate...');
     let template = this.electronservice.ipcRenderer.sendSync('loadtemplate', `${this.appPath}/templates/${filetemplate}`);
     template = this.replacetemplate(template);

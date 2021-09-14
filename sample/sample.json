@@ -1,6 +1,6 @@
 {
 	"version": 0.3,
-	"filePath": "C:\\Users\\luisa\\pepe4",
+	"filePath": "C:\\Users\\luisa\\cmder\\pepe5",
 	"enableCors": true,
 	"dbconf": {
 		"selecteddatabase": 0,
@@ -443,6 +443,18 @@
 					"field": "promotions",
 					"security": true,
 					"roles": "User Admin",
+					"extfiles": "",
+					"options": "",
+					"parameters": []
+				},
+				{
+					"id": 24,
+					"type": "delete",
+					"operation": "",
+					"path": "",
+					"field": "",
+					"security": true,
+					"roles": "Admin User",
 					"extfiles": "",
 					"options": "",
 					"parameters": []

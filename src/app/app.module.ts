@@ -63,6 +63,7 @@ import { AboutComponent } from './about/about.component';
 import { FastprojectComponent } from './fastproject/fastproject.component';
 import { ErrorComponent } from './error/error.component';
 import { EndComponent } from './end/end.component';
+import { InstallFilesComponent } from './install-files/install-files.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -102,6 +103,7 @@ import { EndComponent } from './end/end.component';
     FastprojectComponent,
     ErrorComponent,
     EndComponent,
+    InstallFilesComponent,
   ],
   imports: [ 
     BrowserModule, 

@@ -1,5 +1,5 @@
-const prettier = require("prettier");
 const { app, BrowserWindow, ipcMain, Menu, screen, shell } = require('electron');
+const prettier = require("prettier");
 const { spawn } = require('child_process');
 const url = require("url");
 const path = require("path");
@@ -19,6 +19,11 @@ var template = [
       {
         label: 'Fast project', click() {
           fastproject();
+        }
+      },
+      {
+        label: 'Install files', click() {
+          copy_files()
         }
       },
       {
@@ -138,6 +143,9 @@ function navigate(moveto) {
     case 'testapi':
       mainWindow.webContents.send("navigate", 'testapi');
       break;
+    case 'testapi':
+      mainWindow.webContents.send("navigate", 'testapi');
+      break;
     default:
       break;
   }
@@ -162,6 +170,9 @@ function processinstall(state) {
     default:
       break;
   }
+}
+function copy_files() {
+  mainWindow.webContents.send("copy_files");
 }
 ipcMain.on('getpath', (event, _arg) => {
   event.returnValue = path.join(__dirname, `/dist/generador/assets`);
@@ -194,14 +205,6 @@ ipcMain.on('loadsampledata', (_event, arg) => {
   }
 });
 
-function Callback(err, stdout, stderr) {
-  if (err) {
-    console.log(`exec error: ${err}`);
-    return;
-  } else {
-    mainWindow.webContents.send("addtext", stdout.toString());
-  }
-}
 
 ipcMain.on('installnestjs', (_event, arg) => {
   processinstall('installnestjs');
@@ -234,12 +237,58 @@ ipcMain.on('installnestjs', (_event, arg) => {
       res.on('error', (error) => {
         console.log('error:', error)
       });
-    } catch(error) {
+    } catch (error) {
       mainWindow.webContents.send("error", { message: 'Error runing batch file ', error: error });
     }
   });
 });
-;
+
+ipcMain.on('copy_files', (event, arg) => {
+  let dest;
+  let filedest;
+  if (process.platform === "win32") {
+    console.log('copy in windows...');
+    dest = '\\'
+    filedest = 'package.json';
+  } else {
+    console.log('copy in unix...');
+    dest = '/';
+    filedest = 'package.json';
+  }
+  if (!fs.existsSync(arg.path)) {
+    fs.mkdirSync(arg.path);
+  }
+  fs.readFile(path.join(__dirname, `/dist/generador/assets/files/package/package.json`), 'utf-8', function (err, data) {
+    if (err) throw err;
+    console.log('write copy file:', arg.path + dest + filedest);
+    writeFileSync(arg.path + dest + filedest, data);
+    event.returnValue=data;
+  });
+});
+
+ipcMain.on('write_package', (event, arg) => {
+  console.log('arg',arg);
+  let dest;
+  let filedest;
+  if (process.platform === "win32") {
+    console.log('copy in windows...');
+    dest = '\\'
+    filedest = 'package.json';
+  } else {
+    console.log('copy in unix...');
+    dest = '/';
+    filedest = 'package.json';
+  }
+  if (!fs.existsSync(arg.path)) {
+    fs.mkdirSync(arg.path);
+  }
+  try {
+    writeFileSync(arg.path + dest + filedest, arg.data);
+  } catch (error) {
+    throw error
+  }
+    event.returnValue=arg.data;
+  });
 
 ipcMain.on('createproject', (_event, arg) => {
   let dest;
@@ -259,9 +308,9 @@ ipcMain.on('createproject', (_event, arg) => {
   fs.readFile(path.join(__dirname, `/dist/generador/assets/batchs/createproject.bat`), 'utf-8', function (err, data) {
     if (err) throw err;
     console.log('write create projects:', arg.paths.home + dest + filedest);
-    console.log('package:',arg.package);
+    console.log('package:', arg.package);
     writeFileSync(arg.paths.home + dest + filedest, data);
-    const createproject = spawn(`${arg.paths.home + dest + filedest}`, [`${arg.paths.home}`, `${arg.projectname}`, `${arg.package}`],{});
+    const createproject = spawn(`${arg.paths.home + dest + filedest}`, [`${arg.paths.home}`, `${arg.projectname}`, `${arg.package}`], {});
     createproject.stdout.on('data', (data) => {
       mainWindow.webContents.send("addtext", data.toString());
     });
@@ -305,6 +354,11 @@ function settemplate() {
         {
           label: 'Fast project', click() {
             fastproject();
+          }
+        },
+        {
+          label: 'Install files', click() {
+            copy_files()
           }
         },
         {
@@ -626,21 +680,54 @@ ipcMain.on('savemodule', (event, arg) => {
   writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });
+ipcMain.on('saveservice', (event, arg) => {
+  console.log('writing files os:', process.platform);
+  let dir = '';
+  let filepath = '';
+  let dirsrc = ''
+  if (process.platform === "win32") {
+    console.log('writing in windows...');
+    filepath = arg.path + '\\src\\services\\' + arg.name + '.service.ts';
+    dirsrc = arg.path + '\\src';
+    dir = arg.path + '\\src\\services'
+  } else {
+    console.log('writing in unix...');
+    filepath = arg.path + '/src/services/' + arg.name + '.service.ts';
+    dirsrc = arg.path + '/src';
+    dir = arg.path + '/src/services'
+  }
+  if (!fs.existsSync(dirsrc)) {
+    fs.mkdirSync(dirsrc)
+  }
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir)
+  }
+  writeFile(filepath, arg.file);
+  event.returnValue = filepath;
+});
 
 ipcMain.on('saveentity', (event, arg) => {
   console.log('writing files os:', process.platform);
   let dir = '';
   let filepath = '';
+  let dirsrc = ''
   if (process.platform === "win32") {
     console.log('writing in windows...');
-    filepath = arg.path + '\\src\\entitys\\' + arg.name + '.entity.ts';
-    dir = arg.path + '\\src\\entitys'
+    filepath = arg.path + '\\src\\entity\\' + arg.name + '.entity.ts';
+    dirsrc = arg.path + '\\src';
+    dir = arg.path + '\\src\\entity'
   } else {
     console.log('writing in unix...');
-    filepath = arg.path + '/src/entitys/' + arg.name + '.entity.ts';
-    dir = arg.path + '/src/entitys'
+    filepath = arg.path + '/src/entity/' + arg.name + '.entity.ts';
+    dirsrc = arg.path + '/src';
+    dir = arg.path + '/src/entity'
   }
-  if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
+  if (!fs.existsSync(dirsrc)) {
+    fs.mkdirSync(dirsrc)
+  }
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir)
+  }
   writeFile(filepath, arg.file);
   event.returnValue = filepath;
 });

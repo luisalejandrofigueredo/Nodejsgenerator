@@ -26,10 +26,11 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "start:electron": "ng build --base-href ./ && electron . ",
+    "start:electron": "ng build --base-href ./  --configuration development && electron . ",
     "start:electronserv": "ng build --base-href ./ && electron . --serve",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
