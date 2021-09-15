@@ -7,4 +7,5 @@ export interface Security {
     password: string;
     bearertoken:string;
     roles:string;
+    count?:string;
 }

@@ -732,29 +732,6 @@ ipcMain.on('saveentity', (event, arg) => {
   event.returnValue = filepath;
 });
 
-ipcMain.on('saveservice', (event, arg) => {
-  console.log('writing files os:', process.platform);
-  let dir = '';
-  let filepath = '';
-  if (process.platform === "win32") {
-    console.log('writing in windows...');
-    filepath = arg.path + '\\src\\service\\' + arg.name + '.service.ts';
-    dir = arg.path + '\\src\\service';
-  } else {
-    console.log('writing in unix...');
-    filepath = arg.path + '/src/service/' + arg.name + '.service.ts';
-    dir = arg.path + '/src/service';
-  }
-  if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
-  if (arg.format) {
-    let textprettier = prettier.format(arg.file, { semi: true, singleQuote: true, parser: "typescript" });
-    writeFile(filepath, textprettier);
-  } else {
-    writeFile(filepath, arg.file)
-  }
-  event.returnValue = filepath;
-});
-
 ipcMain.on('saveormconfig', (event, arg) => {
   console.log('writing files os:', process.platform);
   let dir = '';

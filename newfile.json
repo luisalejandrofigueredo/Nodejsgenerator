@@ -1,8 +1,8 @@
 {
 	"version": 0.3,
-	"schemapath": "C:\\Users\\luisa\\cmder\\generador\\newfile.json",
+	"schemapath": "C:\\Users\\luisa\\Documents\\github\\generador\\newfile.json",
 	"filePath": "",
-	"projectname": "luis cinco",
+	"projectname": "Costumers",
 	"enableCors": false,
 	"dbconf": {
 		"selecteddatabase": 0,
@@ -37,5 +37,52 @@
 		"path": "",
 		"rolesclass": ""
 	},
-	"schemas": []
+	"schemas": [
+		{
+			"id": 1,
+			"name": "Costumers",
+			"description": "Costumers table",
+			"imports": "",
+			"fields": "",
+			"security": true,
+			"classsecurity": "RolesGuard",
+			"filesecurity": "",
+			"mastersecurity": true,
+			"filesupload": true,
+			"schemastable": [
+				{
+					"id": 1,
+					"type": "number",
+					"name": "id",
+					"length": 25,
+					"keyautonumber": true,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 2,
+					"type": "string",
+					"name": "name",
+					"length": 255,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				},
+				{
+					"id": 3,
+					"type": "string",
+					"name": "adress",
+					"length": 255,
+					"keyautonumber": false,
+					"extraparameter": "",
+					"index": false
+				}
+			],
+			"schemarelations": {
+				"OnetoOne": [],
+				"Onetomany": []
+			},
+			"schemasapi": []
+		}
+	]
 }

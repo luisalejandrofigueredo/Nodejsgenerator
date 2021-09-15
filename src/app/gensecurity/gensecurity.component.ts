@@ -47,6 +47,7 @@ export class GensecurityComponent implements OnInit {
         selectedFieldpassword: new FormControl(this.configservice.getfieldid(tableid, sec.password), Validators.required),
         selectedFieldtoken: new FormControl(this.configservice.getfieldid(tableid, sec.bearertoken), Validators.required),
         selectedFieldroles: new FormControl(this.configservice.getfieldid(tableid, sec.roles), Validators.required),
+        selectedFieldCount: new FormControl(this.configservice.getfieldid(tableid, sec.count), Validators.required),
 
       });
     } else {
@@ -56,6 +57,7 @@ export class GensecurityComponent implements OnInit {
         selectedFieldpassword: new FormControl('', Validators.required),
         selectedFieldtoken: new FormControl('', Validators.required),
         selectedFieldroles: new FormControl('', Validators.required),
+        selectedFieldCount: new FormControl('', Validators.required),
       });
     }
     this.getfields();
@@ -87,6 +89,7 @@ export class GensecurityComponent implements OnInit {
       password: this.fields[this.profileForm.get('selectedFieldpassword').value - 1].viewValue,
       bearertoken: this.fields[this.profileForm.get('selectedFieldtoken').value - 1].viewValue,
       roles: this.fields[this.profileForm.get('selectedFieldroles').value - 1].viewValue,
+      count: this.fields[this.profileForm.get('selectedFieldCount').value - 1].viewValue,
     } as Security;
     this.configservice.setsecurity(sec);
     this.matsnackbar.open('security update  ', 'Action update', {

@@ -37,6 +37,13 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+            <mat-form-field>
+                <mat-select placeholder="Field for count retry times" formControlName="selectedFieldCount">
+                    <mat-option *ngFor="let item of fields" [value]="item.value">
+                        {{item.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
             <button mat-raised-button [disabled]="!profileForm.valid" (click)="generatesecurity()"
                 color="primary">Change security</button>
         </div>

@@ -21,7 +21,7 @@ export class ConfigService {
     port: 3000,
     jwtsk: '',
     logger: { type: 0, file: 'info.log', maxsize: 50000, typewarn: 0, filewarn: 'warn.log', maxsizewarn: 10000, typeerror: 0, fileerror: 'error.log', maxsizeerror: 10000 },
-    security: { bearertoken: "", login: "", password: "", roles: "", table: "", logger: false, path: "", rolesclass: "" } as Security,
+    security: { bearertoken: "", login: "", password: "", roles: "", table: "", logger: false, path: "", rolesclass: "", count:""} as Security,
     schemas: [],
   };
   /* schemas[id:number,name:string,description:string,schemastable[schemas],

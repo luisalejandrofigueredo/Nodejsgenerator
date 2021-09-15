@@ -29,7 +29,8 @@ export class EntitiesService {
   generate_entities() {
     this.config = this.configservice.config
     for (let index = 0; index < this.config.schemas.length; index++) {
-      const element = this.config[index];
+      const element = this.config.schemas[index];
+      console.log('generate element',element);
       this.entity_generator(index);
     }
   }
@@ -38,6 +39,7 @@ export class EntitiesService {
   }
 
   private entity_generator(ind: number) {
+    this.file_generating='';
     const fields = this.config.schemas[ind].schemastable;
     const relations = this.config.schemas[ind].schemarelations;
     if (relations !== undefined) {
@@ -48,11 +50,9 @@ export class EntitiesService {
     this.file_generating += this.config.schemas[ind].imports + '\n';
     this.file_generating += '@Entity()\n';
     this.file_generating += 'export class ' + this.config.schemas[ind].name + ' {\n';
-    // tslint:disable-next-line: prefer-for-of
     fields.forEach(element => {
       this.generatecolumn(element);
     });
-    // tslint:disable-next-line: prefer-for-of
     this.generaterelationbody(relations, this.config.schemas[ind].name);
     this.add_generating_line('\t adding extra fields ...\n');
     this.file_generating += this.config.schemas[ind].fields + '\n';
