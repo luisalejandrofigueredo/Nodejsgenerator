@@ -3,6 +3,7 @@
     "cSpell.words": [
         "addgenrartinline",
         "configservice",
+        "containerfiles",
         "electronservice",
         "extraparameter",
         "fieldcolumn",
@@ -26,8 +27,10 @@
         "keyautonumber",
         "keyfield",
         "Manytomany",
+        "Manytoone",
         "mastersecurity",
         "nestjs",
+        "ngzone",
         "Oneto",
         "Onetomany",
         "patchbody",

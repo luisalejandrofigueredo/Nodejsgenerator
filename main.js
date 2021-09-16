@@ -1,56 +1,72 @@
-const { app, BrowserWindow, ipcMain, Menu, screen, shell } = require('electron');
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Menu,
+  screen,
+  shell
+} = require('electron');
 const prettier = require("prettier");
-const { spawn } = require('child_process');
+const {
+  spawn
+} = require('child_process');
 const url = require("url");
 const path = require("path");
 var fs = require('fs');
-const { electron } = require("process");
+const {
+  electron
+} = require("process");
 var arraysubmenu = [];
 var recent = [];
-var template = [
-  {
+var template = [{
     label: 'Menu',
-    submenu: [
-      {
-        label: 'New', click() {
+    submenu: [{
+        label: 'New',
+        click() {
           newfile();
         }
       },
       {
-        label: 'Fast project', click() {
+        label: 'Fast project',
+        click() {
           fastproject();
         }
       },
       {
-        label: 'Install files', click() {
+        label: 'Install files',
+        click() {
           copy_files()
         }
       },
       {
-        label: 'Load', click() {
+        label: 'Load',
+        click() {
           load();
         }
       },
       {
         id: 'save',
         enabled: false,
-        label: 'Save', click() {
+        label: 'Save',
+        click() {
           save();
         }
       },
       {
-        label: 'Save as', click() {
+        label: 'Save as',
+        click() {
           saveas();
         }
       },
       {
         id: 'recent',
         submenu: arraysubmenu,
-        label: 'Open recent', click() {
-        }
+        label: 'Open recent',
+        click() {}
       },
       {
-        label: 'Exit', click() {
+        label: 'Exit',
+        click() {
           app.quit()
         }
       }
@@ -58,65 +74,65 @@ var template = [
   }, {
     label: 'Windows',
     submenu: [{
-      label: 'Config',
-      click() {
-        navigate('config')
+        label: 'Config',
+        click() {
+          navigate('config')
+        }
+      },
+      {
+        label: 'Browse schematics',
+        click() {
+          navigate('browseschematics')
+        }
+      },
+      {
+        label: 'Generator',
+        click() {
+          navigate('generator')
+        }
+      }, {
+        label: 'Config security',
+        click() {
+          navigate('gensecurity')
+        }
+      },
+      {
+        label: 'Test Api',
+        click() {
+          navigate('testapi')
+        }
       }
-    },
-    {
-      label: 'Browse schematics',
-      click() {
-        navigate('browseschematics')
-      }
-    },
-    {
-      label: 'Generator',
-      click() {
-        navigate('generator')
-      }
-    }, {
-      label: 'Config security',
-      click() {
-        navigate('gensecurity')
-      }
-    },
-    {
-      label: 'Test Api',
-      click() {
-        navigate('testapi')
-      }
-    }
     ]
   }, {
     label: 'Execute',
     submenu: [{
-      label: 'clear recent',
-      click() {
-        clearrecent()
+        label: 'clear recent',
+        click() {
+          clearrecent()
+        }
+      },
+      {
+        label: 'Open dev tools',
+        click() {
+          opendevtools()
+        }
       }
-    },
-    {
-      label: 'Open dev tools',
-      click() {
-        opendevtools()
-      }
-    }
     ]
   },
   {
     label: 'Help',
     submenu: [{
-      label: 'About',
-      click() {
-        about()
+        label: 'About',
+        click() {
+          about()
+        }
+      },
+      {
+        label: 'Tutorial',
+        click() {
+          tutorial()
+        }
       }
-    },
-    {
-      label: 'Tutorial',
-      click() {
-        tutorial()
-      }
-    }
     ]
   }
 ];
@@ -150,6 +166,7 @@ function navigate(moveto) {
       break;
   }
 }
+
 function processinstall(state) {
   switch (state) {
     case 'installnestjs':
@@ -171,6 +188,7 @@ function processinstall(state) {
       break;
   }
 }
+
 function copy_files() {
   mainWindow.webContents.send("copy_files");
 }
@@ -223,7 +241,9 @@ ipcMain.on('installnestjs', (_event, arg) => {
   if (!fs.existsSync(arg.home + dest)) {
     fs.mkdirSync(arg.home + dest);
   }
-  fs.readFile(path.join(__dirname, `/dist/generador/assets/batchs/installnestjs.bat`), { encoding: 'utf-8' }, function (err, data) {
+  fs.readFile(path.join(__dirname, `/dist/generador/assets/batchs/installnestjs.bat`), {
+    encoding: 'utf-8'
+  }, function (err, data) {
     if (err) throw err;
     try {
       writeFileSync(arg.home + dest + filedest, data)
@@ -238,7 +258,10 @@ ipcMain.on('installnestjs', (_event, arg) => {
         console.log('error:', error)
       });
     } catch (error) {
-      mainWindow.webContents.send("error", { message: 'Error runing batch file ', error: error });
+      mainWindow.webContents.send("error", {
+        message: 'Error runing batch file ',
+        error: error
+      });
     }
   });
 });
@@ -262,12 +285,12 @@ ipcMain.on('copy_files', (event, arg) => {
     if (err) throw err;
     console.log('write copy file:', arg.path + dest + filedest);
     writeFileSync(arg.path + dest + filedest, data);
-    event.returnValue=data;
+    event.returnValue = data;
   });
 });
 
 ipcMain.on('write_package', (event, arg) => {
-  console.log('arg',arg);
+  console.log('arg', arg);
   let dest;
   let filedest;
   if (process.platform === "win32") {
@@ -287,8 +310,8 @@ ipcMain.on('write_package', (event, arg) => {
   } catch (error) {
     throw error
   }
-    event.returnValue=arg.data;
-  });
+  event.returnValue = arg.data;
+});
 
 ipcMain.on('createproject', (_event, arg) => {
   let dest;
@@ -326,66 +349,78 @@ ipcMain.on('createproject', (_event, arg) => {
 ipcMain.on('userpath', (event) => {
   const homePath = app.getPath('home');
   const programPath = app.getPath('userData');
-  event.returnValue = { home: homePath, programPath: programPath };
+  event.returnValue = {
+    home: homePath,
+    programPath: programPath
+  };
 });
+
 function about() {
   mainWindow.webContents.send("about");
 }
+
 function tutorial() {
   mainWindow.webContents.send("tutorial");
 }
+
 function newfile() {
   mainWindow.webContents.send("new");
   let itemmenu = menu.getMenuItemById('save');
   itemmenu.enabled = true;
 }
+
 function settemplate() {
   const itemmenu = menu.getMenuItemById('save');
   const saveenable = itemmenu.enabled;
-  template = [
-    {
+  template = [{
       label: 'Menu',
-      submenu: [
-        {
-          label: 'New', click() {
+      submenu: [{
+          label: 'New',
+          click() {
             newfile();
           }
         },
         {
-          label: 'Fast project', click() {
+          label: 'Fast project',
+          click() {
             fastproject();
           }
         },
         {
-          label: 'Install files', click() {
+          label: 'Install files',
+          click() {
             copy_files()
           }
         },
         {
-          label: 'Load', click() {
+          label: 'Load',
+          click() {
             load();
           }
         },
         {
           id: 'save',
           enabled: saveenable,
-          label: 'Save', click() {
+          label: 'Save',
+          click() {
             save();
           }
         },
         {
-          label: 'Save as', click() {
+          label: 'Save as',
+          click() {
             saveas();
           }
         },
         {
           id: 'recent',
           submenu: arraysubmenu,
-          label: 'Open recent', click() {
-          }
+          label: 'Open recent',
+          click() {}
         },
         {
-          label: 'Exit', click() {
+          label: 'Exit',
+          click() {
             app.quit()
           }
         }
@@ -393,72 +428,75 @@ function settemplate() {
     }, {
       label: 'Windows',
       submenu: [{
-        label: 'Config',
-        click() {
-          navigate('config')
+          label: 'Config',
+          click() {
+            navigate('config')
+          }
+        },
+        {
+          label: 'Browse schematics',
+          click() {
+            navigate('browseschematics')
+          }
+        },
+        {
+          label: 'Generator',
+          click() {
+            navigate('generator')
+          }
+        },
+        {
+          label: 'Config security',
+          click() {
+            navigate('gensecurity')
+          }
+        },
+        {
+          label: 'Test Api',
+          click() {
+            navigate('testapi')
+          }
         }
-      },
-      {
-        label: 'Browse schematics',
-        click() {
-          navigate('browseschematics')
-        }
-      },
-      {
-        label: 'Generator',
-        click() {
-          navigate('generator')
-        }
-      },
-      {
-        label: 'Config security',
-        click() {
-          navigate('gensecurity')
-        }
-      },
-      {
-        label: 'Test Api',
-        click() {
-          navigate('testapi')
-        }
-      }
       ]
     }, {
       label: 'Execute',
       submenu: [{
-        label: 'Clear recent',
-        click() {
-          clearrecent()
+          label: 'Clear recent',
+          click() {
+            clearrecent()
+          }
+        },
+        {
+          label: 'Open dev tools',
+          click() {
+            opendevtools()
+          }
         }
-      },
-      {
-        label: 'Open dev tools',
-        click() {
-          opendevtools()
-        }
-      }
       ]
     },
     {
       label: 'Help',
       submenu: [{
-        label: 'About',
-        click() {
-          about()
+          label: 'About',
+          click() {
+            about()
+          }
+        },
+        {
+          label: 'Tutorial',
+          click() {
+            tutorial()
+          }
         }
-      },
-      {
-        label: 'Tutorial',
-        click() {
-          tutorial()
-        }
-      }]
+      ]
     }
   ]
 }
+
 function opendevtools() {
   mainWindow.webContents.openDevTools();
 }
+
 function clearrecent() {
   mainWindow.webContents.send("clearrecent");
   recent = [];
@@ -471,9 +509,11 @@ function clearrecent() {
 function fastproject() {
   mainWindow.webContents.send("fastproject");
 }
+
 function save() {
   mainWindow.webContents.send("save");
 }
+
 function load() {
   mainWindow.webContents.send("load file");
   saveenabled = true;
@@ -524,15 +564,17 @@ ipcMain.on('setrecent', (_event, recentpar) => {
   recent.splice(0, recent.length);
   arraysubmenu = [];
   recentpar.forEach(element => {
-    arraysubmenu.push(
-      {
-        id: element.name,
-        label: element.name + ' ' + element.path,
-        click() {
-          recentclick(element.name, element.path);
-        }
-      });
-    recent.push({ name: element.name, path: element.path });
+    arraysubmenu.push({
+      id: element.name,
+      label: element.name + ' ' + element.path,
+      click() {
+        recentclick(element.name, element.path);
+      }
+    });
+    recent.push({
+      name: element.name,
+      path: element.path
+    });
   });
   settemplate();
   menu = Menu.buildFromTemplate(template);
@@ -563,17 +605,26 @@ ipcMain.on('savemain', (event, arg) => {
     console.log('writing in unix...');
     filepath = arg.path + '/src/' + arg.name;
   }
-  let textprettier = prettier.format(arg.file, { semi: true, singleQuote: true, parser: "typescript" });
+  let textprettier = prettier.format(arg.file, {
+    semi: true,
+    singleQuote: true,
+    parser: "typescript"
+  });
   writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });
 
 ipcMain.on('loadtemplate', (event, arg) => {
   try {
-    const data = fs.readFileSync(arg, { encoding: 'utf-8' })
+    const data = fs.readFileSync(arg, {
+      encoding: 'utf-8'
+    })
     event.returnValue = data;
   } catch (error) {
-    mainWindow.webContents.send("error", { message: 'error loading template', error: error });
+    mainWindow.webContents.send("error", {
+      message: 'error loading template',
+      error: error
+    });
   }
 });
 
@@ -608,20 +659,23 @@ ipcMain.on('openvisualcode', (event, arg) => {
   console.log('arg', arg);
   try {
     process.chdir(arg.path);
+  } catch (err) {
+    console.log('operative system error');
   }
-  catch (err) { console.log('operative system error'); }
   try {
     if (process.platform === "win32") {
       const visu = spawn('cmd.exe', ['/c', 'code', '.']);
     } else {
       const visu = spawn('code', ['.']);
     }
+  } catch (err) {
+    console.log('operative error open visual');
   }
-  catch (err) { console.log('operative error open visual'); }
   try {
     process.chdir(__dirname);
+  } catch (err) {
+    console.log('operative system error');
   }
-  catch (err) { console.log('operative system error'); }
   event.returnValue = 'visual ready';
 });
 
@@ -638,7 +692,9 @@ ipcMain.on('saveappmodule', (event, arg) => {
     filepath = arg.path + '/src/' + arg.name + '.module.ts';
     dir = arg.path + '/src/'
   }
-  if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir)
+  }
   writeFile(filepath, arg.file);
   event.returnValue = filepath;
 });
@@ -656,8 +712,14 @@ ipcMain.on('saveutilmuter', (event, arg) => {
     filepath = arg.path + '/src/controller/' + arg.name + '.utils.ts';
     dir = arg.path + '/src/controller'
   }
-  if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
-  let textprettier = prettier.format(arg.file, { semi: true, singleQuote: true, parser: "typescript" });
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir)
+  }
+  let textprettier = prettier.format(arg.file, {
+    semi: true,
+    singleQuote: true,
+    parser: "typescript"
+  });
   writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });
@@ -675,8 +737,14 @@ ipcMain.on('savemodule', (event, arg) => {
     filepath = arg.path + '/src/module/' + arg.name + '.module.ts';
     dir = arg.path + '/src/module'
   }
-  if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
-  let textprettier = prettier.format(arg.file, { semi: true, singleQuote: true, parser: "typescript" });
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir)
+  }
+  let textprettier = prettier.format(arg.file, {
+    semi: true,
+    singleQuote: true,
+    parser: "typescript"
+  });
   writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });
@@ -706,6 +774,32 @@ ipcMain.on('saveservice', (event, arg) => {
   event.returnValue = filepath;
 });
 
+ipcMain.on('saveInterfaces', (event, arg) => {
+  console.log('writing files os:', process.platform);
+  let dir = '';
+  let filepath = '';
+  let dirsrc = ''
+  if (process.platform === "win32") {
+    console.log('writing in windows...');
+    filepath = arg.path + '\\src\\interfaces\\' + arg.name + '.interface.ts';
+    dirsrc = arg.path + '\\src';
+    dir = arg.path + '\\src\\interfaces'
+  } else {
+    console.log('writing in unix...');
+    filepath = arg.path + '/src/interfaces/' + arg.name + '.interface.ts';
+    dirsrc = arg.path + '/src';
+    dir = arg.path + '/src/interfaces'
+  }
+  if (!fs.existsSync(dirsrc)) {
+    fs.mkdirSync(dirsrc)
+  }
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir)
+  }
+  writeFile(filepath, arg.file);
+  event.returnValue = filepath;
+});
+
 ipcMain.on('saveentity', (event, arg) => {
   console.log('writing files os:', process.platform);
   let dir = '';
@@ -713,7 +807,7 @@ ipcMain.on('saveentity', (event, arg) => {
   let dirsrc = ''
   if (process.platform === "win32") {
     console.log('writing in windows...');
-    filepath = arg.path + '\\src\\entity\\' + arg.name + '.entity.ts';
+    filepath = arg.path + '\\src\\entity\\' + arg.name + '.entity.ts;';
     dirsrc = arg.path + '\\src';
     dir = arg.path + '\\src\\entity'
   } else {
@@ -764,12 +858,16 @@ ipcMain.on('savecanactivate', (event, arg) => {
   if (!fs.existsSync(dir)) {
     try {
       fs.mkdirSync(dir)
-    }
-    catch (e) {
+    } catch (e) {
       console.log('error:', e);
     }
   }
-  let textprettier = prettier.format(arg.file, { semi: true, singleQuote: true, parser: "typescript" });
+
+  let textprettier = prettier.format(arg.file, {
+    semi: true,
+    singleQuote: true,
+    parser: "typescript"
+  });
   writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });
@@ -787,16 +885,34 @@ ipcMain.on('saveController', (event, arg) => {
     filepath = arg.path + '/src/controller/' + arg.name + '.controller.ts';
     dir = arg.path + '/src/controller'
   }
-  if (!fs.existsSync(dir)) { fs.mkdirSync(dir) }
-  let textprettier = prettier.format(arg.file, { semi: true, singleQuote: true, parser: "typescript" });
-  writeFile(filepath, textprettier);
+  if (!fs.existsSync(dir)) {
+    try {
+      fs.mkdirSync(dir)
+    } catch (e) {
+      console.log('error:', e);
+    }
+  }
+  if (arg.format) {
+    let textprettier = prettier.format(arg.file, {
+      semi: true,
+      singleQuote: true,
+      parser: "typescript"
+    });
+    writeFile(filepath, textprettier);
+  } else {
+    writeFile(filepath, arg.file);
+  }
   event.returnValue = filepath;
 });
 
 function writeFileSync(filepath, file) {
-  try { fs.writeFileSync(filepath, file), console.log('Writed:', filepath); }
-  catch { alert('Failed to save the file !'); }
+  try {
+    fs.writeFileSync(filepath, file), console.log('Writed:', filepath);
+  } catch {
+    alert('Failed to save the file !');
+  }
 }
+
 function writeFile(filepath, file) {
   fs.writeFile(filepath, file, function (err) {
     if (err) throw err;

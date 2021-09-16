@@ -9,6 +9,8 @@ import { Manytoone } from '../interfaces/manytoone';
 import { Manytomany } from '../interfaces/manytomany';
 import { EntitiesService } from '../service/entities.service';
 import { ServiceGeneratorService } from "../service/service-generator.service";
+import { GenerateControllerService } from '../service/generate-controller.service';
+import { GenerateInterfacesService } from '../service/generate-interfaces.service';
 
 @Component({
   selector: 'app-generator',
@@ -22,7 +24,10 @@ export class GeneratorComponent implements OnInit, OnChanges {
   keyfield = '';
   @ViewChild('textgenerating', { static: false }) container: ElementRef;
   @ViewChild('fileswriting', { static: false }) containerfiles: ElementRef;
-  constructor(private entities_service: EntitiesService,
+  constructor(
+    private generateInterface:GenerateInterfacesService,
+    private generateController:GenerateControllerService,
+    private entities_service: EntitiesService,
     private configservice: ConfigService,
     private generator_service:ServiceGeneratorService,
     private relationservice: RelationsService,
@@ -58,6 +63,12 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.addgenrartinline('Begin generate service...');
     this.generator_service.begin_generate();
     this.addgenrartinline('End generate  service...');
+    this.addgenrartinline('Begin generate interface...');
+    this.generateInterface.generateInterface();
+    this.addgenrartinline('Begin generate interface...');
+    this.addgenrartinline('Begin generate controllers...');
+    this.generateController.generateController();
+    this.addgenrartinline('End generate controllers...');
   }
   generateenablecors() {
     this.addgenrartinline('begin generating main module ...');
