@@ -8,6 +8,7 @@ import { MatTable } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import {YesnoComponent} from '../yesno/yesno.component';
+import {MatSort, Sort} from '@angular/material/sort';
 
 @Component({
   selector: 'app-api',
@@ -23,6 +24,8 @@ export class ApiComponent implements OnInit {
   schemaname: string;
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
   // tslint:disable-next-line: max-line-length
   constructor(private router: Router, private activerouter: ActivatedRoute, private configservice: ConfigService, public dialog: MatDialog) { }
   ngOnInit(): void {
@@ -34,6 +37,9 @@ export class ApiComponent implements OnInit {
       this.apis = [...this.configservice.getapis(this.id)];
       this.dataSource.data = [...this.apis];
     });
+  }
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
   }
 
   navigate(){

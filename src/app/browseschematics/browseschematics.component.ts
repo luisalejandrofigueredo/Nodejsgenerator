@@ -9,6 +9,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormschemamodalComponent } from '../formschemamodal/formschemamodal.component';
 import {YesnoComponent} from '../yesno/yesno.component';
 import { Schemahead } from '../interfaces/schemahead';
+import {MatSort, Sort} from '@angular/material/sort';
+
 @Component({
   selector: 'app-browseschematics',
   templateUrl: './browseschematics.component.html',
@@ -16,17 +18,25 @@ import { Schemahead } from '../interfaces/schemahead';
 })
 export class BrowseschematicsComponent implements OnInit {
   dataSource = new MatTableDataSource<Schemahead>([]);
+  dataUnSorted:Schemahead[];
   projectname:string;
   schema: Schemahead[] = [];
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   constructor(private route: Router, public dialog: MatDialog, private configservice: ConfigService) { }
+
   ngOnInit(): void {
     this.projectname=(this.configservice.config.projectname!==undefined) ? this.configservice.config.projectname : "";
     this.schema = [ ...this.configservice.getschema()];
+    this.dataUnSorted = [ ...this.configservice.getschema()];
     this.dataSource.data = this.schema;
     this.dataSource.paginator = this.paginator;
   }
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+
 
   add() {
     const dialogRef = this.dialog.open(FormschemamodalComponent, {

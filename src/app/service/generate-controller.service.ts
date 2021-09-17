@@ -52,9 +52,8 @@ export class GenerateControllerService {
           const tableLower = item.name.toLowerCase();
           this.textGenerated += `public update${table} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
           this.textGenerated += `  try {\n`;
-          this.textGenerated += `   const ${tableLower}Id = Number(req.params.id);\n`;
           this.textGenerated += `   const ${tableLower}Data: any = req.body;\n`;
-          this.textGenerated += `   const update${table}Data: ${table} = await this.${tableLower}Service.update(${tableLower}Id, ${tableLower}Data);\n`;
+          this.textGenerated += `   const update${table}Data: ${table} = await this.${tableLower}Service.update(${tableLower}Data);\n`;
           this.textGenerated += `   res.status(200).json({ data: update${table}Data, message: 'updated' });\n`;
           this.textGenerated += `    } catch (error) {\n`;
           this.textGenerated += `    next(error);\n`;
@@ -132,6 +131,45 @@ export class GenerateControllerService {
         this.textGenerated += `const ${tableLower}Id = Number(req.params.id);\n`;
         this.textGenerated += `const findOne${table}Data: ${table} = await this.${tableLower}Service.find${table}ById(${tableLower}Id);\n`
         this.textGenerated += `  res.status(200).json({ data: findOne${table}Data, message: 'findOne' });\n`;
+        this.textGenerated += `} catch (error) {\n`;
+        this.textGenerated += ` next(error);\n`
+        this.textGenerated += `}\n`
+        this.textGenerated += '};\n\n';
+        break;
+      }
+      case 'findandcount':{
+        this.textGenerated += `public findAndCount = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`
+        this.textGenerated += `try {\n`;
+        this.textGenerated += `const findAndCountData: any = await this.${tableLower}Service.findAndCount();\n`
+        this.textGenerated += `  res.status(200).json({ data: findAndCountData, message: 'findAndCount' });\n`;
+        this.textGenerated += `} catch (error) {\n`;
+        this.textGenerated += ` next(error);\n`
+        this.textGenerated += `}\n`
+        this.textGenerated += '};\n\n';
+        break;
+      }
+      case 'skiplimit':{
+        this.textGenerated += `public skipLimit = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`
+        this.textGenerated += `try {\n`;
+        this.textGenerated += `const skip = Number(req.params.skip);\n`;
+        this.textGenerated += `const limit = Number(req.params.limit);\n`;
+        this.textGenerated += `const order = req.params.order\n`;
+        this.textGenerated += `const skipLimit${table}Data: ${table}[] = await this.${tableLower}Service.skipLimit(skip,limit,order);\n`
+        this.textGenerated += `  res.status(200).json({ data: skipLimit${table}Data, message: 'find skip limit' });\n`;
+        this.textGenerated += `} catch (error) {\n`;
+        this.textGenerated += ` next(error);\n`
+        this.textGenerated += `}\n`
+        this.textGenerated += '};\n\n';
+        break;
+      }
+      case 'skiplimitbyfield':{
+        this.textGenerated += `public skipLimit${itemApi.field} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`
+        this.textGenerated += `try {\n`;
+        this.textGenerated += `const skip = Number(req.params.skip);\n`;
+        this.textGenerated += `const limit = Number(req.params.limit);\n`;
+        this.textGenerated += `const order = req.params.order\n`;
+        this.textGenerated += `const skipLimit${table}Data: ${table}[] = await this.${tableLower}Service.SkipLimit${itemApi.field}(skip,limit,order);\n`
+        this.textGenerated += `  res.status(200).json({ data: skipLimit${table}Data, message: 'find skip limit' });\n`;
         this.textGenerated += `} catch (error) {\n`;
         this.textGenerated += ` next(error);\n`
         this.textGenerated += `}\n`

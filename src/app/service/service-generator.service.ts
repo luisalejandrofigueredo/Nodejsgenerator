@@ -101,7 +101,7 @@ export class ServiceGeneratorService {
         break;
       }
       case 'findandcount': {
-        this.textGenerated += `public async findAndCount${item.name}(): Promise<any[]> {\n`
+        this.textGenerated += `public async findAndCount(): Promise<any[]> {\n`
         this.textGenerated += `const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
         this.textGenerated += `const ${item.name.toLowerCase()}:any[] = await ${item.name.toLowerCase()}Repository.findAndCount();\n`;
         this.textGenerated += `return ${item.name.toLowerCase()};\n`;
@@ -109,7 +109,7 @@ export class ServiceGeneratorService {
         break;
       }
       case 'skiplimit': {
-        this.textGenerated += `async skiplimit(skip: number, limit: number, order: string): Promise<${item.name}[]> {\n`;
+        this.textGenerated += `async skipLimit(skip: number, limit: number, order: string): Promise<${item.name}[]> {\n`;
         this.textGenerated += `const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
         this.textGenerated += `if (order === 'ASC') {\n`;
         this.textGenerated += `\treturn await ${item.name.toLowerCase()}Repository.createQueryBuilder("${item.name}").orderBy('id', 'ASC').offset(skip).limit(limit).getMany();\n`;
@@ -120,7 +120,7 @@ export class ServiceGeneratorService {
         break;
       }
       case 'skiplimitbyfield': {
-        this.textGenerated += `async skiplimit${field}(skip: number, limit: number, order: string): Promise<${item.name}[]> {\n`;
+        this.textGenerated += `async SkipLimit${field}(skip: number, limit: number, order: string): Promise<${item.name}[]> {\n`;
         this.textGenerated += `const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
         this.textGenerated += `if (order === 'ASC') {\n`;
         this.textGenerated += `\treturn await ${item.name.toLowerCase()}Repository.createQueryBuilder("${item.name}").orderBy('${field}', 'ASC').offset(skip).limit(limit).getMany();\n`;

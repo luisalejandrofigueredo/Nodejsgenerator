@@ -5,19 +5,19 @@
 <p>Schema:{{schemaname}}</p>
 <table mat-table matSort [dataSource]="dataSource">
   <ng-container matColumnDef="id">
-    <th mat-header-cell class="head" mat-sort-header *matHeaderCellDef> # </th>
+    <th mat-header-cell mat-sort-header class="head" mat-sort-header *matHeaderCellDef> # </th>
     <td mat-cell *matCellDef="let row"> {{row.id}} </td>
   </ng-container>
   <ng-container matColumnDef="type">
-    <th mat-header-cell class="head" mat-sort-header *matHeaderCellDef> Type </th>
+    <th mat-header-cell mat-sort-header class="head" mat-sort-header *matHeaderCellDef> Type </th>
     <td mat-cell *matCellDef="let row"> {{row.type}} </td>
   </ng-container>
   <ng-container matColumnDef="name">
-    <th mat-header-cell class="head" mat-sort-header *matHeaderCellDef> Name </th>
+    <th mat-header-cell mat-sort-header class="head" mat-sort-header *matHeaderCellDef> Name </th>
     <td mat-cell *matCellDef="let row"><span style="padding-left: 20px;"></span>{{row.name}} </td>
   </ng-container>
   <ng-container matColumnDef="length">
-    <th mat-header-cell class="head" *matHeaderCellDef> Length </th>
+    <th mat-header-cell mat-sort-header class="head" *matHeaderCellDef> Length </th>
     <td mat-cell *matCellDef="let row"><span style="padding-left: 20px;"></span>{{row.length}} </td>
   </ng-container>
   <ng-container matColumnDef="delete">

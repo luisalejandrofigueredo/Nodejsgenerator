@@ -3,29 +3,29 @@
     <button mat-icon-button (click)="navigate()"><mat-icon>home</mat-icon></button>
 </div>
 <p>Api for:{{schemaname}}</p>
-<table #mytable mat-table #table [dataSource]="dataSource">
+<table #mytable mat-table #table matSort [dataSource]="dataSource">
   <ng-container matColumnDef="id">
-    <th class="head" mat-header-cell *matHeaderCellDef> # </th>
+    <th class="head" mat-sort-header mat-header-cell *matHeaderCellDef> # </th>
     <td mat-cell *matCellDef="let row"> {{row.id}} </td>
   </ng-container>
   <ng-container  matColumnDef="type">
-    <th mat-header-cell class="head" *matHeaderCellDef> Type </th>
+    <th mat-header-cell mat-sort-header class="head" *matHeaderCellDef> Type </th>
     <td mat-cell *matCellDef="let row"> {{row.type}} </td>
   </ng-container>
   <ng-container  matColumnDef="operation">
-    <th mat-header-cell class="head" *matHeaderCellDef> Operation </th>
+    <th mat-header-cell mat-sort-header class="head" *matHeaderCellDef> Operation </th>
     <td mat-cell *matCellDef="let row"> {{row.operation}} </td>
   </ng-container>
-  <ng-container  matColumnDef="path">
-    <th mat-header-cell class="head" *matHeaderCellDef> Path </th>
+  <ng-container matColumnDef="path">
+    <th mat-header-cell mat-sort-header class="head" *matHeaderCellDef> Path </th>
     <td mat-cell *matCellDef="let row"> {{row.path}} </td>
   </ng-container>
   <ng-container  matColumnDef="security">
-    <th mat-header-cell class="head" *matHeaderCellDef> Security </th>
+    <th mat-header-cell mat-sort-header class="head" *matHeaderCellDef> Security </th>
     <td mat-cell *matCellDef="let row"><mat-checkbox [disabled]="true" [checked]="row.security"></mat-checkbox></td>
   </ng-container>
   <ng-container  matColumnDef="roles">
-    <th mat-header-cell class="head" *matHeaderCellDef> Roles </th>
+    <th mat-header-cell mat-sort-header class="head" *matHeaderCellDef> Roles </th>
     <td mat-cell *matCellDef="let row"> {{row.roles}} </td>
   </ng-container>
   <ng-container  matColumnDef="delete">

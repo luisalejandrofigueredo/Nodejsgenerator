@@ -30,8 +30,8 @@ export class SchematicsComponent implements OnInit {
   ];
   dataSource = new MatTableDataSource<Schemaitem>([]);
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   buffer: Schemaitem;
   // tslint:disable-next-line: max-line-length
   constructor(private router: Router, private activerouter: ActivatedRoute, private configservice: ConfigService, public dialog: MatDialog, private snackBar: MatSnackBar, private electronservice: ElectronService) { }
@@ -47,8 +47,11 @@ export class SchematicsComponent implements OnInit {
       this.schemaname = this.configservice.getschemaname(this.id);
       this.dataSource =  new MatTableDataSource(this.schemaitems);
       this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
     });
+  }
+  
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
   }
 
   updatingdata(data: Schemaitem) {
