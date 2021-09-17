@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { ConfigService } from '../service/config.service';
 import { Schemahead } from '../interfaces/schemahead';
@@ -11,7 +11,7 @@ import { GenoptionsComponent } from '../genoptions/genoptions.component';
 import { Overlay } from '@angular/cdk/overlay';
 import { AddarrayComponent } from '../addarray/addarray.component';
 import { Relations } from '../interfaces/relations';
-
+import {ErrorComponent} from '../error/error.component';
 
 @Component({
   selector: 'app-testapi',
@@ -52,7 +52,7 @@ export class TestapiComponent implements OnInit {
     { value: 'findgenerated', viewValue: 'Find generated' },
     { value: 'findandcountgenerated', viewValue: 'Find and count generated' }
   ];
-  constructor(private fb: FormBuilder, private httpclient: HttpClient, private genoption: MatDialog, private configservice: ConfigService, private overlay: Overlay) { }
+  constructor(private fb: FormBuilder, private httpclient: HttpClient, private dialog: MatDialog,private genoption: MatDialog, private configservice: ConfigService, private overlay: Overlay) { }
 
   ngOnInit(): void {
     this.api = { id: 0, field: '', path: '', extfiles: '', type: '', roles: '', security: false, operation: '', options: '', parameters: [] };
@@ -133,7 +133,7 @@ export class TestapiComponent implements OnInit {
       this.rtoken = rep.token;
       localStorage.setItem('token', rep.token);
       this.reponse = JSON.stringify(rep);
-    })
+    }, error=> {this.error(error)})
   }
 
   copytoken() {
@@ -149,14 +149,14 @@ export class TestapiComponent implements OnInit {
         'authorization': 'Bearer ' + this.rtoken
       })
     };
-    this.httpclient.get(this.url, httpOptions).subscribe(rep => this.reponselogout = JSON.stringify(rep));
+    this.httpclient.get(this.url, httpOptions).subscribe(rep => this.reponselogout = JSON.stringify(rep), error=> {this.error(error)});
   }
 
   gheader() {
     if (this.api.type === 'getfile') {
       this.profileForm.patchValue({
         header: `
-      Please set reponse type to blob in Agular HttpCLient add in options parameter
+      Please set reponse type to blob in Angular HttpCLient add in options parameter
       'authorization': 'Bearer '${this.token}`
       });
     }
@@ -460,7 +460,7 @@ export class TestapiComponent implements OnInit {
           })
         };
         this.url = this.urlpri + `/${this.schemastring}/${this.api.path}`;
-        this.httpclient.post(this.url, this.form, httpOptions).subscribe(res => this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+        this.httpclient.post(this.url, this.form, httpOptions).subscribe(res => this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }), error=> {this.error(error)});
         break;
       case 'changepassword':
         httpOptions = {
@@ -470,7 +470,7 @@ export class TestapiComponent implements OnInit {
           })
         };
         this.url = this.urlpri + `/${this.schemastring}` + `/changepassword/${encodeURI(this.profileForm.get('login').value)}/${encodeURI(this.profileForm.get('newpassword').value)}`;
-        this.httpclient.put(this.url, {}, httpOptions).subscribe(res => this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }))
+        this.httpclient.put(this.url, {}, httpOptions).subscribe(res => this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }), error=> {this.error(error)})
         break;
       case 'patch':
         {
@@ -482,7 +482,7 @@ export class TestapiComponent implements OnInit {
           };
           this.url = this.urlpri + `/${this.schemastring}/${this.profileForm.get('record').value}`;
           this.httpclient.patch(this.url, this.profileForm.get('body').value, httpOptions).subscribe(res =>
-            this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+            this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }), error=> {this.error(error)});
         }
         break;
       case 'get':
@@ -503,7 +503,7 @@ export class TestapiComponent implements OnInit {
               }
             });
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }), error=> {this.error(error)});
             break;
           case 'findgenerated':
             httpOptions = {
@@ -521,7 +521,7 @@ export class TestapiComponent implements OnInit {
               }
             });
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }), error=> {this.error(error)});
             break;
           case 'findwithoptions':
             httpOptions = {
@@ -532,7 +532,7 @@ export class TestapiComponent implements OnInit {
             };
             this.url = this.urlpri + `/${this.schemastring}/findwithoptions${this.api.path}/${encodeURIComponent(this.profileForm.get('body').value)}`;
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }), error=> {this.error(error)});
             break;
           case 'findandcountwithoptions':
             httpOptions = {
@@ -543,7 +543,7 @@ export class TestapiComponent implements OnInit {
             };
             this.url = this.urlpri + `/${this.schemastring}/findandcountwithoptions${this.api.path}/${encodeURIComponent(this.profileForm.get('body').value)}`;
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }), error=> {this.error(error)});
             break;
           case 'findandcount':
             httpOptions = {
@@ -554,7 +554,7 @@ export class TestapiComponent implements OnInit {
             };
             this.url = this.urlpri + `/${this.schemastring}/findandcount`;
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }), error=> {this.error(error)});
             break;
           case 'count':
             httpOptions = {
@@ -565,7 +565,7 @@ export class TestapiComponent implements OnInit {
             };
             this.url = this.urlpri + `/${this.schemastring}/count`;
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }), error=> {this.error(error)});
             break;
           case 'getone':
             httpOptions = {
@@ -576,7 +576,7 @@ export class TestapiComponent implements OnInit {
             };
             this.url = this.urlpri + `/${this.schemastring}/getone/${this.profileForm.get('record').value}`;
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }), error=> {this.error(error)});
             break;
           case 'getall':
             httpOptions = {
@@ -587,7 +587,7 @@ export class TestapiComponent implements OnInit {
             };
             this.url = this.urlpri + `/${this.schemastring}`;
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+            this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }), error=> {this.error(error)});
             break;
           case 'skiplimit':
             httpOptions = {
@@ -598,7 +598,7 @@ export class TestapiComponent implements OnInit {
             };
             this.url = this.urlpri + `/${this.schemastring}/skiplimit/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}`
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }), error=> {this.error(error)});
             break
           case 'skiplimitbyfield':
             console.log('api', this.api);
@@ -610,7 +610,7 @@ export class TestapiComponent implements OnInit {
             };
             this.url = this.urlpri + `/${this.schemastring}/skiplimitorder${this.api.field}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}`
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }), error=> {this.error(error)});
             break
           case 'skiplimitfilter':
             httpOptions = {
@@ -621,7 +621,7 @@ export class TestapiComponent implements OnInit {
             };
             this.url = this.urlpri + `/${this.schemastring}/skiplimitfilter${this.api.field}/${this.profileForm.get('skip').value}/${this.profileForm.get('limit').value}/${this.profileForm.get('order').value}/${this.profileForm.get('field').value}`
             this.httpclient.get(this.url, httpOptions).subscribe(res =>
-              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+              this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }), error=> {this.error(error)});
             break
           default:
             break;
@@ -636,7 +636,7 @@ export class TestapiComponent implements OnInit {
         };
         this.url = this.urlpri + `/${this.schemastring}/${this.api.path}/${this.profileForm.get('record').value}`;
         this.httpclient.post(this.url, this.profileForm.get('body').value, httpOptions).
-          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }));
+          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }), error=> {this.error(error)});
         break;
         case 'postonetomany':
         httpOptions = {
@@ -647,7 +647,7 @@ export class TestapiComponent implements OnInit {
         };
         this.url = this.urlpri + `/${this.schemastring}/${this.api.path}/${this.profileForm.get('record').value}`;
         this.httpclient.post(this.url, this.profileForm.get('body').value, httpOptions).
-          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }));
+          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }), error=> {this.error(error)});
         break;
         case 'postmanytomany':
         httpOptions = {
@@ -658,7 +658,7 @@ export class TestapiComponent implements OnInit {
         };
         this.url = this.urlpri + `/${this.schemastring}/${this.api.path}/${this.profileForm.get('record').value}`;
         this.httpclient.post(this.url, this.profileForm.get('body').value, httpOptions).
-          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }));
+          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }), error=> {this.error(error)});
         break;
       case 'post':
         httpOptions = {
@@ -669,7 +669,7 @@ export class TestapiComponent implements OnInit {
         };
         this.url = this.urlpri + `/${this.schemastring}`
         this.httpclient.post(this.url, this.profileForm.get('body').value, httpOptions).
-          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }));
+          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }), error=> {this.error(error)});
         break;
       case 'put':
         httpOptions = {
@@ -680,7 +680,7 @@ export class TestapiComponent implements OnInit {
         };
         this.url = this.urlpri + `/${this.schemastring}`;
         this.httpclient.put(this.url, this.profileForm.get('body').value, httpOptions).
-          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }));
+          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }), error=> {this.error(error)});
         break;
       case 'delete':
         httpOptions = {
@@ -691,7 +691,7 @@ export class TestapiComponent implements OnInit {
         };
         this.url = this.urlpri + `/${this.schemastring}/${this.profileForm.get('record').value}`
         this.httpclient.delete(this.url, httpOptions).
-          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }));
+          subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }), error=> {this.error(error)});
         break;
       default:
         break;
@@ -704,5 +704,13 @@ export class TestapiComponent implements OnInit {
   expand() {
     this.url = "";
   }
+
+  error(error:HttpErrorResponse){
+    const dialogRef = this.dialog.open(ErrorComponent, {
+      disableClose: false,
+      data: { message:'Error on server',error:error.message }
+    });
+  }
+  
 
 }

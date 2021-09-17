@@ -176,6 +176,21 @@ export class GenerateControllerService {
         this.textGenerated += '};\n\n';
         break;
       }
+      case 'skiplimitfilter':{
+        this.textGenerated += `public skipLimitFilter${itemApi.field} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`
+        this.textGenerated += `try {\n`;
+        this.textGenerated += `const skip = Number(req.params.skip);\n`;
+        this.textGenerated += `const limit = Number(req.params.limit);\n`;
+        this.textGenerated += `const order = req.params.order\n`;
+        this.textGenerated += `const filter = req.params.filter\n`;
+        this.textGenerated += `const skipLimit${table}Data: ${table}[] = await this.${tableLower}Service.skipLimitFilter${itemApi.field}(skip,limit,order,filter);\n`
+        this.textGenerated += `  res.status(200).json({ data: skipLimit${table}Data, message: 'find skip limit filter' });\n`;
+        this.textGenerated += `} catch (error) {\n`;
+        this.textGenerated += ` next(error);\n`
+        this.textGenerated += `}\n`
+        this.textGenerated += '};\n\n';
+        break;
+      }
       default:
         break;
     }

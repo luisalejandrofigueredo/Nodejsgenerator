@@ -130,7 +130,7 @@ export class ServiceGeneratorService {
         break;
       }
       case 'skiplimitfilter': {
-        this.textGenerated += `async skiplimitfilter${field}(skip: number, limit: number, order: string, ${field}:string): Promise<${item.name}[]> {\n`;
+        this.textGenerated += `async skipLimitFilter${field}(skip: number, limit: number, order: string, ${field}:string): Promise<${item.name}[]> {\n`;
         this.textGenerated += `const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
         this.textGenerated += `if (order === "ASC") {\n`;
         this.textGenerated += `\treturn await ${item.name.toLowerCase()}Repository.createQueryBuilder("${item.name}").orderBy('${field}', 'ASC').offset(skip).limit(limit).where("${item.name}.${field} like :${field}",{ ${field}: ${field}+'%'}).getMany();\n`;
