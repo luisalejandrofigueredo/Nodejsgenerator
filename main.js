@@ -807,7 +807,7 @@ ipcMain.on('saveentity', (event, arg) => {
   let dirsrc = ''
   if (process.platform === "win32") {
     console.log('writing in windows...');
-    filepath = arg.path + '\\src\\entity\\' + arg.name + '.entity.ts;';
+    filepath = arg.path + '\\src\\entity\\' + arg.name + '.entity.ts';
     dirsrc = arg.path + '\\src';
     dir = arg.path + '\\src\\entity'
   } else {

@@ -47,6 +47,64 @@ export class GenerateControllerService {
         case 'get':
           this.createBodyGets(element, item.name);
           break;
+        case 'put': {
+          const table = item.name;
+          const tableLower = item.name.toLowerCase();
+          this.textGenerated += `public update${table} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
+          this.textGenerated += `  try {\n`;
+          this.textGenerated += `   const ${tableLower}Id = Number(req.params.id);\n`;
+          this.textGenerated += `   const ${tableLower}Data: any = req.body;\n`;
+          this.textGenerated += `   const update${table}Data: ${table} = await this.${tableLower}Service.update(${tableLower}Id, ${tableLower}Data);\n`;
+          this.textGenerated += `   res.status(200).json({ data: update${table}Data, message: 'updated' });\n`;
+          this.textGenerated += `    } catch (error) {\n`;
+          this.textGenerated += `    next(error);\n`;
+          this.textGenerated += `  }\n`;
+          this.textGenerated += `};\n\n`;
+          break;
+        }
+        case 'post': {
+          const table = item.name;
+          const tableLower = item.name.toLowerCase();
+          this.textGenerated += `public create${table} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {`;
+          this.textGenerated += `  try {\n`;
+          this.textGenerated += ` const ${tableLower}Data = req.body;\n`;
+          this.textGenerated += `   const create${table}Data: ${table} = await this.${tableLower}Service.create(${tableLower}Data);\n`;
+          this.textGenerated += `  res.status(201).json({ data: create${table}Data, message: 'created' });\n`;
+          this.textGenerated += `  } catch (error) {\n`;
+          this.textGenerated += `    next(error);\n`;
+          this.textGenerated += `  }\n`;
+          this.textGenerated += `};\n\n`;
+          break;
+        }
+        case 'patch': {
+          const table = item.name;
+          const tableLower = item.name.toLowerCase();
+          this.textGenerated += `public Patch${table}ById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
+          this.textGenerated += ` try {\n`;
+          this.textGenerated += `  const ${tableLower}Id = Number(req.params.id);\n`;
+          this.textGenerated += `  const patch=req.params.patch;\n`;
+          this.textGenerated += `  const findPatch${table}Data: any= await this.${tableLower}Service.patch(${tableLower}Id,patch);\n`;
+          this.textGenerated += `    res.status(200).json({ data: findPatch${table}Data, message: 'patch' });\n`;
+          this.textGenerated += `  } catch (error) {\n`;
+          this.textGenerated += `   next(error);\n`;
+          this.textGenerated += `  }\n`;
+          this.textGenerated += ` };\n\n`;
+          break;
+        }
+        case 'delete': {
+          const table = item.name;
+          const tableLower = item.name.toLowerCase();
+          this.textGenerated += `public delete${table} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
+          this.textGenerated += `try {\n`
+          this.textGenerated += `  const ${tableLower}Id = Number(req.params.id);\n`;
+          this.textGenerated += `    const delete${table}Data: ${table} = await this.${tableLower}Service.delete(${tableLower}Id);\n`;
+          this.textGenerated += `res.status(200).json({ data: delete${table}Data, message: 'deleted' });\n`
+          this.textGenerated += `  } catch (error) {\n`;
+          this.textGenerated += `   next(error);\n`;
+          this.textGenerated += `  }\n`;
+          this.textGenerated += ` };\n`;
+          break;
+        }
         default:
           break;
       }
@@ -57,7 +115,7 @@ export class GenerateControllerService {
     const tableLower = table.toLowerCase();
     switch (itemApi.operation) {
       case 'getall': {
-        console.log('Get all',itemApi.operation);
+        console.log('Get all', itemApi.operation);
         this.textGenerated += `public get${table} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
         this.textGenerated += ` try {\n`;
         this.textGenerated += `const findAll${table}Data: ${table}[] = await this.${tableLower}Service.findAll${table}();\n`;
@@ -65,7 +123,19 @@ export class GenerateControllerService {
         this.textGenerated += `  } catch (error) {\n`;
         this.textGenerated += `next(error);\n`;
         this.textGenerated += ` }\n`;
-        this.textGenerated += `};\n`;
+        this.textGenerated += `};\n\n`;
+        break;
+      }
+      case 'getone': {
+        this.textGenerated += `public get${table}ById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`
+        this.textGenerated += `try {\n`;
+        this.textGenerated += `const ${tableLower}Id = Number(req.params.id);\n`;
+        this.textGenerated += `const findOne${table}Data: ${table} = await this.${tableLower}Service.find${table}ById(${tableLower}Id);\n`
+        this.textGenerated += `  res.status(200).json({ data: findOne${table}Data, message: 'findOne' });\n`;
+        this.textGenerated += `} catch (error) {\n`;
+        this.textGenerated += ` next(error);\n`
+        this.textGenerated += `}\n`
+        this.textGenerated += '};\n\n';
         break;
       }
       default:

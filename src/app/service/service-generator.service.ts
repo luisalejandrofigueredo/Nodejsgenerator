@@ -52,7 +52,7 @@ export class ServiceGeneratorService {
           this.textGenerated += `async update(${item.name.toLowerCase()}: ${item.name}): Promise<${item.name}> {\n`;
           this.textGenerated += `const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
           this.textGenerated += `\t return await ${item.name.toLowerCase()}Repository.save(${item.name.toLowerCase()});\n`;
-          this.textGenerated += `}\n`;
+          this.textGenerated += `}\n\n`;
           break;
         case 'post':
           this.textGenerated += `async create(${item.name.toLowerCase()}: ${item.name} ): Promise<${item.name}> {\n`;
@@ -61,20 +61,20 @@ export class ServiceGeneratorService {
             this.textGenerated += `${item.name.toLowerCase()}.${this.security.password}=bcrypt.hashSync(${item.name.toLowerCase()}.${this.security.password},5);\n`;
           }
           this.textGenerated += `\t return await ${item.name.toLowerCase()}Repository.save(${item.name.toLowerCase()});\n`;
-          this.textGenerated += `}\n`;
+          this.textGenerated += `}\n\n`;
           break;
         case 'delete':
           this.textGenerated += `async delete(_id: number) {\n`;
           this.textGenerated += `const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
           this.textGenerated += `\t const ${item.name.toLowerCase()}: ${item.name} = await ${item.name.toLowerCase()}Repository.findOne({where: [{ "id": _id }]});\n`;
           this.textGenerated += `\t return await ${item.name.toLowerCase()}Repository.delete(${item.name.toLowerCase()});\n`;
-          this.textGenerated += `}\n`;
+          this.textGenerated += `}\n\n`;
           break;
         case 'patch':
-          this.textGenerated += `async patch(_id: number,patchbody:any) {\n`;
+          this.textGenerated += `async patch${element.path}(_id: number,patchBody:any) {\n`;
           this.textGenerated += `const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
-          this.textGenerated += `return await ${item.name.toLowerCase()}Repository.createQueryBuilder().update(${item.name}).set(patchbody).where("id = :id", { id:_id }).execute();`;
-          this.textGenerated += '}\n';
+          this.textGenerated += `return await ${item.name.toLowerCase()}Repository.createQueryBuilder().update(${item.name}).set(patchBody).where("id = :id", { id:_id }).execute();\n`;
+          this.textGenerated += '}\n\n';
           break;
       }
     });
