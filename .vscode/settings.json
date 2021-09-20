@@ -28,6 +28,7 @@
         "genoption",
         "Genoptions",
         "getall",
+        "getapis",
         "getfile",
         "getone",
         "getrelationsonetomany",
@@ -77,5 +78,8 @@
         "uploadfile",
         "urlpri",
         "userpath"
-    ]
+    ],
+    "files.exclude": {
+        "**/*spec.ts": true
+    }
 }

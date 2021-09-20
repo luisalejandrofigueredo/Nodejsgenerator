@@ -1,6 +1,13 @@
+<div style="height: 40px; background-color: rgb(255, 8, 0); width: 100%">
+  <div fxLayout="column" fxLayoutAlign="end end" fxLayoutGap="gappx">
+    <button mat-icon-button>
+      <mat-icon color="primary" (click)="onYesClick()">close</mat-icon>
+    </button>
+  </div>
+</div>
 <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
-    <p>Nodejs generator Error</p>
-    <p>Message:{{data.message}}</p>
-    <p>Error:{{data.error}}</p>
-    <button mat-raised-button color="primary" mat-button (click)="onYesClick()">OK</button>
+  <p>Nodejs generator Error</p>
+  <p>Message:{{data.message}}</p>
+  <p>Error:{{data.error}}</p>
+  <button mat-raised-button color="primary" mat-button (click)="onYesClick()">OK</button>
 </div>

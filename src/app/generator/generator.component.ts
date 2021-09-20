@@ -11,6 +11,7 @@ import { EntitiesService } from '../service/entities.service';
 import { ServiceGeneratorService } from "../service/service-generator.service";
 import { GenerateControllerService } from '../service/generate-controller.service';
 import { GenerateInterfacesService } from '../service/generate-interfaces.service';
+import { GenerateRoutesService } from '../service/generate-routes.service';
 
 @Component({
   selector: 'app-generator',
@@ -25,6 +26,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
   @ViewChild('textgenerating', { static: false }) container: ElementRef;
   @ViewChild('fileswriting', { static: false }) containerfiles: ElementRef;
   constructor(
+    private generateRoutes:GenerateRoutesService,
     private generateInterface:GenerateInterfacesService,
     private generateController:GenerateControllerService,
     private entities_service: EntitiesService,
@@ -69,6 +71,9 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.addgenrartinline('Begin generate controllers...');
     this.generateController.generateController();
     this.addgenrartinline('End generate controllers...');
+    this.addgenrartinline('Begin generate routes...');
+    this.generateRoutes.beginGenerate();
+    this.addgenrartinline('End generate routes...');
   }
   generateenablecors() {
     this.addgenrartinline('begin generating main module ...');
