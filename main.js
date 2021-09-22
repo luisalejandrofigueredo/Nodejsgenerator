@@ -773,6 +773,32 @@ ipcMain.on('saveservice', (event, arg) => {
   writeFile(filepath, arg.file);
   event.returnValue = filepath;
 });
+ipcMain.on('saveServe', (event, arg) => {
+  console.log('writing files os:', process.platform);
+  let dir = '';
+  let filepath = '';
+  let dirsrc = ''
+  if (process.platform === "win32") {
+    console.log('writing in windows...');
+    filepath = arg.path + '\\src\\' + arg.name + '.ts';
+    dirsrc = arg.path + '\\src';
+    dir = arg.path + '\\src\\'
+  } else {
+    console.log('writing in unix...');
+    filepath = arg.path + '/src/' + arg.name + '.ts';
+    dirsrc = arg.path + '/src';
+    dir = arg.path + '/src/'
+  }
+  if (!fs.existsSync(dirsrc)) {
+    fs.mkdirSync(dirsrc)
+  }
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir)
+  }
+  writeFile(filepath, arg.file);
+  event.returnValue = filepath;
+});
+
 ipcMain.on('saveRoutes', (event, arg) => {
   console.log('writing files os:', process.platform);
   let dir = '';

@@ -10,7 +10,8 @@ import { MatSort } from '@angular/material/sort';
 import { DatamodalComponent } from '../datamodal/datamodal.component';
 import { YesnoComponent } from '../yesno/yesno.component';
 import { Schemaitem } from '../interfaces/schema';
-import { ActivatedRoute, Router } from '@angular/router';
+import {CdkDragDrop, moveItemInArray,CdkDragHandle} from '@angular/cdk/drag-drop';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 import { Schemaheaditems } from '../interfaces/schemahead';
 interface Type {
   value: string;
@@ -29,7 +30,7 @@ export class SchematicsComponent implements OnInit {
     { value: 'date', viewValue: 'date' }
   ];
   dataSource = new MatTableDataSource<Schemaitem>([]);
-  @ViewChild(MatTable, { static: true }) table: MatTable<any>;
+  @ViewChild(MatTable, { static: true }) table: MatTable<Schemaitem>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   buffer: Schemaitem;
@@ -52,6 +53,8 @@ export class SchematicsComponent implements OnInit {
   
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+    console.log('data on view init',this.dataSource.data)
+    this.table.renderRows();
   }
 
   updatingdata(data: Schemaitem) {
@@ -138,6 +141,7 @@ export class SchematicsComponent implements OnInit {
     const buffer: Schemaitem = { ...this.schemaitems[id - 1] };
     const dialogRef = this.dialog.open(DatamodalComponent, {
       width: '400px',
+      panelClass:'my-outlined-dialog',
       data: buffer,
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -152,6 +156,7 @@ export class SchematicsComponent implements OnInit {
     const dialogRef = this.dialog.open(DatamodalComponent, {
       width: '300px',
       disableClose: true,
+      panelClass:'my-outlined-dialog',
       data: { id: 0, type: '',
        name: '',
        length: 0,
@@ -169,5 +174,10 @@ export class SchematicsComponent implements OnInit {
   }
   navigate(){
     this.router.navigate(['/browse']);
+   }
+   drop(event: CdkDragDrop<any>) {
+    moveItemInArray(this.schemaitems, event.previousIndex, event.currentIndex);
+    this.dataSource.data=this.schemaitems;
+    this.table.renderRows();
    }
 }

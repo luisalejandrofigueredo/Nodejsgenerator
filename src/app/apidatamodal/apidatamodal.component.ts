@@ -105,6 +105,7 @@ export class ApidatamodalComponent implements OnInit {
     const dialogRef = this.dialog.open(GenoptionswithoperatorsComponent, {
       width: '100%',
       disableClose: true,
+      panelClass:'my-outlined-dialog',
       data: { fields: this.configservice.getfieldschemaswithid(this.idschema), schemaid: this.idschema, parameters: JSON.parse(this.profileForm.get('parameters').value) }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -117,6 +118,7 @@ export class ApidatamodalComponent implements OnInit {
     const dialogRef = this.dialog.open(ParametersmodalComponent, {
       width: '500px',
       disableClose: true,
+      panelClass:'my-outlined-dialog',
       data: (this.profileForm.get('parameters').value !== "") ? JSON.parse(this.profileForm.get('parameters').value as string) : []
     });
     dialogRef.afterClosed().subscribe(result => {

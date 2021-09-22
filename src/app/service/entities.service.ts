@@ -30,7 +30,6 @@ export class EntitiesService {
     this.config = this.configservice.config
     for (let index = 0; index < this.config.schemas.length; index++) {
       const element = this.config.schemas[index];
-      console.log('generate element',element);
       this.entity_generator(index);
     }
   }
@@ -154,7 +153,7 @@ export class EntitiesService {
     let insertstr = '';
     if (relations.OnetoOne !== undefined && relations.OnetoOne.length !== 0) {
       insertstr += ', OneToOne';
-      joincolummn = true;
+      joincolummn = true; 
     }
     if (relations.Onetomany !== undefined && relations.Onetomany.length !== 0) {
       insertstr += ', OneToMany';

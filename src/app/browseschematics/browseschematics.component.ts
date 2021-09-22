@@ -42,7 +42,7 @@ export class BrowseschematicsComponent implements OnInit {
     const dialogRef = this.dialog.open(FormschemamodalComponent, {
       width: '500px',
       disableClose: false,
-      // tslint:disable-next-line: max-line-length
+      panelClass:'my-outlined-dialog',
       data: { id: 0, name: '', description: '', imports: '', fields: '' , security: true, classsecurity: 'RolesGuard', filesecurity: '', filesupload:false,mastersecurity: false} as Schemahead
     });
     dialogRef.afterClosed().subscribe(data => {
@@ -80,6 +80,7 @@ export class BrowseschematicsComponent implements OnInit {
     const _data = { ...this.schema[id - 1]};
     const dialogRef = this.dialog.open(FormschemamodalComponent, {
       width: '500px',
+      panelClass:'my-outlined-dialog',
       disableClose: true,
       data: _data
     });

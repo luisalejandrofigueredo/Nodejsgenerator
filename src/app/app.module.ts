@@ -19,6 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -132,6 +133,7 @@ import { InstallFilesComponent } from './install-files/install-files.component';
     MatProgressBarModule,
     MatSortModule,
     MatRadioModule,
+    DragDropModule,
     ClipboardModule,
     NgxElectronModule ],
   providers: [],

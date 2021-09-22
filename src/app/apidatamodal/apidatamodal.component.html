@@ -1,59 +1,72 @@
-<h4 mat-dialog-title>API</h4>
-<div mat-dialog-content>
-    <form [formGroup]="profileForm">
-        <mat-select placeholder="verb" (selectionChange)="selectchange()" formControlName="selectedValue" name="verb">
-            <mat-option *ngFor="let item of types" [value]="item.value">
-                {{item.viewValue}}
-            </mat-option>
-        </mat-select>
-        <mat-select (selectionChange)="operationchange()" *ngIf="profileForm.get('selectedValue').value==='get'" placeholder="get operation" formControlName="selectedOperation" name="operation">
-            <mat-option *ngFor="let item of operation" [value]="item.value">
-                {{item.viewValue}}
-            </mat-option>
-        </mat-select>
-        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-            <mat-form-field *ngIf="profileForm.get('selectedOperation').value==='findgenerated' || profileForm.get('selectedOperation').value==='findandcountgenerated'">
-                <input  matInput name="parameters" placeholder="Parameters" formControlName="parameters">
-            </mat-form-field>
-            <button mat-icon-button *ngIf="profileForm.get('selectedOperation').value==='findgenerated' || profileForm.get('selectedOperation').value==='findandcountgenerated'" (click)="generateparameters()"><mat-icon>add</mat-icon></button>
-        </div>
-        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-            <mat-form-field *ngIf="profileForm.get('selectedOperation').value==='findgenerated' || profileForm.get('selectedOperation').value==='findandcountgenerated'">
-                <textarea  matInput name="options" placeholder="Options" formControlName="options"
-                    cdkTextareaAutosize></textarea>
-            </mat-form-field>
-            <button mat-icon-button *ngIf="profileForm.get('selectedOperation').value==='findgenerated' || profileForm.get('selectedOperation').value==='findandcountgenerated'" (click)="generatecode()"><mat-icon>code</mat-icon></button>
-        </div>
-        <mat-select *ngIf="profileForm.get('selectedOperation').value==='skiplimitbyfield' || profileForm.get('selectedOperation').value==='skiplimitfilter'"
-            placeholder="Select field" formControlName="selectedfield" name="selectfield">
-            <mat-option *ngFor="let items of fields" [value]="items">
-                {{items}}
-            </mat-option>
-        </mat-select>
-        <mat-form-field *ngIf="profileForm.get('selectedValue').value==='postonetoone' || profileForm.get('selectedValue').value==='postonetomany' || profileForm.get('selectedValue').value==='postmanytoone' || profileForm.get('selectedValue').value==='postmanytomany'">
-            <mat-select [placeholder]="placeholder" formControlName="relations">
-                <mat-option *ngFor="let item of relations"  [value]="item.relationname">
-                    {{item.relationname}} {{item.table}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-        <mat-form-field *ngIf="profileForm.get('selectedValue').value==='get' || profileForm.get('selectedValue').value==='postonetoone' || profileForm.get('selectedValue').value==='postonetomany' || profileForm.get('selectedValue').value==='postmanytoone' || profileForm.get('selectedValue').value==='postmanytomany'">
-            <input matInput placeholder="path" formControlName="path">
-        </mat-form-field>
-        <mat-form-field *ngIf="profileForm.get('selectedValue').value==='uploadfile' || profileForm.get('selectedValue').value==='uploadfiles' || profileForm.get('selectedValue').value==='getfile'">
-            <input matInput placeholder="path" formControlName="path">
-        </mat-form-field>
-        <mat-form-field *ngIf="profileForm.get('selectedValue').value==='uploadfile' || profileForm.get('selectedValue').value==='uploadfiles'">
-            <input matInput placeholder="Files types" formControlName="extfiles">
-        </mat-form-field>
-        <mat-checkbox formControlName="security">Security</mat-checkbox>
-        <mat-form-field *ngIf="profileForm.get('security').value===true">
-            <input matInput formControlName="roles" placeholder="roles">
-            <mat-icon matSuffix>code</mat-icon>
-        </mat-form-field>
-    </form>
-</div>
+<h4 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>API</h4>
+<form [formGroup]="profileForm">
+  <mat-select placeholder="verb" (selectionChange)="selectchange()" formControlName="selectedValue" name="verb">
+    <mat-option *ngFor="let item of types" [value]="item.value">
+      {{item.viewValue}}
+    </mat-option>
+  </mat-select>
+  <mat-select (selectionChange)="operationchange()" *ngIf="profileForm.get('selectedValue').value==='get'"
+    placeholder="get operation" formControlName="selectedOperation" name="operation">
+    <mat-option *ngFor="let item of operation" [value]="item.value">
+      {{item.viewValue}}
+    </mat-option>
+  </mat-select>
+  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+    <mat-form-field
+      *ngIf="profileForm.get('selectedOperation').value==='findgenerated' || profileForm.get('selectedOperation').value==='findandcountgenerated'">
+      <input matInput name="parameters" placeholder="Parameters" formControlName="parameters">
+    </mat-form-field>
+    <button mat-icon-button
+      *ngIf="profileForm.get('selectedOperation').value==='findgenerated' || profileForm.get('selectedOperation').value==='findandcountgenerated'"
+      (click)="generateparameters()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+    <mat-form-field
+      *ngIf="profileForm.get('selectedOperation').value==='findgenerated' || profileForm.get('selectedOperation').value==='findandcountgenerated'">
+      <textarea matInput name="options" placeholder="Options" formControlName="options" cdkTextareaAutosize></textarea>
+    </mat-form-field>
+    <button mat-icon-button
+      *ngIf="profileForm.get('selectedOperation').value==='findgenerated' || profileForm.get('selectedOperation').value==='findandcountgenerated'"
+      (click)="generatecode()">
+      <mat-icon>code</mat-icon>
+    </button>
+  </div>
+  <mat-select
+    *ngIf="profileForm.get('selectedOperation').value==='skiplimitbyfield' || profileForm.get('selectedOperation').value==='skiplimitfilter'"
+    placeholder="Select field" formControlName="selectedfield" name="selectfield">
+    <mat-option *ngFor="let items of fields" [value]="items">
+      {{items}}
+    </mat-option>
+  </mat-select>
+  <mat-form-field
+    *ngIf="profileForm.get('selectedValue').value==='postonetoone' || profileForm.get('selectedValue').value==='postonetomany' || profileForm.get('selectedValue').value==='postmanytoone' || profileForm.get('selectedValue').value==='postmanytomany'">
+    <mat-select [placeholder]="placeholder" formControlName="relations">
+      <mat-option *ngFor="let item of relations" [value]="item.relationname">
+        {{item.relationname}} {{item.table}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field
+    *ngIf="profileForm.get('selectedValue').value==='get' || profileForm.get('selectedValue').value==='postonetoone' || profileForm.get('selectedValue').value==='postonetomany' || profileForm.get('selectedValue').value==='postmanytoone' || profileForm.get('selectedValue').value==='postmanytomany'">
+    <input matInput placeholder="path" formControlName="path">
+  </mat-form-field>
+  <mat-form-field
+    *ngIf="profileForm.get('selectedValue').value==='uploadfile' || profileForm.get('selectedValue').value==='uploadfiles' || profileForm.get('selectedValue').value==='getfile'">
+    <input matInput placeholder="path" formControlName="path">
+  </mat-form-field>
+  <mat-form-field
+    *ngIf="profileForm.get('selectedValue').value==='uploadfile' || profileForm.get('selectedValue').value==='uploadfiles'">
+    <input matInput placeholder="Files types" formControlName="extfiles">
+  </mat-form-field>
+  <mat-checkbox formControlName="security">Security</mat-checkbox>
+  <mat-form-field *ngIf="profileForm.get('security').value===true">
+    <input matInput formControlName="roles" placeholder="roles">
+    <mat-icon matSuffix>code</mat-icon>
+  </mat-form-field>
+</form>
 <div mat-dialog-actions style="justify-content: flex-end;">
-    <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>
-    <button mat-raised-button color="primary" mat-button (click)="onYesClick()">Yes</button>
+  <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>
+  <button mat-raised-button color="primary" mat-button (click)="onYesClick()">Yes</button>
 </div>

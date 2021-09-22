@@ -1,29 +1,27 @@
-<h4 mat-dialog-title></h4>
-  <div mat-dialog-content>
-    <mat-form-field>
-      <input matInput [(ngModel)]="data.name" placeholder="name">
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput min="0" step="1" type="number" [(ngModel)]="data.length" placeholder="length">
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Type data</mat-label>
-      <mat-select (selectionChange)="changed()" [(value)]="selected">
-        <mat-option *ngFor="let type of types" [value]="type.value">
-          {{type.viewValue}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <input matInput [(ngModel)]="data.extraparameter" placeholder="extra parameters">
-      <mat-icon matSuffix>code</mat-icon>
-    </mat-form-field>
-    <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
-      <mat-checkbox [(ngModel)]="autonumber" [disabled]="(selected==='number') ? false: true">Autonumber</mat-checkbox>
-      <mat-checkbox [(ngModel)]="index" [disabled]="autonumber">Index</mat-checkbox>
-     </div> 
-  </div>
-  <div mat-dialog-actions style = "justify-content: flex-end;">
-      <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>
-      <button mat-raised-button color="primary" mat-button (click)="onYesClick()" >Yes</button>
-  </div>
+<h4 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>Field</h4>
+<mat-form-field>
+  <input matInput [(ngModel)]="data.name" placeholder="name">
+</mat-form-field>
+<mat-form-field>
+  <input matInput min="0" step="1" type="number" [(ngModel)]="data.length" placeholder="length">
+</mat-form-field>
+<mat-form-field>
+  <mat-label>Type data</mat-label>
+  <mat-select (selectionChange)="changed()" [(value)]="selected">
+    <mat-option *ngFor="let type of types" [value]="type.value">
+      {{type.viewValue}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<mat-form-field appearance="outline">
+  <input matInput [(ngModel)]="data.extraparameter" placeholder="extra parameters">
+  <mat-icon matSuffix>code</mat-icon>
+</mat-form-field>
+<div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
+  <mat-checkbox [(ngModel)]="autonumber" [disabled]="(selected==='number') ? false: true">Autonumber</mat-checkbox>
+  <mat-checkbox [(ngModel)]="index" [disabled]="autonumber">Index</mat-checkbox>
+</div>
+<div mat-dialog-actions style="justify-content: flex-end;">
+  <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>
+  <button mat-raised-button color="primary" mat-button (click)="onYesClick()">Yes</button>
+</div>

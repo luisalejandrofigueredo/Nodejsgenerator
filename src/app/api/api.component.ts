@@ -9,6 +9,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import {YesnoComponent} from '../yesno/yesno.component';
 import {MatSort, Sort} from '@angular/material/sort';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-api',
@@ -96,5 +97,11 @@ export class ApiComponent implements OnInit {
       this.dataSource.data = [...this.apis];
       this.table.renderRows();
     }});
+  }
+
+  drop(event: CdkDragDrop<any>) {
+   moveItemInArray(this.apis, event.previousIndex, event.currentIndex);
+   this.dataSource.data=this.apis;
+   this.table.renderRows();
   }
 }

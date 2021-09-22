@@ -32,7 +32,7 @@ export class GenerateInterfacesService {
     }
   }
 
-  generateInterfaceWithRelations(relation:{table:string;name:string}[]) {
+  generateInterfaceWithRelations(relation: { table: string; name: string }[]) {
     this.config = this.configservice.config
     for (let index = 0; index < this.config.schemas.length; index++) {
       this.file_generating = '';
@@ -42,7 +42,7 @@ export class GenerateInterfacesService {
       if (this.electron_service.isElectronApp) {
         const args = {
           path: this.config.filePath,
-          name: this.config.schemas[index].name+'Relations',
+          name: this.config.schemas[index].name + 'Relations',
           file: this.file_generating,
           format: this.format
         };
@@ -67,13 +67,13 @@ export class GenerateInterfacesService {
     fields.forEach(element => {
       switch (element.type) {
         case 'string':
-          this.file_generating += element.name + ':string;\n\n';
+          this.file_generating += '\t' + element.name + ':string;\n';
           break;
         case 'number':
-          this.file_generating += element.name + ':number;\n\n';
+          this.file_generating += '\t' + element.name + ':number;\n';
           break;
         case 'date':
-          this.file_generating += element.name + ': Date;\n\n';
+          this.file_generating += '\t' + element.name + ': Date;\n';
           break;
         default:
           break;

@@ -1,34 +1,42 @@
 <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-    <button mat-icon-button (click)="openadd()"><mat-icon>add</mat-icon></button>
-    <button mat-icon-button (click)="navigate()"><mat-icon>home</mat-icon></button>
+  <button mat-icon-button (click)="openadd()">
+    <mat-icon>add</mat-icon>
+  </button>
+  <button mat-icon-button (click)="navigate()">
+    <mat-icon>home</mat-icon>
+  </button>
 </div>
 <p>Schema:{{schemaname}}</p>
-<table mat-table matSort [dataSource]="dataSource">
-  <ng-container matColumnDef="id">
-    <th mat-header-cell mat-sort-header class="head" mat-sort-header *matHeaderCellDef> # </th>
-    <td mat-cell *matCellDef="let row"> {{row.id}} </td>
-  </ng-container>
-  <ng-container matColumnDef="type">
-    <th mat-header-cell mat-sort-header class="head" mat-sort-header *matHeaderCellDef> Type </th>
-    <td mat-cell *matCellDef="let row"> {{row.type}} </td>
-  </ng-container>
-  <ng-container matColumnDef="name">
-    <th mat-header-cell mat-sort-header class="head" mat-sort-header *matHeaderCellDef> Name </th>
-    <td mat-cell *matCellDef="let row"><span style="padding-left: 20px;"></span>{{row.name}} </td>
-  </ng-container>
-  <ng-container matColumnDef="length">
-    <th mat-header-cell mat-sort-header class="head" *matHeaderCellDef> Length </th>
-    <td mat-cell *matCellDef="let row"><span style="padding-left: 20px;"></span>{{row.length}} </td>
-  </ng-container>
-  <ng-container matColumnDef="delete">
-    <th mat-header-cell class="head" *matHeaderCellDef> Delete </th>
-    <td mat-cell *matCellDef="let row"><button (click)="delete(row.id)" mat-icon-button><mat-icon>delete</mat-icon></button></td>
-  </ng-container>
-  <ng-container matColumnDef="edit">
-    <th mat-header-cell class="head" *matHeaderCellDef> Edit </th>
-    <td mat-cell *matCellDef="let row"><button (click)="edit(row.id)" mat-icon-button><mat-icon>edit</mat-icon></button></td>
-  </ng-container>
-  <tr mat-header-row *matHeaderRowDef="['id','name','type','length','delete','edit']"></tr>
-  <tr mat-row *matRowDef="let row; columns: ['id','name','type','length','delete','edit'];"></tr>
+<table mat-table matSort class="mat-elevation-z8" [dataSource]="dataSource" cdkDropList   (cdkDropListDropped)="drop($event)">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell mat-sort-header class="head" mat-sort-header *matHeaderCellDef> # </th>
+      <td cdkDrag mat-cell *matCellDef="let row"><mat-icon cdkDragHandle>reorder</mat-icon>{{row.id}}</td>
+    </ng-container>
+    <ng-container matColumnDef="type">
+      <th mat-header-cell mat-sort-header class="head" mat-sort-header *matHeaderCellDef> Type </th>
+      <td mat-cell *matCellDef="let row"> {{row.type}} </td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell mat-sort-header class="head" mat-sort-header *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let row"><span style="padding-left: 20px;"></span>{{row.name}} </td>
+    </ng-container>
+    <ng-container matColumnDef="length">
+      <th mat-header-cell mat-sort-header class="head" *matHeaderCellDef> Length </th>
+      <td mat-cell *matCellDef="let row"><span style="padding-left: 20px;"></span>{{row.length}} </td>
+    </ng-container>
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell class="head" *matHeaderCellDef> Delete </th>
+      <td mat-cell *matCellDef="let row"><button (click)="delete(row.id)" mat-icon-button>
+          <mat-icon>delete</mat-icon>
+        </button></td>
+    </ng-container>
+    <ng-container matColumnDef="edit">
+      <th mat-header-cell class="head" *matHeaderCellDef> Edit </th>
+      <td mat-cell *matCellDef="let row"><button (click)="edit(row.id)" mat-icon-button>
+          <mat-icon>edit</mat-icon>
+        </button></td>
+    </ng-container>
+  <tr mat-header-row *matHeaderRowDef="['id','name','type','length','delete','edit']" ></tr>
+  <tr mat-row *matRowDef="let row; columns: ['id','name','type','length','delete','edit'];" ></tr>
 </table>
 <mat-paginator [pageSizeOptions]="[20,30,40]" showFirstLastButtons></mat-paginator>

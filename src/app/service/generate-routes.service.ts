@@ -18,7 +18,7 @@ export class GenerateRoutesService {
     this.createRoutesInterfaces();
     const schema: Schemahead[] = this.config_service.getschema();
     schema.forEach(element => {
-      this.lineGenerating += '';
+      this.lineGenerating = '';
       const apis: Api[] = this.config_service.getapis(element.id);
       this.generateHeader(apis, element);
       this.generateBody(apis, element);
@@ -47,6 +47,7 @@ export class GenerateRoutesService {
     this.lineGenerating += `private initializeRoutes() {\n`;
     this.generateRoutes(api, schema);
     this.lineGenerating += '}\n';
+    this.lineGenerating += `export default ${schemaName}Route\n`;
   }
 
   generateRoutes(api: Api[], schema: Schemahead) {

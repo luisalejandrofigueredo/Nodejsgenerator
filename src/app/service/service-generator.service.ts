@@ -8,7 +8,7 @@ export class ServiceGeneratorService {
   security: any;
   format: false;
   textGenerated: String = '';
-  constructor(private config_service: ConfigService, private electron_service: ElectronService,) { }
+  constructor(private config_service: ConfigService, private electron_service: ElectronService) { }
   begin_generate() {
     this.security = this.config_service.config.security;
     this.config_service.config.schemas.forEach((item, index) => {
@@ -72,8 +72,8 @@ export class ServiceGeneratorService {
           break;
         case 'patch':
           this.textGenerated += `async patch${element.path}(_id: number,patchBody:any) {\n`;
-          this.textGenerated += `const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
-          this.textGenerated += `return await ${item.name.toLowerCase()}Repository.createQueryBuilder().update(${item.name}).set(patchBody).where("id = :id", { id:_id }).execute();\n`;
+          this.textGenerated += `\t const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
+          this.textGenerated += `\t return await ${item.name.toLowerCase()}Repository.createQueryBuilder().update(${item.name}).set(patchBody).where("id = :id", { id:_id }).execute();\n`;
           this.textGenerated += '}\n\n';
           break;
       }
