@@ -30,8 +30,8 @@ export class SchematicsComponent implements OnInit {
     { value: 'date', viewValue: 'date' }
   ];
   dataSource = new MatTableDataSource<Schemaitem>([]);
-  @ViewChild(MatTable, { static: true }) table: MatTable<Schemaitem>;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatTable) table: MatTable<Schemaitem>;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   buffer: Schemaitem;
   // tslint:disable-next-line: max-line-length
@@ -141,7 +141,6 @@ export class SchematicsComponent implements OnInit {
     const buffer: Schemaitem = { ...this.schemaitems[id - 1] };
     const dialogRef = this.dialog.open(DatamodalComponent, {
       width: '400px',
-      panelClass:'my-outlined-dialog',
       data: buffer,
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -156,7 +155,6 @@ export class SchematicsComponent implements OnInit {
     const dialogRef = this.dialog.open(DatamodalComponent, {
       width: '300px',
       disableClose: true,
-      panelClass:'my-outlined-dialog',
       data: { id: 0, type: '',
        name: '',
        length: 0,
@@ -176,6 +174,9 @@ export class SchematicsComponent implements OnInit {
     this.router.navigate(['/browse']);
    }
    drop(event: CdkDragDrop<any>) {
+    console.log('container data',event.container.data);
+    console.log('current previos index',event.previousIndex);
+    console.log('current current index',event.currentIndex);
     moveItemInArray(this.schemaitems, event.previousIndex, event.currentIndex);
     this.dataSource.data=this.schemaitems;
     this.table.renderRows();
