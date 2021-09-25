@@ -174,9 +174,6 @@ export class SchematicsComponent implements OnInit {
     this.router.navigate(['/browse']);
    }
    drop(event: CdkDragDrop<any>) {
-    console.log('container data',event.container.data);
-    console.log('current previos index',event.previousIndex);
-    console.log('current current index',event.currentIndex);
     moveItemInArray(this.schemaitems, event.previousIndex, event.currentIndex);
     this.dataSource.data=this.schemaitems;
     this.table.renderRows();

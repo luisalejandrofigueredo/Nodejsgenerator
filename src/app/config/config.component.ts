@@ -3,22 +3,24 @@ import { ElectronService } from 'ngx-electron';
 import { ConfigService } from '../service/config.service';
 import { Selectvalues } from "../selectvalues";
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { ConfigProductionComponent } from '../config-production/config-production.component';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-config',
   templateUrl: './config.component.html',
   styleUrls: ['./config.component.scss']
 })
 export class ConfigComponent implements OnInit {
-  constructor(private configservice: ConfigService, private electron: ElectronService) { }
+  constructor(private dialog: MatDialog, private configservice: ConfigService, private electron: ElectronService) { }
   filePath: string;
   enableCors = false;
   enablehttps = false;
-  uploadfiles= false;
+  uploadfiles = false;
   dbconf: any;
   jwtsk: string;
   hide = true;
   hidep = true;
-  port=3000;
+  port = 3000;
   driverdatabase: Selectvalues[] = [{ value: 0, viewValue: 'My Sql' },
   { value: 1, viewValue: "PostgreSQL" },
   { value: 2, viewValue: "SQLite" },
@@ -63,6 +65,15 @@ export class ConfigComponent implements OnInit {
       database: new FormControl(this.dbconf.database, Validators.required),
     });
   }
+
+  applicationConfig() {
+    const dialogRef = this.dialog.open(ConfigProductionComponent, {
+      width: '500px',
+      panelClass: 'my-outlined-dialog',
+      disableClose: true,
+    });
+  }
+
   browse() {
     // tslint:disable-next-line: max-line-length
     this.electron.remote.dialog.showOpenDialog(this.electron.remote.getCurrentWindow(), { properties: ['openDirectory'] }).then(result => {
@@ -81,12 +92,12 @@ export class ConfigComponent implements OnInit {
     this.dbconf.database = this.profileForm.get('database').value;
     this.configservice.setdatabase(this.dbconf);
   }
-  changeuploadfiles(){
-    this.configservice.config.enableuploadfiles=this.uploadfiles;
+  changeuploadfiles() {
+    this.configservice.config.enableuploadfiles = this.uploadfiles;
   }
 
-  changeport(){
-     this.configservice.config.port=this.port;
+  changeport() {
+    this.configservice.config.port = this.port;
   }
 
   change() {

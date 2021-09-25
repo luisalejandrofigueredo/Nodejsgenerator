@@ -39,8 +39,11 @@
     <div>
         <mat-expansion-panel>
             <mat-expansion-panel-header>
-                Database config
+                Database config developer
             </mat-expansion-panel-header>
+            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="gappx">
+                <button mat-raised-button (click)="applicationConfig()">Application config</button>
+            </div>
             <form [formGroup]="profileForm">
                 <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
                     <mat-form-field>

@@ -11,6 +11,7 @@ export class GenerateMainService {
   constructor(private config_service: ConfigService, private electron_service: ElectronService,) { }
 
   beginGenerate() {
+    this.generateAppModule();
     const schema: Schemahead[] = this.config_service.getschema();
     this.textGenerated='';
     this.textGenerated += `process.env['NODE_CONFIG_DIR'] = __dirname + '/configs';\n`;
@@ -41,5 +42,16 @@ export class GenerateMainService {
       };
       const end = this.electron_service.ipcRenderer.sendSync('saveServe', args);
     }
+  }
+
+  generateAppModule(){
+    if (this.electron_service.isElectronApp) {
+      const args = {
+        path: this.config_service.config.filePath,
+        format: false
+      };
+      const end = this.electron_service.ipcRenderer.sendSync('createAppModule', args);
+    }
+
   }
 }

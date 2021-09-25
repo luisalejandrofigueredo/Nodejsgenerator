@@ -679,24 +679,21 @@ ipcMain.on('openvisualcode', (event, arg) => {
   event.returnValue = 'visual ready';
 });
 
-ipcMain.on('saveappmodule', (event, arg) => {
+ipcMain.on('createAppModule', (event, arg) => {
   console.log('writing files os:', process.platform);
-  let dir = '';
-  let filepath = '';
   if (process.platform === "win32") {
-    console.log('writing in windows...');
-    filepath = arg.path + '\\src\\' + arg.name + '.module.ts';
-    dir = arg.path + '\\src\\'
+    console.log('writing in windows app.ts...');
   } else {
-    console.log('writing in unix...');
-    filepath = arg.path + '/src/' + arg.name + '.module.ts';
-    dir = arg.path + '/src/'
+    console.log('writing in unix app.ts...');
   }
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir)
+  if (!fs.existsSync(path.join(arg.path,'/src/configs'))) {
+    fs.mkdirSync(path.join(arg.path,'/src/configs'))
   }
-  writeFile(filepath, arg.file);
-  event.returnValue = filepath;
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/app/app.ts`),arg.path+'/app.ts')
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/development.json`),arg.path+'/src/configs/development.json')
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/production.json`),arg.path+'/src/configs/production.json')
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/test.json`),arg.path+'/src/configs/test.json')
+  event.returnValue = 'Wrote';
 });
 
 ipcMain.on('saveutilmuter', (event, arg) => {

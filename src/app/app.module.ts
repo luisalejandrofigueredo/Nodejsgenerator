@@ -65,6 +65,8 @@ import { FastprojectComponent } from './fastproject/fastproject.component';
 import { ErrorComponent } from './error/error.component';
 import { EndComponent } from './end/end.component';
 import { InstallFilesComponent } from './install-files/install-files.component';
+import { ConfigdevelopemtComponent } from './configdevelopemt/configdevelopemt.component';
+import { ConfigProductionComponent } from './config-production/config-production.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -105,6 +107,8 @@ import { InstallFilesComponent } from './install-files/install-files.component';
     ErrorComponent,
     EndComponent,
     InstallFilesComponent,
+    ConfigdevelopemtComponent,
+    ConfigProductionComponent,
   ],
   imports: [ 
     BrowserModule, 

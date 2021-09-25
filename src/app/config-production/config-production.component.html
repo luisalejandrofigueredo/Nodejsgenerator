@@ -1,0 +1,37 @@
+<h4 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>Application database config</h4>
+<form [formGroup]="profileForm">
+    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
+        <mat-form-field>
+            <mat-select placeholder="Select database driver" formControlName="selecteddatabase"
+                name="itemsdatabase">
+                <mat-option *ngFor="let item of driverdatabase" [value]="item.value">
+                    {{item.viewValue}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Host" formControlName="host">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput type="number" placeholder="Port" formControlName="port">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="User name" formControlName="username">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput [type]="hidep ? 'password' : 'text'" placeholder="Password"
+                formControlName="password">
+            <button mat-icon-button matSuffix (click)="hidep = !hidep" [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hidep">
+                <mat-icon>{{hidep ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Database" formControlName="database">
+        </mat-form-field>
+    </div>
+</form>
+<div mat-dialog-actions style="justify-content: flex-end;">
+    <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>
+    <button mat-raised-button color="primary" [disabled]="!profileForm.valid" mat-button (click)="onYesClick()">Yes</button>
+  </div>

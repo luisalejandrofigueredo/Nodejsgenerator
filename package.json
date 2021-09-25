@@ -1,9 +1,9 @@
 {
   "name": "generator",
-  "productName": "Nestjs Generator",
-  "version": "0.0.28",
+  "productName": "Nodejs Generator",
+  "version": "0.0.30",
   "author": "Luis Alejandro Figueredo Casadei",
-  "description": "Generator for Nestjs",
+  "description": "Generator for Node",
   "main": "main.js",
   "icon": "dist/generador/assets/icons/win/icon.ico",
   "build": {
