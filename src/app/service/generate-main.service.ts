@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ComponentFactoryResolver, Injectable } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { Schemahead } from '../interfaces/schemahead';
 import { ConfigService } from './config.service';
@@ -12,6 +12,7 @@ export class GenerateMainService {
 
   beginGenerate() {
     this.generateAppModule();
+    this.configDevelopment();
     const schema: Schemahead[] = this.config_service.getschema();
     this.textGenerated='';
     this.textGenerated += `process.env['NODE_CONFIG_DIR'] = __dirname + '/configs';\n`;
@@ -41,6 +42,25 @@ export class GenerateMainService {
         format: false
       };
       const end = this.electron_service.ipcRenderer.sendSync('saveServe', args);
+    }
+  }
+
+  configDevelopment(){
+    if (this.electron_service.isElectronApp) {
+      const args = {
+        path: this.config_service.config.filePath,
+      };
+      let configDatabase = this.electron_service.ipcRenderer.sendSync('loadDevelopment', args);
+      configDatabase.dbConfig.database=this.config_service.config.dbconf.database;
+      configDatabase.dbConfig.host=this.config_service.config.dbconf.host;
+      configDatabase.dbConfig.user=this.config_service.config.dbconf.username;
+      configDatabase.dbConfig.password=this.config_service.config.dbconf.password;
+      const argSave = {
+        path: this.config_service.config.filePath,
+        file:JSON.stringify(configDatabase,null,4)
+      };
+      const wrote=this.electron_service.ipcRenderer.sendSync('saveDevelopment', argSave);
+      console.log('configDevelopment',configDatabase);
     }
   }
 
