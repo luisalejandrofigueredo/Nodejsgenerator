@@ -18,6 +18,7 @@ export class ConfigComponent implements OnInit {
   uploadfiles = false;
   dbconf: any;
   jwtsk: string;
+  jwtskProduction:string;
   hide = true;
   hidep = true;
   port = 3000;
@@ -54,6 +55,11 @@ export class ConfigComponent implements OnInit {
       this.configservice.config.jwtsk = ''
     } else {
       this.jwtsk = this.configservice.config.jwtsk;
+    }
+    if (this.configservice.config.jwtskProduction === undefined) { //for compa delete las version
+      this.configservice.config.jwtskProduction = ''
+    } else {
+      this.jwtskProduction = this.configservice.config.jwtskProduction;
     }
     this.dbconf = this.configservice.getdatabase();
     this.profileForm = new FormGroup({
@@ -110,6 +116,7 @@ export class ConfigComponent implements OnInit {
 
   chsecret() {
     this.configservice.config.jwtsk = this.jwtsk;
+    this.configservice.config.jwtskProduction=this.jwtskProduction;
   }
   save() {
     this.configservice.save();

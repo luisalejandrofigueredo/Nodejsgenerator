@@ -678,9 +678,23 @@ ipcMain.on('openvisualcode', (event, arg) => {
   }
   event.returnValue = 'visual ready';
 });
+
 ipcMain.on('saveDevelopment', (event, arg) => {
   writeFile(arg.path+'/src/configs/development.json',arg.file);
   event.returnValue = 'wrote';
+});
+
+ipcMain.on('saveProduction', (event, arg) => {
+  writeFile(arg.path+'/src/configs/production.json',arg.file);
+  event.returnValue = 'wrote';
+});
+
+ipcMain.on('loadProduction', (event, arg) => {
+  fs.readFile(arg.path+'/src/configs/production.json', function (err, data) {
+    if (err) throw err;
+    const json = JSON.parse(data);
+    event.returnValue = json;
+  });
 });
 ipcMain.on('loadDevelopment', (event, arg) => {
   fs.readFile(arg.path+'/src/configs/development.json', function (err, data) {

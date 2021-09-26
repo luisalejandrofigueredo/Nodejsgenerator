@@ -13,6 +13,7 @@ export class GenerateMainService {
   beginGenerate() {
     this.generateAppModule();
     this.configDevelopment();
+    this.configProduction();
     const schema: Schemahead[] = this.config_service.getschema();
     this.textGenerated='';
     this.textGenerated += `process.env['NODE_CONFIG_DIR'] = __dirname + '/configs';\n`;
@@ -55,6 +56,7 @@ export class GenerateMainService {
       configDatabase.dbConfig.host=this.config_service.config.dbconf.host;
       configDatabase.dbConfig.user=this.config_service.config.dbconf.username;
       configDatabase.dbConfig.password=this.config_service.config.dbconf.password;
+      configDatabase.secretKey=this.config_service.config.jwtsk;
       const argSave = {
         path: this.config_service.config.filePath,
         file:JSON.stringify(configDatabase,null,4)
@@ -62,6 +64,27 @@ export class GenerateMainService {
       const wrote=this.electron_service.ipcRenderer.sendSync('saveDevelopment', argSave);
       console.log('configDevelopment',configDatabase);
     }
+  }
+
+  configProduction(){
+    if (this.electron_service.isElectronApp) {
+      const args = {
+        path: this.config_service.config.filePath,
+      };
+      let configDatabase = this.electron_service.ipcRenderer.sendSync('loadProduction', args);
+      configDatabase.dbConfig.database=this.config_service.config.dbconfProduction.database;
+      configDatabase.dbConfig.host=this.config_service.config.dbconfProduction.host;
+      configDatabase.dbConfig.user=this.config_service.config.dbconfProduction.username;
+      configDatabase.dbConfig.password=this.config_service.config.dbconfProduction.password;
+      configDatabase.secretKey=this.config_service.config.jwtskProduction;
+      const argSave = {
+        path: this.config_service.config.filePath,
+        file:JSON.stringify(configDatabase,null,4)
+      };
+      const wrote=this.electron_service.ipcRenderer.sendSync('saveProduction', argSave);
+      console.log('configProduction',configDatabase);
+    }
+
   }
 
   generateAppModule(){
