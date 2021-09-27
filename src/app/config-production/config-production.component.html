@@ -2,18 +2,7 @@
 <form [formGroup]="profileForm">
     <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
         <mat-form-field>
-            <mat-select placeholder="Select database driver" formControlName="selecteddatabase"
-                name="itemsdatabase">
-                <mat-option *ngFor="let item of driverdatabase" [value]="item.value">
-                    {{item.viewValue}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-        <mat-form-field>
             <input matInput placeholder="Host" formControlName="host">
-        </mat-form-field>
-        <mat-form-field>
-            <input matInput type="number" placeholder="Port" formControlName="port">
         </mat-form-field>
         <mat-form-field>
             <input matInput placeholder="User name" formControlName="username">

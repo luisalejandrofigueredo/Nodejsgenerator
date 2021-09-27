@@ -714,9 +714,24 @@ ipcMain.on('createAppModule', (event, arg) => {
     fs.mkdirSync(path.join(arg.path,'/src/configs'))
   }
   fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/app/app.ts`),arg.path+'/app.ts')
+  fs.readFile(arg.path+'/app.ts', function (err, data) {
+    if (err) throw err;
+    const dataString = data.toString().replace(/3000/g, arg.port);
+    writeFile(arg.path+'/app.ts',dataString);
+  });
   fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/development.json`),arg.path+'/src/configs/development.json')
   fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/production.json`),arg.path+'/src/configs/production.json')
   fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/test.json`),arg.path+'/src/configs/test.json')
+  if (!fs.existsSync(path.join(arg.path,'/src/databases'))) {
+    fs.mkdirSync(path.join(arg.path,'/src/databases'))
+  }
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/databases/index.ts`),arg.path+'/src/databases/index.ts')
+  fs.readFile(arg.path+'/src/databases/index.ts', function (err, data) {
+    if (err) throw err;
+    let dataString = data.toString().replace(/mysql/g, arg.driver);
+    dataString = dataString.replace(/3306/g, arg.portDatabase);
+    writeFile(arg.path+'/src/databases/index.ts',dataString);
+  });
   event.returnValue = 'Wrote';
 });
 
