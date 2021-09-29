@@ -722,6 +722,32 @@ ipcMain.on('createAppModule', (event, arg) => {
   fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/development.json`),arg.path+'/src/configs/development.json')
   fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/production.json`),arg.path+'/src/configs/production.json')
   fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/test.json`),arg.path+'/src/configs/test.json')
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/ts/tsconfig.json`),arg.path+'/tsconfig.json')
+  /**install middleware */
+  if (!fs.existsSync(path.join(arg.path,'/src/middlewares'))) {
+    fs.mkdirSync(path.join(arg.path,'/src/middlewares'))
+  }
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/middleware/validation.middleware.ts`),arg.path+'/src/middlewares/validation.middleware.ts');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/middleware/error.middleware.ts`),arg.path+'/src/middlewares/error.middleware.ts')
+  /**end middleware */
+  /** index*/
+  if (!fs.existsSync(path.join(arg.path,'/src/routes'))) {
+    fs.mkdirSync(path.join(arg.path,'/src/routes'))
+  }
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/routes/index.route.ts`),arg.path+'/src/routes/index.route.ts')
+  if (!fs.existsSync(path.join(arg.path,'/src/controllers'))) {
+    fs.mkdirSync(path.join(arg.path,'/src/controllers'))
+  }
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/controller/index.controller.ts`),arg.path+'/src/controllers/index.controller.ts')
+  /** end index */
+  /** utils*/
+  if (!fs.existsSync(path.join(arg.path,'/src/utils'))) {
+    fs.mkdirSync(path.join(arg.path,'/src/utils'))
+  }
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/utils/logger.ts`),arg.path+'/src/utils/logger.ts');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/utils/util.ts`),arg.path+'/src/utils/util.ts');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/utils/validateEnv.ts`),arg.path+'/src/utils/validateEnv.ts');
+  /* end utils*/
   if (!fs.existsSync(path.join(arg.path,'/src/databases'))) {
     fs.mkdirSync(path.join(arg.path,'/src/databases'))
   }
@@ -964,12 +990,12 @@ ipcMain.on('saveController', (event, arg) => {
   let filepath = '';
   if (process.platform === "win32") {
     console.log('writing in windows...');
-    filepath = arg.path + '\\src\\controller\\' + arg.name + '.controller.ts';
-    dir = arg.path + '\\src\\controller'
+    filepath = arg.path + '\\src\\controllers\\' + arg.name + '.controller.ts';
+    dir = arg.path + '\\src\\controllers'
   } else {
     console.log('writing in unix...');
-    filepath = arg.path + '/src/controller/' + arg.name + '.controller.ts';
-    dir = arg.path + '/src/controller'
+    filepath = arg.path + '/src/controllers/' + arg.name + '.controller.ts';
+    dir = arg.path + '/src/controllers'
   }
   if (!fs.existsSync(dir)) {
     try {

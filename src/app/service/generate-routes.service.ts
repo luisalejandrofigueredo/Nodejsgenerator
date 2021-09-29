@@ -90,8 +90,8 @@ export class GenerateRoutesService {
 
   generateHeader(Api: Api[], schema: Schemahead) {
     this.lineGenerating += `import { Router } from 'express';\n`;
-    this.lineGenerating += `import ${schema.name}Controller from '@controllers/users.controller';\n`;
-    this.lineGenerating += `import { Routes } from '@interfaces/routes.interface';\n`;
+    this.lineGenerating += `import ${schema.name}Controller from '../controllers/${schema.name}.controller';\n`;
+    this.lineGenerating += `import { Routes } from '../interfaces/routes.interface';\n`;
   }
 
   createRoutesInterfaces() {

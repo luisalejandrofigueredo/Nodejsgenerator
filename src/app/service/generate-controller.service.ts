@@ -19,6 +19,7 @@ export class GenerateControllerService {
       this.AddHeader(item, index);
       this.createBody(item, index);
       this.textGenerated += '}\n'
+      this.textGenerated += `export default ${item.name}Controller`;
       if (this.electron_service.isElectronApp) {
         const args = {
           path: this.config_service.config.filePath,

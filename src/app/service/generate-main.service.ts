@@ -1,5 +1,4 @@
-import { Portal } from '@angular/cdk/portal';
-import { ComponentFactoryResolver, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { Schemahead } from '../interfaces/schemahead';
 import { ConfigService } from './config.service';
@@ -20,19 +19,17 @@ export class GenerateMainService {
     this.textGenerated += `process.env['NODE_CONFIG_DIR'] = __dirname + '/configs';\n`;
     this.textGenerated += `import 'dotenv/config';\n`;
     this.textGenerated += `import App from '../app';\n`;
+    this.textGenerated +=`import IndexRoute from '../src/routes/index.route';\n`;
     schema.forEach(element => {
       this.textGenerated += `import ${element.name}Route from '../src/routes/${element.name}.route';\n`;
     });
-    this.textGenerated += `import validateEnv from '@utils/validateEnv;\n`;
+    this.textGenerated += `import validateEnv from '@utils/validateEnv';\n`;
     this.textGenerated += '';
     this.textGenerated += `validateEnv();\n`;
     this.textGenerated += 'const app = new App([';
+    this.textGenerated += `new IndexRoute()`;
     schema.forEach((element, index) => {
-      if (index === 0) {
-        this.textGenerated += `new ${element.name}Route()`;
-      } else {
         this.textGenerated += `, new ${element.name}Route()`;
-      }
     });
     this.textGenerated += ']);';
     this.textGenerated += `app.listen();`;
