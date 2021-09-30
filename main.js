@@ -713,16 +713,19 @@ ipcMain.on('createAppModule', (event, arg) => {
   if (!fs.existsSync(path.join(arg.path,'/src/configs'))) {
     fs.mkdirSync(path.join(arg.path,'/src/configs'))
   }
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/app/app.ts`),arg.path+'/app.ts')
-  fs.readFile(arg.path+'/app.ts', function (err, data) {
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/app/app.ts`),arg.path+'/src/app.ts')
+  fs.readFile(arg.path+'/src/app.ts', function (err, data) {
     if (err) throw err;
     const dataString = data.toString().replace(/3000/g, arg.port);
-    writeFile(arg.path+'/app.ts',dataString);
+    writeFile(arg.path+'/src/app.ts',dataString);
   });
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/development.json`),arg.path+'/src/configs/development.json')
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/production.json`),arg.path+'/src/configs/production.json')
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/test.json`),arg.path+'/src/configs/test.json')
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/ts/tsconfig.json`),arg.path+'/tsconfig.json')
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/development.json`),arg.path+'/src/configs/development.json');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/production.json`),arg.path+'/src/configs/production.json');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/test.json`),arg.path+'/src/configs/test.json');
+  /** configs */
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/ts/tsconfig.json`),arg.path+'/tsconfig.json');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/root/.env`),arg.path+'/.env');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/root/nodemon.json`),arg.path+'/nodemon.json');
   /**install middleware */
   if (!fs.existsSync(path.join(arg.path,'/src/middlewares'))) {
     fs.mkdirSync(path.join(arg.path,'/src/middlewares'))
@@ -748,6 +751,18 @@ ipcMain.on('createAppModule', (event, arg) => {
   fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/utils/util.ts`),arg.path+'/src/utils/util.ts');
   fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/utils/validateEnv.ts`),arg.path+'/src/utils/validateEnv.ts');
   /* end utils*/
+  /** exceptions */
+  if (!fs.existsSync(path.join(arg.path,'/src/exceptions'))) {
+    fs.mkdirSync(path.join(arg.path,'/src/exceptions'))
+  }
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/exceptions/HttpException.ts`),arg.path+'/src/exceptions/HttpException.ts');
+  /** end exceptions */
+  /** interfaces  */
+  if (!fs.existsSync(path.join(arg.path,'/src/interfaces'))) {
+    fs.mkdirSync(path.join(arg.path,'/src/interfaces'))
+  }
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/interfaces/db.interface.ts`),arg.path+'/src/interfaces/db.interface.ts');
+  /** end interfaces */
   if (!fs.existsSync(path.join(arg.path,'/src/databases'))) {
     fs.mkdirSync(path.join(arg.path,'/src/databases'))
   }
@@ -844,18 +859,13 @@ ipcMain.on('saveServe', (event, arg) => {
     console.log('writing in windows...');
     filepath = arg.path + '\\src\\' + arg.name + '.ts';
     dirsrc = arg.path + '\\src';
-    dir = arg.path + '\\src\\'
   } else {
     console.log('writing in unix...');
     filepath = arg.path + '/src/' + arg.name + '.ts';
     dirsrc = arg.path + '/src';
-    dir = arg.path + '/src/'
   }
   if (!fs.existsSync(dirsrc)) {
     fs.mkdirSync(dirsrc)
-  }
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir)
   }
   writeFile(filepath, arg.file);
   event.returnValue = filepath;

@@ -144,6 +144,7 @@
         "skiplimit",
         "skiplimitbyfield",
         "skiplimitfilter",
+        "skiplimitorder",
         "testapi",
         "typeerror",
         "Typeoperation",

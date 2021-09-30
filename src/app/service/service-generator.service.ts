@@ -37,7 +37,7 @@ export class ServiceGeneratorService {
     if (item.mastersecurity) {
       this.textGenerated += `import bcrypt from 'bcrypt';\n`;
     }
-    this.textGenerated += `import { getRepository } from 'typeorm;'\n`;
+    this.textGenerated += `import { getRepository } from 'typeorm';\n`;
     this.textGenerated += `import  {${item.name}} from '../entity/${item.name}.entity';\n`;
     this.textGenerated += `import { HttpException } from '@exceptions/HttpException';\n`;
     this.textGenerated += `import { isEmpty } from '@utils/util';\n`;
@@ -64,16 +64,19 @@ export class ServiceGeneratorService {
           this.textGenerated += `}\n\n`;
           break;
         case 'delete':
-          this.textGenerated += `async delete(_id: number) {\n`;
+          this.textGenerated += `async delete(_id: number) : Promise<${item.name}> {\n`;
           this.textGenerated += `const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
           this.textGenerated += `\t const ${item.name.toLowerCase()}: ${item.name} = await ${item.name.toLowerCase()}Repository.findOne({where: [{ "id": _id }]});\n`;
-          this.textGenerated += `\t return await ${item.name.toLowerCase()}Repository.delete(${item.name.toLowerCase()});\n`;
+          this.textGenerated += `\t if (!${item.name.toLowerCase()}) throw new HttpException(409, "You're not ${item.name}");\n`;
+          this.textGenerated += `\t await ${item.name.toLowerCase()}Repository.delete({id:_id});\n`;
+          this.textGenerated += `\t return ${item.name.toLowerCase()}`;
           this.textGenerated += `}\n\n`;
           break;
         case 'patch':
-          this.textGenerated += `async patch${element.path}(_id: number,patchBody:any) {\n`;
+          this.textGenerated += `async patch${element.path}(_id: number,patchBody:any): Promise<${item.name}> {\n`;
           this.textGenerated += `\t const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
-          this.textGenerated += `\t return await ${item.name.toLowerCase()}Repository.createQueryBuilder().update(${item.name}).set(patchBody).where("id = :id", { id:_id }).execute();\n`;
+          this.textGenerated += `\t await ${item.name.toLowerCase()}Repository.createQueryBuilder().update(${item.name}).set(patchBody).where("id = :id", { id:_id }).execute();\n`;
+          this.textGenerated += `return await ${item.name.toLowerCase()}Repository.findOne({ where: { id: _id } });  `;
           this.textGenerated += '}\n\n';
           break;
       }
@@ -137,6 +140,13 @@ export class ServiceGeneratorService {
         this.textGenerated += `} else {\n`;
         this.textGenerated += `\treturn await ${item.name.toLowerCase()}Repository.createQueryBuilder("${item.name}").orderBy('${field}', 'DESC').offset(skip).limit(limit).where("${item.name}.${field} like :${field}",{ ${field}: ${field}+'%'}).getMany();\n`;
         this.textGenerated += `}\n}\n`;
+        break;
+      }
+      case 'findwithoptions': {
+        this.textGenerated += `async getfindwithoptions${item.name}(options:string): Promise<any[]> {\n`;
+        this.textGenerated += `const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
+        this.textGenerated += `\treturn await ${item.name.toLowerCase()}Repository.find(JSON.parse(decodeURI(options)));\n`;
+        this.textGenerated += `}\n`;
         break;
       }
 

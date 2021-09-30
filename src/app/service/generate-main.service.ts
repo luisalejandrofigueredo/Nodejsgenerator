@@ -18,10 +18,10 @@ export class GenerateMainService {
     this.textGenerated = '';
     this.textGenerated += `process.env['NODE_CONFIG_DIR'] = __dirname + '/configs';\n`;
     this.textGenerated += `import 'dotenv/config';\n`;
-    this.textGenerated += `import App from '../app';\n`;
-    this.textGenerated +=`import IndexRoute from '../src/routes/index.route';\n`;
+    this.textGenerated += `import App from '@/app';\n`;
+    this.textGenerated +=`import IndexRoute from '@routes/index.route';\n`;
     schema.forEach(element => {
-      this.textGenerated += `import ${element.name}Route from '../src/routes/${element.name}.route';\n`;
+      this.textGenerated += `import ${element.name}Route from '@routes/${element.name}.route';\n`;
     });
     this.textGenerated += `import validateEnv from '@utils/validateEnv';\n`;
     this.textGenerated += '';
@@ -36,7 +36,7 @@ export class GenerateMainService {
     if (this.electron_service.isElectronApp) {
       const args = {
         path: this.config_service.config.filePath,
-        name: 'serve',
+        name: 'server',
         file: this.textGenerated,
         format: false
       };

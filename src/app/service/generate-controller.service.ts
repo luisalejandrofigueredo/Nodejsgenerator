@@ -82,7 +82,7 @@ export class GenerateControllerService {
           this.textGenerated += `public Patch${table}ById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
           this.textGenerated += ` try {\n`;
           this.textGenerated += `  const ${tableLower}Id = Number(req.params.id);\n`;
-          this.textGenerated += `  const patch=req.params.patch;\n`;
+          this.textGenerated += `  const patch=req.body;\n`;
           this.textGenerated += `  const findPatch${table}Data: any= await this.${tableLower}Service.patch(${tableLower}Id,patch);\n`;
           this.textGenerated += `    res.status(200).json({ data: findPatch${table}Data, message: 'patch' });\n`;
           this.textGenerated += `  } catch (error) {\n`;
@@ -186,6 +186,17 @@ export class GenerateControllerService {
         this.textGenerated += `const filter = req.params.filter\n`;
         this.textGenerated += `const skipLimit${table}Data: ${table}[] = await this.${tableLower}Service.skipLimitFilter${itemApi.field}(skip,limit,order,filter);\n`
         this.textGenerated += `  res.status(200).json({ data: skipLimit${table}Data, message: 'find skip limit filter' });\n`;
+        this.textGenerated += `} catch (error) {\n`;
+        this.textGenerated += ` next(error);\n`
+        this.textGenerated += `}\n`
+        this.textGenerated += '};\n\n';
+        break;
+      }
+      case 'findwithoptions':{
+        this.textGenerated += `public skipLimitOptions${itemApi.path} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`
+        this.textGenerated += `try {\n`;
+        this.textGenerated += `const findwithoptions = await this.${tableLower}Service.getfindwithoptions${table}(req.params.options);`
+        this.textGenerated += `  res.status(200).json({ data: findwithoptions, message: 'find skip limit filter' });\n`;
         this.textGenerated += `} catch (error) {\n`;
         this.textGenerated += ` next(error);\n`
         this.textGenerated += `}\n`
