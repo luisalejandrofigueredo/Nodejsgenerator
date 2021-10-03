@@ -65,7 +65,7 @@ export class ApiComponent implements OnInit {
         api.type = this.changeVisibleTypes(api.type);
         api.operation = this.changeVisibleOperation(api.operation);
       });
-      this.dataSource.data = [...this.apis];
+      this.dataSource.data =this.apis;
     });
   }
 
@@ -82,7 +82,7 @@ export class ApiComponent implements OnInit {
       return this.operations[this.operations.findIndex((operation) => operation.value === paramOperation)].viewValue;
     }
     else {
-      return '';
+      return paramOperation;
     }
   }
 
@@ -134,7 +134,7 @@ export class ApiComponent implements OnInit {
           api.type = this.changeVisibleTypes(api.type);
           api.operation = this.changeVisibleOperation(api.operation);
         });
-        this.dataSource.data = [...this.apis];
+        this.dataSource.data = this.apis;
         this.table.renderRows();
         this.paginator.lastPage();
       }
@@ -148,13 +148,13 @@ export class ApiComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(data => {
       if (data !== undefined) {
-        this.apis.splice(id - 1, 1);
-        // renum schema
-        for (let index = 0; index < this.apis.length; index++) {
-          this.apis[index].id = index + 1;
-        }
-        this.dataSource.data = this.apis;
         this.configservice.deleteapi(this.id, id);
+        this.apis = [...this.configservice.getapis(this.id)];
+        this.apis.forEach((api: Api) => {
+          api.type = this.changeVisibleTypes(api.type);
+          api.operation = this.changeVisibleOperation(api.operation);
+        });
+        this.dataSource.data = this.apis;
         this.table.renderRows();
       }
     });
@@ -187,7 +187,7 @@ export class ApiComponent implements OnInit {
           api.type = this.changeVisibleTypes(api.type);
           api.operation = this.changeVisibleOperation(api.operation);
         });
-        this.dataSource.data = [...this.apis];
+        this.dataSource.data = this.apis;
         this.table.renderRows();
       }
     });
