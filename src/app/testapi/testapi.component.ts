@@ -49,8 +49,8 @@ export class TestapiComponent implements OnInit {
     { value: 'findandcount', viewValue: 'Find and Count' },
     { value: 'findandcountwithoptions', viewValue: 'Find and Count with options' },
     { value: 'findwithoptions', viewValue: 'Find with options' },
-    { value: 'findgenerated', viewValue: 'Find generated' },
-    { value: 'findandcountgenerated', viewValue: 'Find and count generated' }
+    { value: 'findgenerated', viewValue: 'Find with options and parameters' },
+    { value: 'findandcountgenerated', viewValue: 'Find with options and parameters' }
   ];
   constructor(private fb: FormBuilder, private httpclient: HttpClient, private dialog: MatDialog,private genoption: MatDialog, private configservice: ConfigService, private overlay: Overlay) { }
 

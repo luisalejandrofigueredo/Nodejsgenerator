@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ConfigService } from "../service/config.service";
 import { ElectronService } from 'ngx-electron';
+import { Api } from '../interfaces/api';
 @Injectable({
   providedIn: 'root'
 })
@@ -38,15 +39,16 @@ export class ServiceGeneratorService {
       this.textGenerated += `import bcrypt from 'bcrypt';\n`;
     }
     this.textGenerated += `import { getRepository } from 'typeorm';\n`;
+    this.textGenerated += `import { NextFunction, Request, Response } from 'express';\n`
     this.textGenerated += `import  {${item.name}} from '../entity/${item.name}.entity';\n`;
     this.textGenerated += `import { HttpException } from '@exceptions/HttpException';\n`;
     this.textGenerated += `import { isEmpty } from '@utils/util';\n`;
   }
   generateService(item, _index) {
-    item.schemasapi.forEach(element => { /**element is api */
+    item.schemasapi.forEach((element: Api) => {
       switch (element.type) {
         case 'get':
-          this.generateOperationGet(item, element.operation, element.field)
+          this.generateOperationGet(item, element.operation, element.field, element)
           break;
         case 'put':
           this.textGenerated += `async update(${item.name.toLowerCase()}: ${item.name}): Promise<${item.name}> {\n`;
@@ -82,8 +84,8 @@ export class ServiceGeneratorService {
       }
     });
   }
-  generateOperationGet(item, operation, field) {
-    console.log('operation:', operation);
+  generateOperationGet(item, operation: string, field: string, api: Api) {
+
     switch (operation) {
       case 'getall': {
         this.textGenerated += `public async findAll${item.name}(): Promise<any[]> {\n`
@@ -149,7 +151,61 @@ export class ServiceGeneratorService {
         this.textGenerated += `}\n`;
         break;
       }
-
+      case 'findandcountwithoptions': {
+        this.textGenerated += `async getfindandcountwithoptions${item.name}(options:string): Promise<any[]> {\n`;
+        this.textGenerated += `const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
+        this.textGenerated += `\treturn await ${item.name.toLowerCase()}Repository.findAndCount(JSON.parse(decodeURI(options)));\n`;
+        this.textGenerated += `}\n`;
+        break;
+      }
+      case 'count': {
+        this.textGenerated += `public async count${item.name}(): Promise<number> {\n`
+        this.textGenerated += `const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
+        this.textGenerated += `const ${item.name.toLowerCase()}:number = await ${item.name.toLowerCase()}Repository.count();\n`;
+        this.textGenerated += `return ${item.name.toLowerCase()};\n`;
+        this.textGenerated += `}\n`;
+        break;
+      }
+      case 'findgenerated': {
+        this.textGenerated += `public async findGenerated${item.name}${api.path}(req: Request): Promise<any> {\n`
+        api.parameters.forEach((parameter)=>{
+          switch (parameter.type) {
+            case 'string':
+              this.textGenerated +=`const ${parameter.name}:string=req.params.${parameter.name};\n`;  
+              break;
+              case 'number':
+              this.textGenerated +=`const ${parameter.name}:number=Number(req.params.${parameter.name});\n`;  
+              break;
+            default:
+              break;
+          }
+        })
+        this.textGenerated += `const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
+        this.textGenerated += `const ${item.name.toLowerCase()}:any = await ${item.name.toLowerCase()}Repository.find(${api.options});\n`;
+        this.textGenerated += `return ${item.name.toLowerCase()};\n`;
+        this.textGenerated += `}\n`;
+        break;
+      }
+       case 'findandcountgenerated': {
+        this.textGenerated += `public async findAndCountGenerated${item.name}${api.path}(req: Request): Promise<any> {\n`
+        api.parameters.forEach((parameter)=>{
+          switch (parameter.type) {
+            case 'string':
+              this.textGenerated +=`const ${parameter.name}:string=req.params.${parameter.name};\n`;  
+              break;
+              case 'number':
+              this.textGenerated +=`const ${parameter.name}:number=Number(req.params.${parameter.name});\n`;  
+              break;
+            default:
+              break;
+          }
+        })
+        this.textGenerated += `const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
+        this.textGenerated += `const ${item.name.toLowerCase()}:any = await ${item.name.toLowerCase()}Repository.findAndCount(${api.options});\n`;
+        this.textGenerated += `return ${item.name.toLowerCase()};\n`;
+        this.textGenerated += `}\n`;
+        break;
+      }
     }
   }
 }

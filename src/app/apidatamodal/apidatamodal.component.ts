@@ -36,8 +36,8 @@ export class ApidatamodalComponent implements OnInit {
     { value: 'findandcount', viewValue: 'Find and Count' },
     { value: 'findandcountwithoptions', viewValue: 'Find and Count with options' },
     { value: 'findwithoptions', viewValue: 'Find with options' },
-    { value: 'findgenerated', viewValue: 'Find generated' },
-    { value: 'findandcountgenerated', viewValue: 'Find and count generated' }
+    { value: 'findgenerated', viewValue: 'Find with parameters' },
+    { value: 'findandcountgenerated', viewValue: 'Find and count with parameters' }
   ];
   placeholder = 'Relation one to one'
   fields: string[];
@@ -84,6 +84,8 @@ export class ApidatamodalComponent implements OnInit {
       this.types.push({ value: 'getfile', viewValue: 'Get file' });
     }
     this.fields = this.data.fields;
+    this.data.type=this.data.type!==''?this.types[this.types.findIndex((constType)=> constType.viewValue===this.data.type)].value:'';
+    this.data.operation=this.data.operation!==''?this.operation[this.operation.findIndex((constOperation)=> constOperation.viewValue===this.data.operation)].value:'';
     this.profileForm = new FormGroup({
       selectedValue: new FormControl(this.data.type, Validators.required),
       selectedOperation: new FormControl(this.data.operation, Validators.required),
