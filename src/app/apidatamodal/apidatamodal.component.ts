@@ -101,9 +101,9 @@ export class ApidatamodalComponent implements OnInit {
     this.profileForm.get('selectedOperation').disable;
     this.profileForm.get('parameters').disable;
     this.profileForm.get('relations').disable;
-    this.chargerelations();
+    this.chargeRelations();
   }
-  generatecode() {
+  generateCode() {
     const dialogRef = this.dialog.open(GenoptionswithoperatorsComponent, {
       width: '100%',
       disableClose: true,
@@ -116,7 +116,7 @@ export class ApidatamodalComponent implements OnInit {
       }
     });
   }
-  generateparameters() {
+  generateParameters() {
     const dialogRef = this.dialog.open(ParametersmodalComponent, {
       width: '500px',
       disableClose: true,
@@ -129,7 +129,7 @@ export class ApidatamodalComponent implements OnInit {
       }
     });
   }
-  operationchange() {
+  operationChange() {
     if (this.profileForm.get('selectedOperation').value === 'findgenerated') {
       this.profileForm.get('selectedOperation').enable;
       this.profileForm.get('parameters').enable;
@@ -139,12 +139,12 @@ export class ApidatamodalComponent implements OnInit {
       this.profileForm.get('parameters').disable;
     }
   }
-  selectchange() {
+  selectChange() {
     this.relations = [];
-    this.chargerelations();
+    this.chargeRelations();
   }
 
-  chargerelations(){
+  chargeRelations(){
     if (this.profileForm.get('selectedValue').value === 'postonetoone') {
       this.profileForm.get('relations').setValue(this.data.field);
       this.profileForm.get('relations').enable;

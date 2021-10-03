@@ -1,11 +1,11 @@
 <h4 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>API</h4>
 <form [formGroup]="profileForm">
-  <mat-select placeholder="verb" (selectionChange)="selectchange()" formControlName="selectedValue" name="verb">
+  <mat-select placeholder="verb" (selectionChange)="selectChange()" formControlName="selectedValue" name="verb">
     <mat-option *ngFor="let item of types" [value]="item.value">
       {{item.viewValue}}
     </mat-option>
   </mat-select>
-  <mat-select (selectionChange)="operationchange()" *ngIf="profileForm.get('selectedValue').value==='get'"
+  <mat-select (selectionChange)="operationChange()" *ngIf="profileForm.get('selectedValue').value==='get'"
     placeholder="get operation" formControlName="selectedOperation" name="operation">
     <mat-option *ngFor="let item of operation" [value]="item.value">
       {{item.viewValue}}
@@ -18,7 +18,7 @@
     </mat-form-field>
     <button mat-icon-button
       *ngIf="profileForm.get('selectedOperation').value==='findgenerated' || profileForm.get('selectedOperation').value==='findandcountgenerated'"
-      (click)="generateparameters()">
+      (click)="generateParameters()">
       <mat-icon>add</mat-icon>
     </button>
   </div>
@@ -29,7 +29,7 @@
     </mat-form-field>
     <button mat-icon-button
       *ngIf="profileForm.get('selectedOperation').value==='findgenerated' || profileForm.get('selectedOperation').value==='findandcountgenerated'"
-      (click)="generatecode()">
+      (click)="generateCode()">
       <mat-icon>code</mat-icon>
     </button>
   </div>
