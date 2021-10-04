@@ -27,12 +27,6 @@ var template = [{
         }
       },
       {
-        label: 'Fast project',
-        click() {
-          fastproject();
-        }
-      },
-      {
         label: 'Install files',
         click() {
           copy_files()
@@ -166,6 +160,13 @@ function navigate(moveto) {
       break;
   }
 }
+ipcMain.on('disableMenus', (event, _arg) => {
+  mainWindow.setMenuBarVisibility(false);
+  });
+
+ipcMain.on('enableMenus', (event, _arg) => {
+  mainWindow.setMenuBarVisibility(true);
+})
 
 function processinstall(state) {
   switch (state) {
@@ -381,12 +382,6 @@ function settemplate() {
           }
         },
         {
-          label: 'Fast project',
-          click() {
-            fastproject();
-          }
-        },
-        {
           label: 'Install files',
           click() {
             copy_files()
@@ -506,10 +501,6 @@ function clearrecent() {
   Menu.setApplicationMenu(menu);
 }
 
-function fastproject() {
-  mainWindow.webContents.send("fastproject");
-}
-
 function save() {
   mainWindow.webContents.send("save");
 }
@@ -531,6 +522,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: maxiSize.width,
     height: maxiSize.height,
+    autoHideMenuBar: false,
     webPreferences: {
       nodeIntegration: true
     },
@@ -703,6 +695,12 @@ ipcMain.on('loadDevelopment', (event, arg) => {
     event.returnValue = json;
   });
 });
+
+ipcMain.on('createDirectory', (event, arg) => {
+  fs.existsSync(arg.directory) || fs.mkdirSync(arg.directory);
+  event.returnValue='ready'
+})
+
 ipcMain.on('createAppModule', (event, arg) => {
   console.log('writing files os:', process.platform);
   if (process.platform === "win32") {

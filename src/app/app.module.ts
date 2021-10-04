@@ -18,6 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import {MatStepperModule} from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -61,7 +62,6 @@ import { BrowsemanytomanyComponent } from './browsemanytomany/browsemanytomany.c
 import { RealtiondatamodalmanytomanyComponent } from './realtiondatamodalmanytomany/realtiondatamodalmanytomany.component';
 import { ProjectmodalComponent } from './projectmodal/projectmodal.component';
 import { AboutComponent } from './about/about.component';
-import { FastprojectComponent } from './fastproject/fastproject.component';
 import { ErrorComponent } from './error/error.component';
 import { EndComponent } from './end/end.component';
 import { InstallFilesComponent } from './install-files/install-files.component';
@@ -103,7 +103,6 @@ import { ConfigProductionComponent } from './config-production/config-production
     RealtiondatamodalmanytomanyComponent,
     ProjectmodalComponent,
     AboutComponent,
-    FastprojectComponent,
     ErrorComponent,
     EndComponent,
     InstallFilesComponent,
@@ -119,6 +118,7 @@ import { ConfigProductionComponent } from './config-production/config-production
     ReactiveFormsModule,
     FlexLayoutModule,
     LayoutModule,
+    MatStepperModule,
     MatFormFieldModule,
     MatToolbarModule,
     MatButtonModule,

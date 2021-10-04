@@ -6,9 +6,9 @@ import { ProjectmodalComponent } from './projectmodal/projectmodal.component';
 import { ConfigService } from './service/config.service';
 import { YesnoComponent } from './yesno/yesno.component';
 import { AboutComponent } from './about/about.component';
-import { FastprojectComponent } from './fastproject/fastproject.component';
 import { ErrorComponent } from './error/error.component';
-import {InstallFilesComponent} from './install-files/install-files.component';
+import { InstallFilesComponent } from './install-files/install-files.component';
+import { MenuserviceService } from './service/system/menuservice.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -17,7 +17,13 @@ import {InstallFilesComponent} from './install-files/install-files.component';
 export class AppComponent {
   title = 'Generator';
   recent: { name: string; path: string }[] = [];
-  constructor(private ngzone: NgZone, public dialog: MatDialog, private router: Router, private electron: ElectronService, private configservice: ConfigService) {
+  constructor(
+    private menuService:MenuserviceService,
+    private ngzone: NgZone,
+    public dialog: MatDialog,
+    private router: Router,
+    private electron: ElectronService,
+    private configservice: ConfigService) {
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
     };
@@ -32,7 +38,6 @@ export class AppComponent {
         this.electron.ipcRenderer.on("error", (event, error) => this.error(error.message, error.error));
       }
       this.electron.ipcRenderer.on("navigate", (event, path) => this.navigate(path));
-      this.electron.ipcRenderer.on("fastproject", (event, path) => this.fastproject());
       this.electron.ipcRenderer.on("about", (event, file) => this.about());
       this.electron.ipcRenderer.on("tutorial", (event, file) => this.tutorial());
       this.electron.ipcRenderer.on("clearrecent", (event, file) => this.clearrecent());
@@ -76,17 +81,6 @@ export class AppComponent {
       });
     });
   }
-  fastproject() {
-    this.ngzone.run(() => {
-      this.ngzone.run(() => {
-        const dialogRef = this.dialog.open(FastprojectComponent, {
-          disableClose: true, data: ''
-        });
-        dialogRef.afterClosed().subscribe(data => {
-        });
-      });
-    });
-  }
   install_files() {
     this.ngzone.run(() => {
       this.ngzone.run(() => {
@@ -99,12 +93,14 @@ export class AppComponent {
     });
   }
   about() {
+    this.menuService.menuDisabled();
     this.ngzone.run(() => {
       const dialogRef = this.dialog.open(AboutComponent, {
         width: '300px',
         disableClose: true, data: ''
       });
       dialogRef.afterClosed().subscribe(data => {
+        this.menuService.menuEnabled();
         if (data) { this.router.navigate(['browse']) };
       });
     });
@@ -140,7 +136,7 @@ export class AppComponent {
     if (this.electron.isElectronApp) {
       const projectname = (this.configservice.config.projectname !== undefined) ? this.configservice.config.projectname : "";
       const dialogRef = this.dialog.open(ProjectmodalComponent, {
-        width: '300px',
+        width: '100%',
         disableClose: true, data: { projectname: projectname }
       });
       dialogRef.afterClosed().subscribe(data => {

@@ -1,9 +1,100 @@
-<p>Project name</p>
-<form [formGroup]="profileForm" (ngSubmit)="onYesClick()">
-    <mat-form-field>
-        <input matInput placeholder="Project Name" formControlName="projectname">
-    </mat-form-field>
+<mat-stepper>
+  <mat-step label="Name" [stepControl]="profileForm" errorMessage="Error field(s) invalid">
+    <ng-template matStepLabel>Principal configuration</ng-template>
+    <form [formGroup]="profileForm">
+      <mat-form-field>
+        <input matInput placeholder="Project Name" formControlName="projectname" required>
+        <mat-error *ngIf="profileForm.get('projectname').invalid">Error invalid name use string like Costumers
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput tabindex="-1" placeholder="Work directory" formControlName="workDirectory" readonly>
+        <button mat-icon-button matSuffix (click)="workDirectoryClick()">
+          <mat-icon>folder</mat-icon>
+        </button>
+      </mat-form-field>
+      <div mat-dialog-actions style="justify-content: flex-end;">
+        <button mat-button matStepperPrevious (click)="onNoClick()">Cancel</button>
+        <button mat-button matStepperNext>Next</button> </div>
+    </form>
+  </mat-step>
+  <mat-step label="Database" [stepControl]="profileFormDatabase" errorMessage="Error field(s) invalid">
+    <ng-template matStepLabel>Config Database</ng-template>
+    <form [formGroup]="profileFormDatabase">
+      <mat-form-field>
+        <mat-select placeholder="Select database driver" formControlName="driver" name="itemsdatabase">
+          <mat-option *ngFor="let item of driverdatabase" [value]="item.value">
+            {{item.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Host" formControlName="host">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="number" placeholder="Port" formControlName="port">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="User name" formControlName="username">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput [type]="hidep ? 'password' : 'text'" placeholder="Password" formControlName="password">
+        <button mat-icon-button matSuffix (click)="hidep = !hidep" [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hidep">
+          <mat-icon>{{hidep ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Database" formControlName="database">
+      </mat-form-field>
+    </form>
     <div mat-dialog-actions style="justify-content: flex-end;">
-        <button mat-raised-button type="submit" color="primary" mat-button [disabled]="!profileForm.valid">Yes</button>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
     </div>
-</form>
+  </mat-step>
+  <mat-step label="Project">
+    <ng-template matStepLabel>Config security</ng-template>
+    <form [formGroup]="profileFormTable">
+        <mat-checkbox (change)="generateTable($event)" formControlName="tableWithSecurity">Create your first table with
+          security</mat-checkbox>
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+        <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
+          <mat-form-field>
+            <input formControlName="tableName" [disabled]="this.profileFormTable.get('tableWithSecurity').value"
+              matInput placeholder="Table name">
+            <mat-error *ngIf="profileFormTable.get('tableName').invalid">Error invalid name use string like Costumers
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
+          <mat-form-field>
+            <input formControlName="login" [disabled]="this.profileFormTable.get('tableWithSecurity').value" matInput
+              placeholder="Login">
+          </mat-form-field>
+          <mat-form-field>
+            <input formControlName="password" [disabled]="this.profileFormTable.get('tableWithSecurity').value" matInput
+              placeholder="Password">
+          </mat-form-field>
+          <mat-form-field>
+            <input formControlName="roles" [disabled]="this.profileFormTable.get('tableWithSecurity').value" matInput
+              placeholder="Roles">
+          </mat-form-field>
+          <mat-form-field>
+            <input formControlName="bearer" [disabled]="this.profileFormTable.get('tableWithSecurity').value" matInput
+              placeholder="Bearer token">
+          </mat-form-field>
+          <mat-form-field>
+            <input formControlName="count" [disabled]="this.profileFormTable.get('tableWithSecurity').value" matInput
+              placeholder="Field for count retry">
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+    <div mat-dialog-actions style="justify-content: flex-end;">
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext [disabled]="profileForm.invalid || profileFormDatabase.invalid || profileFormTable.invalid"
+        (click)="onYesClick()">Finish</button>
+    </div>
+  </mat-step>
+</mat-stepper>
