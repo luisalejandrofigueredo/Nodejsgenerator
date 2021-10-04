@@ -8,7 +8,8 @@ const {
 } = require('electron');
 const prettier = require("prettier");
 const {
-  spawn
+  spawn,
+  spawnSync
 } = require('child_process');
 const url = require("url");
 const path = require("path");
@@ -162,7 +163,7 @@ function navigate(moveto) {
 }
 ipcMain.on('disableMenus', (event, _arg) => {
   mainWindow.setMenuBarVisibility(false);
-  });
+});
 
 ipcMain.on('enableMenus', (event, _arg) => {
   mainWindow.setMenuBarVisibility(true);
@@ -647,6 +648,28 @@ ipcMain.on('saveas', (event, arg) => {
   return event.returnValue = "fileas ready";
 });
 
+ipcMain.on('createProject', (event, arg) => {
+  console.log('arg', arg);
+  try {
+    process.chdir(arg.path);
+  } catch (err) {
+    console.log('operative system error');
+  }
+  try {
+    console.log('Platform', process.platform);
+    if (process.platform === "win32") {
+      console.log('send spawn');
+      const commandCd = spawnSync('cmd.exe', ["/c", 'cd'],{stdio: 'inherit',shell: true});
+      const command = spawnSync('cmd.exe', ["/c", 'npm', 'init', '-f', '-y']);
+    } else {
+      const command = spawn('npm', ['init', '-f', '-y']);
+    }
+  } catch (err) {
+    console.log('system error while create project');
+  }
+  event.returnValue = 'project created';
+});
+
 ipcMain.on('openvisualcode', (event, arg) => {
   console.log('arg', arg);
   try {
@@ -672,24 +695,24 @@ ipcMain.on('openvisualcode', (event, arg) => {
 });
 
 ipcMain.on('saveDevelopment', (event, arg) => {
-  writeFile(arg.path+'/src/configs/development.json',arg.file);
+  writeFile(arg.path + '/src/configs/development.json', arg.file);
   event.returnValue = 'wrote';
 });
 
 ipcMain.on('saveProduction', (event, arg) => {
-  writeFile(arg.path+'/src/configs/production.json',arg.file);
+  writeFile(arg.path + '/src/configs/production.json', arg.file);
   event.returnValue = 'wrote';
 });
 
 ipcMain.on('loadProduction', (event, arg) => {
-  fs.readFile(arg.path+'/src/configs/production.json', function (err, data) {
+  fs.readFile(arg.path + '/src/configs/production.json', function (err, data) {
     if (err) throw err;
     const json = JSON.parse(data);
     event.returnValue = json;
   });
 });
 ipcMain.on('loadDevelopment', (event, arg) => {
-  fs.readFile(arg.path+'/src/configs/development.json', function (err, data) {
+  fs.readFile(arg.path + '/src/configs/development.json', function (err, data) {
     if (err) throw err;
     const json = JSON.parse(data);
     event.returnValue = json;
@@ -698,7 +721,7 @@ ipcMain.on('loadDevelopment', (event, arg) => {
 
 ipcMain.on('createDirectory', (event, arg) => {
   fs.existsSync(arg.directory) || fs.mkdirSync(arg.directory);
-  event.returnValue='ready'
+  event.returnValue = 'ready'
 })
 
 ipcMain.on('createAppModule', (event, arg) => {
@@ -708,68 +731,68 @@ ipcMain.on('createAppModule', (event, arg) => {
   } else {
     console.log('writing in unix app.ts...');
   }
-  if (!fs.existsSync(path.join(arg.path,'/src/configs'))) {
-    fs.mkdirSync(path.join(arg.path,'/src/configs'))
+  if (!fs.existsSync(path.join(arg.path, '/src/configs'))) {
+    fs.mkdirSync(path.join(arg.path, '/src/configs'))
   }
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/app/app.ts`),arg.path+'/src/app.ts')
-  fs.readFile(arg.path+'/src/app.ts', function (err, data) {
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/app/app.ts`), arg.path + '/src/app.ts')
+  fs.readFile(arg.path + '/src/app.ts', function (err, data) {
     if (err) throw err;
     const dataString = data.toString().replace(/3000/g, arg.port);
-    writeFile(arg.path+'/src/app.ts',dataString);
+    writeFile(arg.path + '/src/app.ts', dataString);
   });
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/development.json`),arg.path+'/src/configs/development.json');
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/production.json`),arg.path+'/src/configs/production.json');
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/test.json`),arg.path+'/src/configs/test.json');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/development.json`), arg.path + '/src/configs/development.json');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/production.json`), arg.path + '/src/configs/production.json');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/test.json`), arg.path + '/src/configs/test.json');
   /** configs */
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/ts/tsconfig.json`),arg.path+'/tsconfig.json');
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/root/.env`),arg.path+'/.env');
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/root/nodemon.json`),arg.path+'/nodemon.json');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/ts/tsconfig.json`), arg.path + '/tsconfig.json');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/root/.env`), arg.path + '/.env');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/root/nodemon.json`), arg.path + '/nodemon.json');
   /**install middleware */
-  if (!fs.existsSync(path.join(arg.path,'/src/middlewares'))) {
-    fs.mkdirSync(path.join(arg.path,'/src/middlewares'))
+  if (!fs.existsSync(path.join(arg.path, '/src/middlewares'))) {
+    fs.mkdirSync(path.join(arg.path, '/src/middlewares'))
   }
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/middleware/validation.middleware.ts`),arg.path+'/src/middlewares/validation.middleware.ts');
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/middleware/error.middleware.ts`),arg.path+'/src/middlewares/error.middleware.ts')
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/middleware/validation.middleware.ts`), arg.path + '/src/middlewares/validation.middleware.ts');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/middleware/error.middleware.ts`), arg.path + '/src/middlewares/error.middleware.ts')
   /**end middleware */
   /** index*/
-  if (!fs.existsSync(path.join(arg.path,'/src/routes'))) {
-    fs.mkdirSync(path.join(arg.path,'/src/routes'))
+  if (!fs.existsSync(path.join(arg.path, '/src/routes'))) {
+    fs.mkdirSync(path.join(arg.path, '/src/routes'))
   }
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/routes/index.route.ts`),arg.path+'/src/routes/index.route.ts')
-  if (!fs.existsSync(path.join(arg.path,'/src/controllers'))) {
-    fs.mkdirSync(path.join(arg.path,'/src/controllers'))
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/routes/index.route.ts`), arg.path + '/src/routes/index.route.ts')
+  if (!fs.existsSync(path.join(arg.path, '/src/controllers'))) {
+    fs.mkdirSync(path.join(arg.path, '/src/controllers'))
   }
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/controller/index.controller.ts`),arg.path+'/src/controllers/index.controller.ts')
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/controller/index.controller.ts`), arg.path + '/src/controllers/index.controller.ts')
   /** end index */
   /** utils*/
-  if (!fs.existsSync(path.join(arg.path,'/src/utils'))) {
-    fs.mkdirSync(path.join(arg.path,'/src/utils'))
+  if (!fs.existsSync(path.join(arg.path, '/src/utils'))) {
+    fs.mkdirSync(path.join(arg.path, '/src/utils'))
   }
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/utils/logger.ts`),arg.path+'/src/utils/logger.ts');
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/utils/util.ts`),arg.path+'/src/utils/util.ts');
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/utils/validateEnv.ts`),arg.path+'/src/utils/validateEnv.ts');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/utils/logger.ts`), arg.path + '/src/utils/logger.ts');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/utils/util.ts`), arg.path + '/src/utils/util.ts');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/utils/validateEnv.ts`), arg.path + '/src/utils/validateEnv.ts');
   /* end utils*/
   /** exceptions */
-  if (!fs.existsSync(path.join(arg.path,'/src/exceptions'))) {
-    fs.mkdirSync(path.join(arg.path,'/src/exceptions'))
+  if (!fs.existsSync(path.join(arg.path, '/src/exceptions'))) {
+    fs.mkdirSync(path.join(arg.path, '/src/exceptions'))
   }
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/exceptions/HttpException.ts`),arg.path+'/src/exceptions/HttpException.ts');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/exceptions/HttpException.ts`), arg.path + '/src/exceptions/HttpException.ts');
   /** end exceptions */
   /** interfaces  */
-  if (!fs.existsSync(path.join(arg.path,'/src/interfaces'))) {
-    fs.mkdirSync(path.join(arg.path,'/src/interfaces'))
+  if (!fs.existsSync(path.join(arg.path, '/src/interfaces'))) {
+    fs.mkdirSync(path.join(arg.path, '/src/interfaces'))
   }
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/interfaces/db.interface.ts`),arg.path+'/src/interfaces/db.interface.ts');
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/interfaces/db.interface.ts`), arg.path + '/src/interfaces/db.interface.ts');
   /** end interfaces */
-  if (!fs.existsSync(path.join(arg.path,'/src/databases'))) {
-    fs.mkdirSync(path.join(arg.path,'/src/databases'))
+  if (!fs.existsSync(path.join(arg.path, '/src/databases'))) {
+    fs.mkdirSync(path.join(arg.path, '/src/databases'))
   }
-  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/databases/index.ts`),arg.path+'/src/databases/index.ts')
-  fs.readFile(arg.path+'/src/databases/index.ts', function (err, data) {
+  fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/databases/index.ts`), arg.path + '/src/databases/index.ts')
+  fs.readFile(arg.path + '/src/databases/index.ts', function (err, data) {
     if (err) throw err;
     let dataString = data.toString().replace(/mysql/g, arg.driver);
     dataString = dataString.replace(/3306/g, arg.portDatabase);
-    writeFile(arg.path+'/src/databases/index.ts',dataString);
+    writeFile(arg.path + '/src/databases/index.ts', dataString);
   });
   event.returnValue = 'Wrote';
 });

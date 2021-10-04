@@ -1,22 +1,26 @@
 <mat-stepper>
+
   <mat-step label="Name" [stepControl]="profileForm" errorMessage="Error field(s) invalid">
-    <ng-template matStepLabel>Principal configuration</ng-template>
-    <form [formGroup]="profileForm">
-      <mat-form-field>
-        <input matInput placeholder="Project Name" formControlName="projectname" required>
-        <mat-error *ngIf="profileForm.get('projectname').invalid">Error invalid name use string like Costumers
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput tabindex="-1" placeholder="Work directory" formControlName="workDirectory" readonly>
-        <button mat-icon-button matSuffix (click)="workDirectoryClick()">
-          <mat-icon>folder</mat-icon>
-        </button>
-      </mat-form-field>
-      <div mat-dialog-actions style="justify-content: flex-end;">
-        <button mat-button matStepperPrevious (click)="onNoClick()">Cancel</button>
-        <button mat-button matStepperNext>Next</button> </div>
-    </form>
+    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+      <ng-template matStepLabel>Principal configuration</ng-template>
+      <form [formGroup]="profileForm">
+        <mat-form-field>
+          <input matInput placeholder="Project Name" formControlName="projectname" required>
+          <mat-error *ngIf="profileForm.get('projectname').invalid">Error invalid name use string like Costumers
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput tabindex="-1" placeholder="Work directory" formControlName="workDirectory" readonly>
+          <button mat-icon-button matSuffix (click)="workDirectoryClick()">
+            <mat-icon>folder</mat-icon>
+          </button>
+        </mat-form-field>
+      </form>
+      <img style="width: 250px;" src="assets/wizard.png" alt="">
+    </div>
+    <div mat-dialog-actions style="justify-content: flex-end;">
+      <button mat-button matStepperPrevious (click)="onNoClick()">Cancel</button>
+      <button mat-button matStepperNext>Next</button> </div>
   </mat-step>
   <mat-step label="Database" [stepControl]="profileFormDatabase" errorMessage="Error field(s) invalid">
     <ng-template matStepLabel>Config Database</ng-template>
@@ -56,8 +60,8 @@
   <mat-step label="Project">
     <ng-template matStepLabel>Config security</ng-template>
     <form [formGroup]="profileFormTable">
-        <mat-checkbox (change)="generateTable($event)" formControlName="tableWithSecurity">Create your first table with
-          security</mat-checkbox>
+      <mat-checkbox (change)="generateTable($event)" formControlName="tableWithSecurity">Create your first table with
+        security</mat-checkbox>
       <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
         <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
           <mat-form-field>
@@ -93,7 +97,8 @@
     </form>
     <div mat-dialog-actions style="justify-content: flex-end;">
       <button mat-button matStepperPrevious>Back</button>
-      <button mat-button matStepperNext [disabled]="profileForm.invalid || profileFormDatabase.invalid || profileFormTable.invalid"
+      <button mat-button matStepperNext
+        [disabled]="profileForm.invalid || profileFormDatabase.invalid || profileFormTable.invalid"
         (click)="onYesClick()">Finish</button>
     </div>
   </mat-step>

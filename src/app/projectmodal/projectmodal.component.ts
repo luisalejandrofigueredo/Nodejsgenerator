@@ -82,7 +82,85 @@ export class ProjectmodalComponent implements OnInit {
   }
   onYesClick() {
     this.configservice.config.projectname = this.profileForm.get('projectname').value;
+    this.configservice.config.filePath= this.profileForm.get('workDirectory').value + `\\` + this.profileForm.get('projectname').value
+    if (this.profileFormTable.get('tableWithSecurity').value) {
+      this.configservice.config.security.table=this.profileFormTable.get('tableName').value;
+      this.configservice.config.security.login=this.profileFormTable.get('login').value;
+      this.configservice.config.security.password=this.profileFormTable.get('password').value;
+      this.configservice.config.security.roles=this.profileFormTable.get('roles').value;
+      this.configservice.config.security.bearertoken=this.profileFormTable.get('bearer').value;
+      this.configservice.config.security.count=this.profileFormTable.get('count').value;
+      this.configservice.addschema({ id: 1,
+          name: this.profileFormTable.get('tableName').value,
+          description: '',
+          imports: '',
+          fields: '' ,
+          security: true,
+          classsecurity: 'RolesGuard',
+          filesecurity: '',
+          filesupload:false,mastersecurity: true}
+      );
+    }
+    /** adding tables */
+    this.configservice.addschemaitem(1,{
+      id:1,
+      name:'id',
+      type:'string',
+      length:255,
+      index:false,
+      extraparameter:'',
+      keyautonumber:true
+    });
+    this.configservice.addschemaitem(1,{
+      id:2,name:this.profileFormTable.get('login').value,
+      type:'string',
+      length:255,
+      index:true,
+      extraparameter:'',
+      keyautonumber:false
+    });
+    this.configservice.addschemaitem(1,{
+      id:3,name:this.profileFormTable.get('password').value,
+      type:'string',
+      length:255,
+      index:false,
+      extraparameter:'',
+      keyautonumber:false
+    });
+    this.configservice.addschemaitem(1,{
+      id:4,name:this.profileFormTable.get('roles').value,
+      type:'string',
+      length:255,
+      index:false,
+      extraparameter:'',
+      keyautonumber:false
+    });
+    this.configservice.addschemaitem(1,{
+      id:5,name:this.profileFormTable.get('bearer').value,
+      type:'string',
+      length:255,
+      index:false,
+      extraparameter:'',
+      keyautonumber:false
+    });
+    this.configservice.addschemaitem(1,{
+      id:6,name:this.profileFormTable.get('roles').value,
+      type:'string',
+      length:255,
+      index:false,
+      extraparameter:'',
+      keyautonumber:false
+    });
+    this.configservice.addschemaitem(1,{
+      id:7,name:this.profileFormTable.get('count').value,
+      type:'number',
+      length:10,
+      index:false,
+      extraparameter:'',
+      keyautonumber:false
+    });
     const createDirectory = this.electron.ipcRenderer.sendSync('createDirectory', { directory: this.profileForm.get('workDirectory').value + `\\` + this.profileForm.get('projectname').value });
+    const createPackageFile = this.electron.ipcRenderer.sendSync('createProject', { path: this.profileForm.get('workDirectory').value + `\\` + this.profileForm.get('projectname').value });
     this.dialogRef.close(this.profileForm.value);
   }
 }

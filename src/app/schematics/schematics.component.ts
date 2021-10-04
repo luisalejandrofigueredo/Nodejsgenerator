@@ -76,7 +76,6 @@ export class SchematicsComponent implements OnInit {
     let position = 0;
     if (this.schemaitems === undefined) {
       position = 1;
-      // tslint:disable-next-line: max-line-length
       this.schemaitems = [{ id: position,
          type: data.type,
           name: data.name,
