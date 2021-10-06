@@ -22,7 +22,7 @@ interface Type {
   styleUrls: ['./api.component.scss']
 })
 export class ApiComponent implements OnInit {
-  apis = [];
+  apis:Api[]=[];
   fields = [];
   selected: string;
   types: Type[] = [
@@ -60,12 +60,14 @@ export class ApiComponent implements OnInit {
       this.id = params.id;
       this.schemaname = this.configservice.getschemaname(this.id);
       this.fields = this.configservice.getfields(this.id);
-      this.apis = [...this.configservice.getapis(this.id)];
+      this.apis = JSON.parse(JSON.stringify(this.configservice.getapis(this.id)));
       this.apis.forEach((api: Api) => {
         api.type = this.changeVisibleTypes(api.type);
         api.operation = this.changeVisibleOperation(api.operation);
       });
-      this.dataSource.data =this.apis;
+      this.dataSource.data = this.apis;
+      console.log('on init local api',this.apis);
+      console.log('on init service',this.configservice.getapis(this.id));
     });
   }
 
@@ -115,6 +117,7 @@ export class ApiComponent implements OnInit {
     });
     matRef.afterClosed().subscribe(data => {
       if (data !== undefined) {
+        console.log('data', data);
         const _id = this.apis.length + 1;
         this.configservice.addapi(this.id,
           {
@@ -129,7 +132,7 @@ export class ApiComponent implements OnInit {
             options: data.options,
             parameters: data.parameters
           });
-        this.apis = [...this.configservice.getapis(this.id)];
+        this.apis = JSON.parse(JSON.stringify(this.configservice.getapis(this.id)));
         this.apis.forEach((api: Api) => {
           api.type = this.changeVisibleTypes(api.type);
           api.operation = this.changeVisibleOperation(api.operation);
@@ -149,7 +152,7 @@ export class ApiComponent implements OnInit {
     dialogRef.afterClosed().subscribe(data => {
       if (data !== undefined) {
         this.configservice.deleteapi(this.id, id);
-        this.apis = [...this.configservice.getapis(this.id)];
+        this.apis = JSON.parse(JSON.stringify(this.configservice.getapis(this.id)));
         this.apis.forEach((api: Api) => {
           api.type = this.changeVisibleTypes(api.type);
           api.operation = this.changeVisibleOperation(api.operation);
@@ -182,7 +185,7 @@ export class ApiComponent implements OnInit {
     matRef.afterClosed().subscribe(data => {
       if (data !== undefined) {
         this.configservice.editapi(this.id, _id, data);
-        this.apis = [...this.configservice.getapis(this.id)];
+        this.apis = JSON.parse(JSON.stringify(this.configservice.getapis(this.id)));
         this.apis.forEach((api: Api) => {
           api.type = this.changeVisibleTypes(api.type);
           api.operation = this.changeVisibleOperation(api.operation);

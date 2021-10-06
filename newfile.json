@@ -1,21 +1,30 @@
 {
 	"version": 0.3,
 	"schemapath": "C:\\Users\\luisa\\Documents\\github\\generador\\newfile.json",
-	"filePath": "",
-	"projectname": "Costumers",
-	"enableCors": false,
+	"filePath": "C:\\Users\\luisa\\Documents\\Pruebacinco",
+	"projectname": "Pruebacinco",
+	"enableCors": true,
 	"dbconf": {
 		"selecteddatabase": 0,
-		"host": "",
-		"port": 0,
-		"username": "",
-		"password": "",
-		"database": ""
+		"host": "127.0.0.1",
+		"port": 3306,
+		"username": "root",
+		"password": "root",
+		"database": "Costumers"
+	},
+	"dbconfProduction": {
+		"selecteddatabase": 0,
+		"host": "127.0.0.1",
+		"port": 3306,
+		"username": "root",
+		"password": "root",
+		"database": "Costumers"
 	},
 	"enablehttps": false,
 	"enableuploadfiles": false,
 	"port": 3000,
-	"jwtsk": "",
+	"jwtsk": "test",
+	"jwtskProduction": "test",
 	"logger": {
 		"type": 0,
 		"file": "info.log",
@@ -28,33 +37,116 @@
 		"maxsizeerror": 10000
 	},
 	"security": {
-		"bearertoken": "",
-		"login": "",
-		"password": "",
-		"roles": "",
-		"table": "",
+		"bearertoken": "bearer",
+		"login": "login",
+		"password": "password",
+		"roles": "roles",
+		"table": "Security",
 		"logger": false,
 		"path": "",
-		"rolesclass": ""
+		"rolesclass": "",
+		"count": "count"
 	},
 	"schemas": [
 		{
 			"id": 1,
-			"name": "Costumers",
-			"description": "Costumers table",
+			"name": "Security",
+			"description": "",
 			"imports": "",
 			"fields": "",
 			"security": true,
 			"classsecurity": "RolesGuard",
 			"filesecurity": "",
 			"mastersecurity": true,
+			"filesupload": false,
+			"schemastable": [
+				{
+					"id": 1,
+					"name": "id",
+					"type": "string",
+					"length": 255,
+					"index": false,
+					"extraparameter": "",
+					"keyautonumber": true
+				},
+				{
+					"id": 2,
+					"name": "login",
+					"type": "string",
+					"length": 255,
+					"index": true,
+					"extraparameter": "",
+					"keyautonumber": false
+				},
+				{
+					"id": 3,
+					"name": "password",
+					"type": "string",
+					"length": 255,
+					"index": false,
+					"extraparameter": "",
+					"keyautonumber": false
+				},
+				{
+					"id": 4,
+					"name": "roles",
+					"type": "string",
+					"length": 255,
+					"index": false,
+					"extraparameter": "",
+					"keyautonumber": false
+				},
+				{
+					"id": 5,
+					"name": "bearer",
+					"type": "string",
+					"length": 255,
+					"index": false,
+					"extraparameter": "",
+					"keyautonumber": false
+				},
+				{
+					"id": 6,
+					"name": "roles",
+					"type": "string",
+					"length": 255,
+					"index": false,
+					"extraparameter": "",
+					"keyautonumber": false
+				},
+				{
+					"id": 7,
+					"name": "count",
+					"type": "number",
+					"length": 10,
+					"index": false,
+					"extraparameter": "",
+					"keyautonumber": false
+				}
+			],
+			"schemarelations": {
+				"OnetoOne": [],
+				"Onetomany": []
+			},
+			"schemasapi": []
+		},
+		{
+			"id": 2,
+			"name": "Costumers",
+			"description": "",
+			"imports": "",
+			"fields": "",
+			"security": true,
+			"classsecurity": "RolesGuard",
+			"filesecurity": "",
+			"mastersecurity": false,
 			"filesupload": true,
 			"schemastable": [
 				{
 					"id": 1,
 					"type": "number",
 					"name": "id",
-					"length": 25,
+					"length": 10,
 					"keyautonumber": true,
 					"extraparameter": "",
 					"index": false
@@ -71,7 +163,7 @@
 				{
 					"id": 3,
 					"type": "string",
-					"name": "adress",
+					"name": "surname",
 					"length": 255,
 					"keyautonumber": false,
 					"extraparameter": "",
@@ -82,7 +174,20 @@
 				"OnetoOne": [],
 				"Onetomany": []
 			},
-			"schemasapi": []
+			"schemasapi": [
+				{
+					"id": 1,
+					"type": "get",
+					"operation": "getall",
+					"path": "getall",
+					"field": "",
+					"security": false,
+					"roles": "",
+					"extfiles": "",
+					"options": "",
+					"parameters": []
+				}
+			]
 		}
 	]
 }

@@ -113,7 +113,8 @@ export class AppComponent {
     this.ngzone.run(() => { this.router.navigate(['browse']); });
   }
   clearrecent() {
-    localStorage.clear();
+    localStorage.removeItem("recent");
+    this.recent=[];
   }
 
   new() {
@@ -231,17 +232,9 @@ export class AppComponent {
       if (result.canceled === false) {
         file = result.filePath;
         this.ngzone.run(() => {
-          const projectname = (this.configservice.config.projectname !== undefined) ? this.configservice.config.projectname : "";
-          const dialogRef = this.dialog.open(ProjectmodalComponent, {
-            width: '300px',
-            disableClose: true, data: { projectname: projectname }
-          });
-          dialogRef.afterClosed().subscribe(data => {
-            if (data !== undefined) {
+              this.configservice.config.schemapath=file;
               this.savelocalstrorage(this.configservice.config.projectname, this.configservice.config.schemapath);
               this.configservice.saveas(file);
-            }
-          });
         });
       }
     }

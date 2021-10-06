@@ -89,6 +89,7 @@ export class TestapiComponent implements OnInit {
   }
 
   viewValue(value: string): string {
+    console.log('console value',value);
     if (value === "") return "";
     return this.operationarray.find(element => element.value === value).viewValue
   }

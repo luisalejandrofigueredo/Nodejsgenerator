@@ -137,7 +137,9 @@ export class ConfigService {
 
   // tslint:disable-next-line: variable-name
   addapi(_id: number, api: Api) {
+    console.log('add api api',api);
     this.config.schemas[_id - 1].schemasapi.push(api);
+    console.log('add api',this.config.schemas[_id - 1].schemasapi);
   }
   // tslint:disable-next-line: variable-name
   addrelation(_id: number, relation: Relations) {
@@ -160,7 +162,7 @@ export class ConfigService {
   }
   getapis(id: number): Api[] {
     // tslint:disable-next-line: prefer-const
-    return this.config.schemas[id - 1].schemasapi;
+    return [...this.config.schemas[id - 1].schemasapi];
   }
 
 
