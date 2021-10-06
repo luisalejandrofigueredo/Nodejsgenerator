@@ -1,12 +1,14 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfigService } from '../service/config.service';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { Selectvalues } from "../selectvalues";
 import { ElectronService } from 'ngx-electron';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { ConfigServiceService } from "../service/config/config-service.service";
+import { WizardModalComponent } from "../wizard-modal/wizard-modal.component";
 @Component({
   selector: 'app-projectmodal',
   templateUrl: './projectmodal.component.html',
@@ -20,7 +22,7 @@ export class ProjectmodalComponent implements OnInit {
   profileFormDatabase: FormGroup;
   profileFormTable: FormGroup;
   hidep = true;
-  constructor(private electron: ElectronService, private snackbar: MatSnackBar, public configservice: ConfigService, public dialogRef: MatDialogRef<ProjectmodalComponent>, @Inject(MAT_DIALOG_DATA) public data: { projectname: string }) { }
+  constructor(private wizardDialog: MatDialog,private configPackageService:ConfigServiceService,private electron: ElectronService, private snackbar: MatSnackBar, public configservice: ConfigService, public dialogRef: MatDialogRef<ProjectmodalComponent>, @Inject(MAT_DIALOG_DATA) public data: { projectname: string }) { }
   driverdatabase: Selectvalues[] = [{ value: 0, viewValue: 'My Sql' },
   { value: 1, viewValue: "PostgreSQL" },
   { value: 2, viewValue: "SQLite" },
@@ -32,10 +34,11 @@ export class ProjectmodalComponent implements OnInit {
   ngOnInit(): void {
     this.profileForm = new FormGroup({
       projectname: new FormControl('', Validators.compose([Validators.required, Validators.pattern('[A-Z][a-z]*')])),
+      description: new FormControl(''),
       workDirectory: new FormControl('', Validators.required)
     });
     this.profileFormDatabase = new FormGroup({
-      driver: new FormControl('', Validators.required),
+      driver: new FormControl(0, Validators.required),
       host: new FormControl('127.0.0.1', Validators.required),
       port: new FormControl(3306, Validators.required),
       username: new FormControl('', Validators.required),
@@ -83,6 +86,20 @@ export class ProjectmodalComponent implements OnInit {
   onYesClick() {
     this.configservice.config.projectname = this.profileForm.get('projectname').value;
     this.configservice.config.filePath= this.profileForm.get('workDirectory').value + `\\` + this.profileForm.get('projectname').value
+    /* config database*/
+    this.configservice.config.dbconfProduction.selecteddatabase=this.profileFormDatabase.get('driver').value;
+    this.configservice.config.dbconfProduction.host=this.profileFormDatabase.get('host').value;
+    this.configservice.config.dbconfProduction.port=this.profileFormDatabase.get('port').value;
+    this.configservice.config.dbconfProduction.username=this.profileFormDatabase.get('username').value;
+    this.configservice.config.dbconfProduction.password=this.profileFormDatabase.get('password').value;
+    this.configservice.config.dbconfProduction.database=this.profileFormDatabase.get('database').value;
+    /** config development  data base*/
+    this.configservice.config.dbconf.selecteddatabase=this.profileFormDatabase.get('driver').value;
+    this.configservice.config.dbconf.host=this.profileFormDatabase.get('host').value;
+    this.configservice.config.dbconf.port=this.profileFormDatabase.get('port').value;
+    this.configservice.config.dbconf.username=this.profileFormDatabase.get('username').value;
+    this.configservice.config.dbconf.password=this.profileFormDatabase.get('password').value;
+    this.configservice.config.dbconf.database=this.profileFormDatabase.get('database').value;
     if (this.profileFormTable.get('tableWithSecurity').value) {
       this.configservice.config.security.table=this.profileFormTable.get('tableName').value;
       this.configservice.config.security.login=this.profileFormTable.get('login').value;
@@ -159,8 +176,15 @@ export class ProjectmodalComponent implements OnInit {
       extraparameter:'',
       keyautonumber:false
     });
+    this.configservice.config.enableCors=true;
+    this.configservice.config.jwtsk="test";
+    this.configservice.config.jwtskProduction="test";
     const createDirectory = this.electron.ipcRenderer.sendSync('createDirectory', { directory: this.profileForm.get('workDirectory').value + `\\` + this.profileForm.get('projectname').value });
     const createPackageFile = this.electron.ipcRenderer.sendSync('createProject', { path: this.profileForm.get('workDirectory').value + `\\` + this.profileForm.get('projectname').value });
-    this.dialogRef.close(this.profileForm.value);
+    const data={projectname:this.profileForm.get('projectname').value as string,description:this.profileForm.get('description').value as string}
+    const dialogRef = this.wizardDialog.open(WizardModalComponent, { data: data ,disableClose:false });
+    dialogRef.afterClosed().subscribe(()=>{
+      this.dialogRef.close(this.profileForm.value);
+    })
   }
 }

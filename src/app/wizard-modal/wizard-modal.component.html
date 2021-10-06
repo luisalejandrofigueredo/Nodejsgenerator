@@ -1,0 +1,11 @@
+<mat-progress-bar *ngIf="installingValue"
+  mode="indeterminate">
+</mat-progress-bar>
+<div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
+  <h2 *ngIf="installingValue">Installing all packages wait a moment...</h2>
+  <img style="width: 250px;" src="assets/wizard.png" alt="">
+  <p>You want us to install the libraries for you</p>
+  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+    <button *ngIf="!installingValue" mat-raised-button (click)="onNoClick()">No</button>
+    <button *ngIf="!installingValue" mat-raised-button (click)="onYesClick(true)">Yes</button>
+  </div>

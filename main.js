@@ -28,12 +28,6 @@ var template = [{
         }
       },
       {
-        label: 'Install files',
-        click() {
-          copy_files()
-        }
-      },
-      {
         label: 'Load',
         click() {
           load();
@@ -202,7 +196,6 @@ ipcMain.on('loadsampledata', (_event, arg) => {
   if (arg.loadsampleproject === true) {
     let dest;
     let filedest;
-    console.log('process:', process.platform);
     if (process.platform === "win32") {
       console.log('copy in windows...');
       dest = '\\sample'
@@ -380,12 +373,6 @@ function settemplate() {
           label: 'New',
           click() {
             newfile();
-          }
-        },
-        {
-          label: 'Install files',
-          click() {
-            copy_files()
           }
         },
         {
@@ -645,9 +632,39 @@ ipcMain.on('load', (event, arg) => {
 
 ipcMain.on('saveas', (event, arg) => {
   writeFile(arg.path, arg.file);
-  return event.returnValue = "fileas ready";
+  return event.returnValue = "file as ready";
 });
 
+ipcMain.on('installPackages', (event, arg) => {
+  console.log('arg', arg);
+  try {
+    process.chdir(arg.path);
+  } catch (err) {
+    console.log('operative system error');
+  }
+  try {
+    if (process.platform === "win32") {
+      const commandCd = spawnSync('cmd.exe', ["/c", 'cd'],{stdio: 'inherit',shell: true});
+      const command = spawn('cmd.exe', ["/c", 'npm', 'install']);
+      command.stdout.on('data', (data) => {
+        console.log(data.toString());
+      });
+      
+      command.stderr.on('data', (data) => {
+        console.error(data.toString());
+      });
+      
+      command.on('exit', (code) => {
+        console.log(`Child exited with code ${code}`);
+        mainWindow.webContents.send("endProcess");
+      });
+    } else {
+      const command = spawn('npm', ['install']);
+    }
+  } catch (err) {
+    console.log('system error while create project');
+  }
+});
 ipcMain.on('createProject', (event, arg) => {
   console.log('arg', arg);
   try {
@@ -656,9 +673,7 @@ ipcMain.on('createProject', (event, arg) => {
     console.log('operative system error');
   }
   try {
-    console.log('Platform', process.platform);
     if (process.platform === "win32") {
-      console.log('send spawn');
       const commandCd = spawnSync('cmd.exe', ["/c", 'cd'],{stdio: 'inherit',shell: true});
       const command = spawnSync('cmd.exe', ["/c", 'npm', 'init', '-f', '-y']);
     } else {

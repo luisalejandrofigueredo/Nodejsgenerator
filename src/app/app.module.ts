@@ -67,6 +67,7 @@ import { EndComponent } from './end/end.component';
 import { InstallFilesComponent } from './install-files/install-files.component';
 import { ConfigdevelopemtComponent } from './configdevelopemt/configdevelopemt.component';
 import { ConfigProductionComponent } from './config-production/config-production.component';
+import { WizardModalComponent } from './wizard-modal/wizard-modal.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -108,6 +109,7 @@ import { ConfigProductionComponent } from './config-production/config-production
     InstallFilesComponent,
     ConfigdevelopemtComponent,
     ConfigProductionComponent,
+    WizardModalComponent,
   ],
   imports: [ 
     BrowserModule, 

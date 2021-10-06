@@ -10,6 +10,9 @@
           </mat-error>
         </mat-form-field>
         <mat-form-field>
+          <input matInput placeholder="Description" formControlName="description">
+        </mat-form-field>
+        <mat-form-field>
           <input matInput tabindex="-1" placeholder="Work directory" formControlName="workDirectory" readonly>
           <button mat-icon-button matSuffix (click)="workDirectoryClick()">
             <mat-icon>folder</mat-icon>
