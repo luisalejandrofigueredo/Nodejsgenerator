@@ -17,7 +17,6 @@
     "win": {
       "icon": "dist/generador/assets/icons/win/icon.ico",
       "target": [
-        "msi",
         "nsis"
       ]
     }

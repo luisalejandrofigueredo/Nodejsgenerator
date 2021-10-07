@@ -204,7 +204,6 @@ export class ApidatamodalComponent implements OnInit {
     else {
       this.data.parameters = [];
     }
-    console.log('data modal',this.data);
     this.dialogRef.close(this.data);
   }
 }

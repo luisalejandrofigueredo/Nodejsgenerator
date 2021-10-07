@@ -12,6 +12,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { AddarrayComponent } from '../addarray/addarray.component';
 import { Relations } from '../interfaces/relations';
 import {ErrorComponent} from '../error/error.component';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-testapi',
@@ -193,7 +194,7 @@ export class TestapiComponent implements OnInit {
   }
 
   change() {
-    this.profileForm.patchValue({ body: '', reponse: '' });
+    this.profileForm.patchValue({ body: '', reponse: '', operation:0 });
     this.apis = [...this.configservice.getapis(this.profileForm.get('Schema').value)];
     this.schemastring = this.configservice.getschemaname(this.profileForm.get('Schema').value);
   }
@@ -201,7 +202,7 @@ export class TestapiComponent implements OnInit {
     return (this.profileForm.get('parameters') as FormArray).length;
   }
 
-  changeoperation(event) {
+  changeoperation(event:MatSelectChange) {
     let typea: Array<string> = [];
     const apinumber = event.value;
     this.profileForm.patchValue({ body: '', reponse: '', test: false });
@@ -709,7 +710,7 @@ export class TestapiComponent implements OnInit {
   error(error:HttpErrorResponse){
     const dialogRef = this.dialog.open(ErrorComponent, {
       disableClose: false,
-      data: { message:'Error on server',error:error.message }
+      data: { message:'Check your server',error:error.message }
     });
   }
   
