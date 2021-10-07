@@ -68,6 +68,8 @@ import { InstallFilesComponent } from './install-files/install-files.component';
 import { ConfigdevelopemtComponent } from './configdevelopemt/configdevelopemt.component';
 import { ConfigProductionComponent } from './config-production/config-production.component';
 import { WizardModalComponent } from './wizard-modal/wizard-modal.component';
+import { ViewschemasComponent } from './viewschemas/viewschemas.component';
+import { MatTreeModule } from '@angular/material/tree';
 @NgModule({
   declarations: [
     AppComponent,
@@ -110,6 +112,7 @@ import { WizardModalComponent } from './wizard-modal/wizard-modal.component';
     ConfigdevelopemtComponent,
     ConfigProductionComponent,
     WizardModalComponent,
+    ViewschemasComponent,
   ],
   imports: [ 
     BrowserModule, 
@@ -141,7 +144,8 @@ import { WizardModalComponent } from './wizard-modal/wizard-modal.component';
     MatRadioModule,
     DragDropModule,
     ClipboardModule,
-    NgxElectronModule ],
+    NgxElectronModule,
+    MatTreeModule ],
   providers: [],
   bootstrap: [AppComponent],
   // tslint:disable-next-line: max-line-length

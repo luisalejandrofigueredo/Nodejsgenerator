@@ -55,7 +55,7 @@ export class RelationsService {
   }
 
   getrelationmanytoone(schemaid: number): Manytoone[] {
-    if (this.config.getrelations(schemaid).Onetomany!==undefined)
+    if (this.config.getrelations(schemaid).Manytoone!==undefined)
     return this.config.getrelations(schemaid).Manytoone
     else
     return [];

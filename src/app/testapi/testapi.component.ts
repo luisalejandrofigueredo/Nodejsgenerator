@@ -90,7 +90,6 @@ export class TestapiComponent implements OnInit {
   }
 
   viewValue(value: string): string {
-    console.log('console value',value);
     if (value === "") return "";
     return this.operationarray.find(element => element.value === value).viewValue
   }
@@ -100,13 +99,11 @@ export class TestapiComponent implements OnInit {
     this.form.getAll("files").forEach(element => { this.form.delete("files") });
     const file: File = (event.target as HTMLInputElement).files[0];
     if (file) {
-      console.log('file selected', file)
       this.form.set("file", file, file.name);
     }
   }
   onFilesSelected(event) {
     const files: FileList = event.target.files;
-    console.log('files', files);
     this.form.getAll("file").forEach(element => { this.form.delete("file") });
     this.form.getAll("files").forEach(element => { this.form.delete("files") });
     Array.from(files).forEach(element => {
@@ -603,7 +600,6 @@ export class TestapiComponent implements OnInit {
               this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }), error=> {this.error(error)});
             break
           case 'skiplimitbyfield':
-            console.log('api', this.api);
             httpOptions = {
               headers: new HttpHeaders({
                 'Content-Type': 'application/json',
