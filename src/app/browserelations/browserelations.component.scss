@@ -6,3 +6,19 @@ table{
     background-color:blue ;
     color: white;
 }
+
+.componentWraper {
+    margin: 40px; /* just for contrast */
+    position: relative;
+    margin-top: -3em;
+    border: 2px solid cornflowerblue;
+    border-radius: 12px;
+    padding: 20px;
+  }
+  
+  .componentWraper .componentTitle {
+    position: absolute;
+    top: -25px;
+    background: #fff;
+    padding: 0 10px;
+  }

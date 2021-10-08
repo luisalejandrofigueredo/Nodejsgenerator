@@ -1,10 +1,13 @@
 <button mat-icon-button (click)="navigate()">
-    <mat-icon>home</mat-icon>
+  <mat-icon>home</mat-icon>
 </button>
-<h3>Select your type relation for configure with the schema:{{ schemaname}}</h3>
+<div style="height: 40px;width: 100%;"></div>
 <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="gappx">
+  <div class='componentWraper'>
+    <p class='componentTitle'>Select your relation to add in {{ schemaname}}</p>
     <button type="button" (click)="browseonetoone()" mat-raised-button color="primary">One to one</button>
     <button type="button" (click)="browseonetomany()" mat-raised-button color="primary">One to Many/Many to One</button>
     <button type="button" (click)="browsemanytomany()" mat-raised-button color="primary">Many to Many</button>
+  </div>
 </div>
 <app-viewschemas [id]="id"></app-viewschemas>
