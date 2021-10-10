@@ -3,7 +3,6 @@ import { ElectronService } from 'ngx-electron';
 import { ConfigService } from './config.service';
 import { RelationsService } from './relations.service';
 import { Api } from '../interfaces/api';
-import { Relations } from '../interfaces/relations';
 import { Manytoone } from '../interfaces/manytoone';
 @Injectable({
   providedIn: 'root'
