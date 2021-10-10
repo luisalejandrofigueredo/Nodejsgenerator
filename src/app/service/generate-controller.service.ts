@@ -3,6 +3,8 @@ import { ElectronService } from 'ngx-electron';
 import { ConfigService } from './config.service';
 import { RelationsService } from './relations.service';
 import { Api } from '../interfaces/api';
+import { Relations } from '../interfaces/relations';
+import { Manytoone } from '../interfaces/manytoone';
 @Injectable({
   providedIn: 'root'
 })
@@ -105,6 +107,17 @@ export class GenerateControllerService {
           this.textGenerated += ` };\n`;
           break;
         }
+        case 'postonetomany':
+          const table = item.name;
+          const tableLower = item.name.toLowerCase();
+          const relationsOneToMany = this.relationservice.getrelationsonetomany(item.id);
+          console.log('relations one to many:',relationsOneToMany)
+          const relationOneToMany= relationsOneToMany.find(oneToMany => oneToMany.relationname === element.field);
+          const invRelations: Manytoone[] = this.relationservice.getrelationmanytoone(this.config_service.getschemawithname(relationOneToMany.table));
+          const manytoone = invRelations.find(manyToOne => manyToOne.table === table);
+          this.textGenerated += `public post${element.path}onetomany = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
+          this.textGenerated += '}';
+          break;
         default:
           break;
       }
@@ -138,7 +151,7 @@ export class GenerateControllerService {
         this.textGenerated += '};\n\n';
         break;
       }
-      case 'findandcount':{
+      case 'findandcount': {
         this.textGenerated += `public findAndCount = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`
         this.textGenerated += `try {\n`;
         this.textGenerated += `const findAndCountData: any = await this.${tableLower}Service.findAndCount();\n`
@@ -149,7 +162,7 @@ export class GenerateControllerService {
         this.textGenerated += '};\n\n';
         break;
       }
-      case 'skiplimit':{
+      case 'skiplimit': {
         this.textGenerated += `public skipLimit = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`
         this.textGenerated += `try {\n`;
         this.textGenerated += `const skip = Number(req.params.skip);\n`;
@@ -163,7 +176,7 @@ export class GenerateControllerService {
         this.textGenerated += '};\n\n';
         break;
       }
-      case 'skiplimitbyfield':{
+      case 'skiplimitbyfield': {
         this.textGenerated += `public skipLimit${itemApi.field} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`
         this.textGenerated += `try {\n`;
         this.textGenerated += `const skip = Number(req.params.skip);\n`;
@@ -177,7 +190,7 @@ export class GenerateControllerService {
         this.textGenerated += '};\n\n';
         break;
       }
-      case 'skiplimitfilter':{
+      case 'skiplimitfilter': {
         this.textGenerated += `public skipLimitFilter${itemApi.field} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`
         this.textGenerated += `try {\n`;
         this.textGenerated += `const skip = Number(req.params.skip);\n`;
@@ -192,7 +205,7 @@ export class GenerateControllerService {
         this.textGenerated += '};\n\n';
         break;
       }
-      case 'findwithoptions':{
+      case 'findwithoptions': {
         this.textGenerated += `public skipLimitOptions${itemApi.path} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`
         this.textGenerated += `try {\n`;
         this.textGenerated += `const findwithoptions = await this.${tableLower}Service.getfindwithoptions${table}(req.params.options);`
@@ -203,7 +216,7 @@ export class GenerateControllerService {
         this.textGenerated += '};\n\n';
         break;
       }
-      case 'findandcountwithoptions':{
+      case 'findandcountwithoptions': {
         this.textGenerated += `public skipLimitOptions${itemApi.path} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`
         this.textGenerated += `try {\n`;
         this.textGenerated += `const findwithoptions = await this.${tableLower}Service.getfindandcountwithoptions${table}(req.params.options);`
@@ -234,7 +247,7 @@ export class GenerateControllerService {
         this.textGenerated += `next(error);\n`;
         this.textGenerated += ` }\n`;
         this.textGenerated += `};\n\n`;
-      break;
+        break;
       case 'findandcountgenerated':
         this.textGenerated += `public get${table}FindAndCountGenerated${itemApi.path} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
         this.textGenerated += ` try {\n`;
@@ -244,7 +257,7 @@ export class GenerateControllerService {
         this.textGenerated += `next(error);\n`;
         this.textGenerated += ` }\n`;
         this.textGenerated += `};\n\n`;
-      break; 
+        break;
       default:
         break;
     }

@@ -30,7 +30,15 @@ export class ApiComponent implements OnInit {
     { value: 'put', viewValue: 'Put' },
     { value: 'post', viewValue: 'Post' },
     { value: 'delete', viewValue: 'Delete' },
-    { value: 'patch', viewValue: 'Patch' }
+    { value: 'patch', viewValue: 'Patch' },
+    { value: 'postonetoone', viewValue: 'Post One to One' },
+    { value: 'postonetomany', viewValue: 'Post One to Many' },
+    { value: 'postmanytoone', viewValue: 'Post Many to one' },
+    { value: 'postmanytomany', viewValue: 'Post Many to many' },
+    { value: 'changepassword', viewValue: 'Put change password' },
+    { value: 'uploadfile', viewValue: 'Up load file' },
+    { value: 'uploadfiles', viewValue: 'Up load multiple files' },
+    { value: 'getfile', viewValue: 'Get file' }
   ];
   operations: Type[] = [
     { value: 'getall', viewValue: 'Get All' },
@@ -66,8 +74,6 @@ export class ApiComponent implements OnInit {
         api.operation = this.changeVisibleOperation(api.operation);
       });
       this.dataSource.data = this.apis;
-      console.log('on init local api',this.apis);
-      console.log('on init service',this.configservice.getapis(this.id));
     });
   }
 

@@ -157,12 +157,11 @@ export class ConfigService {
 
   editapi(schemaid: number, apiid: number, reg: Api) {
     // tslint:disable-next-line: prefer-const
-    let apis = this.getapis(schemaid);
-    apis[apiid - 1] = reg;
+    this.getapis(schemaid)[apiid - 1] = reg;
   }
   getapis(id: number): Api[] {
     // tslint:disable-next-line: prefer-const
-    return [...this.config.schemas[id - 1].schemasapi];
+    return this.config.schemas[id - 1].schemasapi;
   }
 
 

@@ -70,6 +70,9 @@ export class GenerateRoutesService {
         case 'patch':
           this.lineGenerating += 'this.router.patch(`${this.path}/:id`,' + `this.${schemaLower}Controller.Patch${schemaName}ById);\n`;
           break;
+        case 'postonetomany':
+          this.lineGenerating += 'this.router.post(`${this.path}/onetomany/' + element.path + '/:id`,' + `this.${schemaLower}Controller.post${element.path}onetomany);\n`;
+          break;
         default:
           break;
       }
@@ -80,7 +83,7 @@ export class GenerateRoutesService {
   generateRoutesGet(api: Api, schema: Schemahead) {
     const schemaLower = schema.name.toLowerCase();
     const schemaName = schema.name;
-    const {path}=api
+    const { path } = api
     switch (api.operation) {
       case 'getall':
         this.lineGenerating += 'this.router.get(`${this.path\}`,' + `this.${schemaLower}Controller.get${schemaName});\n`;
@@ -97,33 +100,33 @@ export class GenerateRoutesService {
       case 'skiplimitbyfield':
         this.lineGenerating += 'this.router.get(`${this.path}' + `/skiplimitorder${api.field}` + '/:skip/:limit/:order`,' + `this.${schemaLower}Controller.skipLimit${api.field});\n`;
         break;
-        case 'skiplimitfilter':
+      case 'skiplimitfilter':
         this.lineGenerating += 'this.router.get(`${this.path}' + `/skiplimitfilter${api.field}` + '/:skip/:limit/:order/:filter`,' + `this.${schemaLower}Controller.skipLimitFilter${api.field});\n`;
         break;
-        case 'findwithoptions':
+      case 'findwithoptions':
         this.lineGenerating += 'this.router.get(`${this.path}' + `/findwithoptions${api.path}` + '/:options`,' + `this.${schemaLower}Controller.skipLimitOptions${api.path});\n`;
         break;
-        case 'findandcountwithoptions':
+      case 'findandcountwithoptions':
         this.lineGenerating += 'this.router.get(`${this.path}' + `/findandcountwithoptions${api.path}` + '/:options`,' + `this.${schemaLower}Controller.skipLimitOptions${api.path});\n`;
         break;
-        case 'count':
-          this.lineGenerating += 'this.router.get(`${this.path}/count`,' + `this.${schemaLower}Controller.get${schemaName}Count);\n`;
+      case 'count':
+        this.lineGenerating += 'this.router.get(`${this.path}/count`,' + `this.${schemaLower}Controller.get${schemaName}Count);\n`;
         break;
-        case 'findgenerated':
-          this.lineGenerating += 'this.router.get(`${this.path}/findgenerated'+api.path 
-          api.parameters.forEach((param,index)=>{
-            this.lineGenerating+='/:'+param.name
-          })
-          this.lineGenerating+='`'+','+`this.${schemaLower}Controller.get${schemaName}FindGenerated${api.path});\n`;
+      case 'findgenerated':
+        this.lineGenerating += 'this.router.get(`${this.path}/findgenerated' + api.path
+        api.parameters.forEach((param, index) => {
+          this.lineGenerating += '/:' + param.name
+        })
+        this.lineGenerating += '`' + ',' + `this.${schemaLower}Controller.get${schemaName}FindGenerated${api.path});\n`;
         break;
-        case 'findandcountgenerated':{
-          this.lineGenerating += 'this.router.get(`${this.path}/findandcountgenerated'+api.path
-          api.parameters.forEach((param,index)=>{
-            this.lineGenerating+='/:'+param.name
-          })
-          this.lineGenerating+='`'+','+`this.${schemaLower}Controller.get${schemaName}FindAndCountGenerated${api.path});\n`;
-         break;
-        }
+      case 'findandcountgenerated': {
+        this.lineGenerating += 'this.router.get(`${this.path}/findandcountgenerated' + api.path
+        api.parameters.forEach((param, index) => {
+          this.lineGenerating += '/:' + param.name
+        })
+        this.lineGenerating += '`' + ',' + `this.${schemaLower}Controller.get${schemaName}FindAndCountGenerated${api.path});\n`;
+        break;
+      }
       default:
         break;
     }
