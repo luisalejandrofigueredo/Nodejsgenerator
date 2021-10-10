@@ -161,15 +161,7 @@ export class ProjectmodalComponent implements OnInit {
       keyautonumber:false
     });
     this.configservice.addschemaitem(1,{
-      id:6,name:this.profileFormTable.get('roles').value,
-      type:'string',
-      length:255,
-      index:false,
-      extraparameter:'',
-      keyautonumber:false
-    });
-    this.configservice.addschemaitem(1,{
-      id:7,name:this.profileFormTable.get('count').value,
+      id:6,name:this.profileFormTable.get('count').value,
       type:'number',
       length:10,
       index:false,
