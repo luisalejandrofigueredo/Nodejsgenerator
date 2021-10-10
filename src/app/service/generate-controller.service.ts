@@ -135,7 +135,6 @@ export class GenerateControllerService {
     const tableLower = table.toLowerCase();
     switch (itemApi.operation) {
       case 'getall': {
-        console.log('Get all', itemApi.operation);
         this.textGenerated += `public get${table} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
         this.textGenerated += ` try {\n`;
         this.textGenerated += `const findAll${table}Data: ${table}[] = await this.${tableLower}Service.findAll${table}();\n`;

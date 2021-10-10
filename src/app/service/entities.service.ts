@@ -73,22 +73,22 @@ export class EntitiesService {
   private add_relations_entity(relations: Relations) {
     if (relations.OnetoOne !== undefined) {
       relations.OnetoOne.forEach(element => {
-        this.file_generating += `import {${element.table}} from "./${element.table}.entity";`;
+        this.file_generating += `import {${element.table}} from "./${element.table}.entity";\n`;
       });
     }
     if (relations.Onetomany !== undefined) {
       relations.Onetomany.forEach(element => {
-        this.file_generating += `import {${element.table}} from "./${element.table}.entity";`;
+        this.file_generating += `import {${element.table}} from "./${element.table}.entity";\n`;
       });
     }
     if (relations.Manytoone !== undefined) {
       relations.Manytoone.forEach(element => {
-        this.file_generating += `import {${element.table}} from "./${element.table}.entity";`;
+        this.file_generating += `import {${element.table}} from "./${element.table}.entity";\n`;
       });
     }
     if (relations.Manytomany !== undefined) {
       relations.Manytomany.forEach(element => {
-        this.file_generating += `import {${element.table}} from "./${element.table}.entity";`;
+        this.file_generating += `import {${element.table}} from "./${element.table}.entity";\n`;
       });
     }
   }
