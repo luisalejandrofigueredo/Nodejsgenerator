@@ -64,6 +64,7 @@
         "getfile",
         "getfilepath",
         "getfindandcountwithoptions",
+        "getfindwithoptions",
         "getone",
         "getrelationmanytoone",
         "getrelations",

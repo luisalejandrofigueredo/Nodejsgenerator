@@ -137,7 +137,7 @@ export class ServiceGeneratorService {
         this.textGenerated+=`async postonetomany${element.path}(_id: number,relation:${relationOneToMany.table}): Promise<${table}> {\n`;
         this.textGenerated += `\t const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
         this.textGenerated += `\t const ${relationOneToMany.table.toLowerCase()}Repository = getRepository(this.${relationOneToMany.table.toLowerCase()});\n`
-        this.textGenerated += `\t let ${item.name.toLowerCase()}: ${item.name} = await ${item.name.toLowerCase()}Repository.findOne({where: { "id": _id }});\n`;
+        this.textGenerated += `\t let ${item.name.toLowerCase()}: ${item.name} = await ${item.name.toLowerCase()}Repository.findOne({where: { "id": _id },relations:["${relationOneToMany.relationname}"]});\n`;
         this.textGenerated += `\t if (!${item.name.toLowerCase()}) throw new HttpException(409, "Not find in post one to many ${item.name}");\n`;
         this.textGenerated += `\t let relationRegister= await  ${relationOneToMany.table.toLowerCase()}Repository.save(relation);\n`;
         this.textGenerated += `\t if (!relationRegister) throw new HttpException(409, "Not post in post one to many ${relationOneToMany.table}");\n`;

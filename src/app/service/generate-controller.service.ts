@@ -111,12 +111,19 @@ export class GenerateControllerService {
           const table = item.name;
           const tableLower = item.name.toLowerCase();
           const relationsOneToMany = this.relationservice.getrelationsonetomany(item.id);
-          console.log('relations one to many:',relationsOneToMany)
           const relationOneToMany= relationsOneToMany.find(oneToMany => oneToMany.relationname === element.field);
           const invRelations: Manytoone[] = this.relationservice.getrelationmanytoone(this.config_service.getschemawithname(relationOneToMany.table));
           const manytoone = invRelations.find(manyToOne => manyToOne.table === table);
           this.textGenerated += `public post${element.path}onetomany = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
-          this.textGenerated += '}';
+          this.textGenerated += `const ${tableLower}Id = Number(req.params.id);\n`;
+          this.textGenerated += `const relation=req.body;\n`;
+          this.textGenerated += `try {\n`
+          this.textGenerated += `const manyToOne=await this.${tableLower}Service.postonetomany${element.path}(${tableLower}Id,relation);\n`;
+          this.textGenerated += `res.status(200).json({ data: manyToOne, message: 'post one ${table} to many ${relationOneToMany.table}' });\n`
+          this.textGenerated += `  } catch (error) {\n`;
+          this.textGenerated += `   next(error);\n`;
+          this.textGenerated += `  }\n`;
+          this.textGenerated += '}\n';
           break;
         default:
           break;
