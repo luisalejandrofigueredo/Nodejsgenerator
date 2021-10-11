@@ -73,6 +73,12 @@ export class GenerateRoutesService {
         case 'postonetomany':
           this.lineGenerating += 'this.router.post(`${this.path}/onetomany/' + element.path + '/:id`,' + `this.${schemaLower}Controller.post${element.path}onetomany);\n`;
           break;
+        case 'postonetoone':
+          this.lineGenerating += 'this.router.post(`${this.path}/oneToOne/' + element.path + '/:id`,' + `this.${schemaLower}Controller.post${element.path}oneToOne);\n`;
+          break;
+        case 'postmanytomany':
+          this.lineGenerating += 'this.router.post(`${this.path}/ManyToMany/' + element.path + '/:id`,' + `this.${schemaLower}Controller.post${element.path}manyToMany);\n`;
+          break;
         default:
           break;
       }

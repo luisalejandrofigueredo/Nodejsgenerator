@@ -4,6 +4,7 @@ import { ConfigService } from './config.service';
 import { RelationsService } from './relations.service';
 import { Api } from '../interfaces/api';
 import { Manytoone } from '../interfaces/manytoone';
+import { Manytomany } from '../interfaces/manytomany';
 @Injectable({
   providedIn: 'root'
 })
@@ -106,11 +107,11 @@ export class GenerateControllerService {
           this.textGenerated += ` };\n`;
           break;
         }
-        case 'postonetomany':
+        case 'postonetomany': {
           const table = item.name;
           const tableLower = item.name.toLowerCase();
           const relationsOneToMany = this.relationservice.getrelationsonetomany(item.id);
-          const relationOneToMany= relationsOneToMany.find(oneToMany => oneToMany.relationname === element.field);
+          const relationOneToMany = relationsOneToMany.find(oneToMany => oneToMany.relationname === element.field);
           const invRelations: Manytoone[] = this.relationservice.getrelationmanytoone(this.config_service.getschemawithname(relationOneToMany.table));
           const manytoone = invRelations.find(manyToOne => manyToOne.table === table);
           this.textGenerated += `public post${element.path}onetomany = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
@@ -123,7 +124,44 @@ export class GenerateControllerService {
           this.textGenerated += `   next(error);\n`;
           this.textGenerated += `  }\n`;
           this.textGenerated += '}\n';
+        }
           break;
+        case 'postonetoone': {
+          const table = item.name;
+          const tableLower = item.name.toLowerCase();
+          const relationsOneToOne = this.relationservice.getrelationsonetone(item.id);
+          const relationOneToOne = relationsOneToOne.find(oneToOne => oneToOne.relationname === element.field);
+          this.textGenerated += `public post${element.path}oneToOne = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
+          this.textGenerated += `const ${tableLower}Id = Number(req.params.id);\n`;
+          this.textGenerated += `const relation=req.body;\n`;
+          this.textGenerated += `try {\n`
+          this.textGenerated += `const oneToOne=await this.${tableLower}Service.postoneToOne${element.path}(${tableLower}Id,relation);\n`;
+          this.textGenerated += `res.status(200).json({ data: oneToOne, message: 'post one ${table} to one ${relationOneToOne.table}' });\n`
+          this.textGenerated += `  } catch (error) {\n`;
+          this.textGenerated += `   next(error);\n`;
+          this.textGenerated += `  }\n`;
+          this.textGenerated += '}\n';
+        }
+          break;
+        case 'postmanytomany': {
+          const table = item.name;
+          const tableLower = item.name.toLowerCase();
+          const relationsManyToMany = this.relationservice.getrelationsmanytomany(item.id);
+          const relationManyToMany = relationsManyToMany.find(manyToMany => manyToMany.relationname === element.field);
+          const invRelations: Manytomany[] = this.relationservice.getrelationsmanytomany(this.config_service.getschemawithname(relationManyToMany.table));
+          const manytomany = invRelations.find(manyToMany => manyToMany.table === table);
+          this.textGenerated += `public post${element.path}manyToMany = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
+          this.textGenerated += `const ${tableLower}Id = Number(req.params.id);\n`;
+          this.textGenerated += `const relation=req.body;\n`;
+          this.textGenerated += `try {\n`
+          this.textGenerated += `const manyToMany=await this.${tableLower}Service.postManyToMany${element.path}(${tableLower}Id,relation);\n`;
+          this.textGenerated += `res.status(200).json({ data: manyToMany, message: 'post one ${table} to many ${relationManyToMany.table}' });\n`
+          this.textGenerated += `  } catch (error) {\n`;
+          this.textGenerated += `   next(error);\n`;
+          this.textGenerated += `  }\n`;
+          this.textGenerated += '}\n';
+        }
+        break;
         default:
           break;
       }

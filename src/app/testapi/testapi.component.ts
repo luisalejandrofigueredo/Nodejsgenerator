@@ -632,7 +632,7 @@ export class TestapiComponent implements OnInit {
             'authorization': 'Bearer ' + this.rtoken
           })
         };
-        this.url = this.urlpri + `/${this.schemastring}/${this.api.path}/${this.profileForm.get('record').value}`;
+        this.url = this.urlpri + `/${this.schemastring}/oneToOne/${this.api.path}/${this.profileForm.get('record').value}`;
         this.httpclient.post(this.url, this.profileForm.get('body').value, httpOptions).
           subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }), error=> {this.error(error)});
         break;
@@ -654,7 +654,7 @@ export class TestapiComponent implements OnInit {
             'authorization': 'Bearer ' + this.rtoken
           })
         };
-        this.url = this.urlpri + `/${this.schemastring}/${this.api.path}/${this.profileForm.get('record').value}`;
+        this.url = this.urlpri + `/${this.schemastring}/ManyToMany/${this.api.path}/${this.profileForm.get('record').value}`;
         this.httpclient.post(this.url, this.profileForm.get('body').value, httpOptions).
           subscribe(res => this.profileForm.patchValue({ "reponse": JSON.stringify(res, null, 4) }), error=> {this.error(error)});
         break;

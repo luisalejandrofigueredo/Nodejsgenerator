@@ -4,6 +4,7 @@ import { ElectronService } from 'ngx-electron';
 import { Api } from '../interfaces/api';
 import { RelationsService } from './relations.service';
 import { Manytoone } from '../interfaces/manytoone';
+import { Manytomany } from '../interfaces/manytomany';
 @Injectable({
   providedIn: 'root'
 })
@@ -11,7 +12,7 @@ export class ServiceGeneratorService {
   security: any;
   format: false;
   textGenerated: String = '';
-  constructor(private relationsService:RelationsService,private config_service: ConfigService, private electron_service: ElectronService) { }
+  constructor(private relationsService: RelationsService, private config_service: ConfigService, private electron_service: ElectronService) { }
   begin_generate() {
     this.security = this.config_service.config.security;
     this.config_service.config.schemas.forEach((item, index) => {
@@ -31,28 +32,28 @@ export class ServiceGeneratorService {
   createBody(item, index) {
     this.textGenerated += `class ${item.name}Service {\n`;
     this.textGenerated += `public ${item.name.toLowerCase()} = ${item.name}\n`;
-    this.bodyRelations(index,item);
+    this.bodyRelations(index, item);
     this.generateService(item, index);
     this.textGenerated += `}\n`;
     this.textGenerated += `export default ${item.name}Service;\n`;
   }
 
-  bodyRelations(index,item) {
-    const id=this.config_service.getschemawithname(item.name);
-    const oneToMany=this.relationsService.getrelationsonetomany(id);
-    oneToMany.forEach(OneToMany=>{
+  bodyRelations(index, item) {
+    const id = this.config_service.getschemawithname(item.name);
+    const oneToMany = this.relationsService.getrelationsonetomany(id);
+    oneToMany.forEach(OneToMany => {
       this.textGenerated += `public ${OneToMany.table.toLowerCase()}=${OneToMany.table}\n`;
     });
-    const manyToOne=this.relationsService.getrelationmanytoone(id);
-    manyToOne.forEach(ManyToOne=>{
+    const manyToOne = this.relationsService.getrelationmanytoone(id);
+    manyToOne.forEach(ManyToOne => {
       this.textGenerated += `public ${ManyToOne.table.toLowerCase()}=${ManyToOne.table};\n`;
     });
-    const manyToMany=this.relationsService.getrelationsmanytomany(id);
-    manyToMany.forEach(ManyToMany=>{
+    const manyToMany = this.relationsService.getrelationsmanytomany(id);
+    manyToMany.forEach(ManyToMany => {
       this.textGenerated += `public ${ManyToMany.table.toLowerCase()}=${ManyToMany.table}\n`;
     });
-    const oneToOne=this.relationsService.getrelationsonetone(id);
-    oneToOne.forEach(OneToOne=>{
+    const oneToOne = this.relationsService.getrelationsonetone(id);
+    oneToOne.forEach(OneToOne => {
       this.textGenerated += `public  ${OneToOne.table.toLowerCase()}=${OneToOne.table}\n`;
     });
   }
@@ -70,22 +71,22 @@ export class ServiceGeneratorService {
     this.textGenerated += `import { isEmpty } from '@utils/util';\n`;
   }
 
-  relationsHeader(table:string){
-    const id=this.config_service.getschemawithname(table);
-    const oneToMany=this.relationsService.getrelationsonetomany(id);
-    oneToMany.forEach(OneToMany=>{
+  relationsHeader(table: string) {
+    const id = this.config_service.getschemawithname(table);
+    const oneToMany = this.relationsService.getrelationsonetomany(id);
+    oneToMany.forEach(OneToMany => {
       this.textGenerated += `import  {${OneToMany.table}} from '../entity/${OneToMany.table}.entity';\n`;
     });
-    const manyToOne=this.relationsService.getrelationmanytoone(id);
-    manyToOne.forEach(ManyToOne=>{
+    const manyToOne = this.relationsService.getrelationmanytoone(id);
+    manyToOne.forEach(ManyToOne => {
       this.textGenerated += `import  {${ManyToOne.table}} from '../entity/${ManyToOne.table}.entity';\n`;
     });
-    const manyToMany=this.relationsService.getrelationsmanytomany(id);
-    manyToMany.forEach(ManyToMany=>{
+    const manyToMany = this.relationsService.getrelationsmanytomany(id);
+    manyToMany.forEach(ManyToMany => {
       this.textGenerated += `import  {${ManyToMany.table}} from '../entity/${ManyToMany.table}.entity';\n`;
     });
-    const oneToOne=this.relationsService.getrelationsonetone(id);
-    oneToOne.forEach(OneToOne=>{
+    const oneToOne = this.relationsService.getrelationsonetone(id);
+    oneToOne.forEach(OneToOne => {
       this.textGenerated += `import  {${OneToOne.table}} from '../entity/${OneToOne.table}.entity';\n`;
     });
   }
@@ -127,29 +128,65 @@ export class ServiceGeneratorService {
           this.textGenerated += `return await ${item.name.toLowerCase()}Repository.findOne({ where: { id: _id } });  `;
           this.textGenerated += '}\n\n';
           break;
-        case 'postonetomany': 
-        const table = item.name;
-        const tableLower = item.name.toLowerCase();
-        const relationsOneToMany = this.relationsService.getrelationsonetomany(item.id);
-        const relationOneToMany= relationsOneToMany.find(oneToMany => oneToMany.relationname === element.field);
-        const invRelations: Manytoone[] = this.relationsService.getrelationmanytoone(this.config_service.getschemawithname(relationOneToMany.table));
-        const manytoone = invRelations.find(manyToOne => manyToOne.table === table);
-        this.textGenerated+=`async postonetomany${element.path}(_id: number,relation:${relationOneToMany.table}): Promise<${table}> {\n`;
-        this.textGenerated += `\t const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
-        this.textGenerated += `\t const ${relationOneToMany.table.toLowerCase()}Repository = getRepository(this.${relationOneToMany.table.toLowerCase()});\n`
-        this.textGenerated += `\t let ${item.name.toLowerCase()}: ${item.name} = await ${item.name.toLowerCase()}Repository.findOne({where: { "id": _id },relations:["${relationOneToMany.relationname}"]});\n`;
-        this.textGenerated += `\t if (!${item.name.toLowerCase()}) throw new HttpException(409, "Not find in post one to many ${item.name}");\n`;
-        this.textGenerated += `\t let relationRegister= await  ${relationOneToMany.table.toLowerCase()}Repository.save(relation);\n`;
-        this.textGenerated += `\t if (!relationRegister) throw new HttpException(409, "Not post in post one to many ${relationOneToMany.table}");\n`;
-        this.textGenerated += `\t ${item.name.toLowerCase()}.${relationOneToMany.relationname}.push(relationRegister);\n`;
-        this.textGenerated += `\t return await ${item.name.toLowerCase()}Repository.save(${item.name.toLowerCase()});\n`;
-        this.textGenerated += '}\n\n';
-        break;
+        case 'postonetomany': {
+          const table = item.name;
+          const tableLower = item.name.toLowerCase();
+          const relationsOneToMany = this.relationsService.getrelationsonetomany(item.id);
+          const relationOneToMany = relationsOneToMany.find(oneToMany => oneToMany.relationname === element.field);
+          const invRelations: Manytoone[] = this.relationsService.getrelationmanytoone(this.config_service.getschemawithname(relationOneToMany.table));
+          const manytoone = invRelations.find(manyToOne => manyToOne.table === table);
+          this.textGenerated += `async postonetomany${element.path}(_id: number,relation:${relationOneToMany.table}): Promise<${table}> {\n`;
+          this.textGenerated += `\t const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
+          this.textGenerated += `\t const ${relationOneToMany.table.toLowerCase()}Repository = getRepository(this.${relationOneToMany.table.toLowerCase()});\n`
+          this.textGenerated += `\t let ${item.name.toLowerCase()}: ${item.name} = await ${item.name.toLowerCase()}Repository.findOne({where: { "id": _id },relations:["${relationOneToMany.relationname}"]});\n`;
+          this.textGenerated += `\t if (!${item.name.toLowerCase()}) throw new HttpException(409, "Not find in post one to many ${item.name}");\n`;
+          this.textGenerated += `\t let relationRegister= await  ${relationOneToMany.table.toLowerCase()}Repository.save(relation);\n`;
+          this.textGenerated += `\t if (!relationRegister) throw new HttpException(409, "Not post in post one to many ${relationOneToMany.table}");\n`;
+          this.textGenerated += `\t ${item.name.toLowerCase()}.${relationOneToMany.relationname}.push(relationRegister);\n`;
+          this.textGenerated += `\t return await ${item.name.toLowerCase()}Repository.save(${item.name.toLowerCase()});\n`;
+          this.textGenerated += '}\n\n';
+          break;
+        }
+        case 'postonetoone': {
+          const table = item.name;
+          const tableLower = item.name.toLowerCase();
+          const relationsOneToOne = this.relationsService.getrelationsonetone(item.id);
+          const relationOneToOne = relationsOneToOne.find(oneToOne => oneToOne.relationname === element.field);
+          this.textGenerated += `async postoneToOne${element.path}(_id: number,relation:${relationOneToOne.table}): Promise<${table}> {\n`;
+          this.textGenerated += `\t const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
+          this.textGenerated += `\t const ${relationOneToOne.table.toLowerCase()}Repository = getRepository(this.${relationOneToOne.table.toLowerCase()});\n`
+          this.textGenerated += `\t let ${item.name.toLowerCase()}: ${item.name} = await ${item.name.toLowerCase()}Repository.findOne({where: { "id": _id },relations:["${relationOneToOne.relationname}"]});\n`;
+          this.textGenerated += `\t if (!${item.name.toLowerCase()}) throw new HttpException(409, "Not find in post one to one ${item.name}");\n`;
+          this.textGenerated += `\t let relationRegister= await  ${relationOneToOne.table.toLowerCase()}Repository.save(relation);\n`;
+          this.textGenerated += `\t if (!relationRegister) throw new HttpException(409, "Not post in post one to one ${relationOneToOne.table}");\n`;
+          this.textGenerated += `\t ${item.name.toLowerCase()}.${relationOneToOne.relationname}=relationRegister;\n`;
+          this.textGenerated += `\t return await ${item.name.toLowerCase()}Repository.save(${item.name.toLowerCase()});\n`;
+          this.textGenerated += '}\n\n';
+          break;
+        }
+        case 'postmanytomany': {
+          const table = item.name;
+          const tableLower = item.name.toLowerCase();
+          const relationsManyToMany = this.relationsService.getrelationsmanytomany(item.id);
+          const relationManyToMany = relationsManyToMany.find(ManyToMany => ManyToMany.relationname === element.field);
+          const invRelations: Manytomany[] = this.relationsService.getrelationsmanytomany(this.config_service.getschemawithname(relationManyToMany.table));
+          const manytomany = invRelations.find(manyToMany => manyToMany.table === table);
+          this.textGenerated += `async postManyToMany${element.path}(_id: number,relation:${relationManyToMany.table}): Promise<${table}> {\n`;
+          this.textGenerated += `\t const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
+          this.textGenerated += `\t const ${relationManyToMany.table.toLowerCase()}Repository = getRepository(this.${relationManyToMany.table.toLowerCase()});\n`
+          this.textGenerated += `\t let ${item.name.toLowerCase()}: ${item.name} = await ${item.name.toLowerCase()}Repository.findOne({where: { "id": _id },relations:["${relationManyToMany.relationname}"]});\n`;
+          this.textGenerated += `\t if (!${item.name.toLowerCase()}) throw new HttpException(409, "Not find in post many ${item.name} to many ${relationManyToMany.table}");\n`;
+          this.textGenerated += `\t let relationRegister= await  ${relationManyToMany.table.toLowerCase()}Repository.save(relation);\n`;
+          this.textGenerated += `\t if (!relationRegister) throw new HttpException(409, "Not post in post many ${item.name} to many ${relationManyToMany.table}");\n`;
+          this.textGenerated += `\t ${item.name.toLowerCase()}.${relationManyToMany.relationname}.push(relationRegister);\n`;
+          this.textGenerated += `\t return await ${item.name.toLowerCase()}Repository.save(${item.name.toLowerCase()});\n`;
+          this.textGenerated += '}\n\n';
+          break;
+        }
       }
     });
   }
   generateOperationGet(item, operation: string, field: string, api: Api) {
-
     switch (operation) {
       case 'getall': {
         this.textGenerated += `public async findAll${item.name}(): Promise<any[]> {\n`
@@ -232,13 +269,13 @@ export class ServiceGeneratorService {
       }
       case 'findgenerated': {
         this.textGenerated += `public async findGenerated${item.name}${api.path}(req: Request): Promise<any> {\n`
-        api.parameters.forEach((parameter)=>{
+        api.parameters.forEach((parameter) => {
           switch (parameter.type) {
             case 'string':
-              this.textGenerated +=`const ${parameter.name}:string=req.params.${parameter.name};\n`;  
+              this.textGenerated += `const ${parameter.name}:string=req.params.${parameter.name};\n`;
               break;
-              case 'number':
-              this.textGenerated +=`const ${parameter.name}:number=Number(req.params.${parameter.name});\n`;  
+            case 'number':
+              this.textGenerated += `const ${parameter.name}:number=Number(req.params.${parameter.name});\n`;
               break;
             default:
               break;
@@ -250,15 +287,15 @@ export class ServiceGeneratorService {
         this.textGenerated += `}\n`;
         break;
       }
-       case 'findandcountgenerated': {
+      case 'findandcountgenerated': {
         this.textGenerated += `public async findAndCountGenerated${item.name}${api.path}(req: Request): Promise<any> {\n`
-        api.parameters.forEach((parameter)=>{
+        api.parameters.forEach((parameter) => {
           switch (parameter.type) {
             case 'string':
-              this.textGenerated +=`const ${parameter.name}:string=req.params.${parameter.name};\n`;  
+              this.textGenerated += `const ${parameter.name}:string=req.params.${parameter.name};\n`;
               break;
-              case 'number':
-              this.textGenerated +=`const ${parameter.name}:number=Number(req.params.${parameter.name});\n`;  
+            case 'number':
+              this.textGenerated += `const ${parameter.name}:number=Number(req.params.${parameter.name});\n`;
               break;
             default:
               break;
