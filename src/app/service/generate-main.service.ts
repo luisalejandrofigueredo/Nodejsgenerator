@@ -12,6 +12,9 @@ export class GenerateMainService {
 
   beginGenerate() {
     this.generateAppModule();
+    if (this.config_service.config.enableuploadfiles===true){
+      this.enableMulter();
+    }
     this.configDevelopment();
     this.configProduction();
     const schema: Schemahead[] = this.config_service.getschema();
@@ -42,6 +45,16 @@ export class GenerateMainService {
       };
       const end = this.electron_service.ipcRenderer.sendSync('saveServe', args);
     }
+  }
+
+  enableMulter(){
+    let text:string=this.electron_service.ipcRenderer.sendSync('loadAppModule',{path:this.config_service.config.filePath});
+    const result=this.electron_service.ipcRenderer.sendSync('saveAppModule',{path:this.config_service.config.filePath,file:text});
+  }
+
+  findAndInsert(find:string,insert:string,text:string):string {
+    const positionInsert=text.indexOf(find)+find.length;
+    return text.substr(0,positionInsert)+'\n'+insert+'\n'+text.substr(positionInsert);
   }
 
   configDevelopment() {

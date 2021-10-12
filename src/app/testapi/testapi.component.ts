@@ -393,7 +393,7 @@ export class TestapiComponent implements OnInit {
   }
 
   changefile() {
-    this.url = this.urlpri + `/${this.schemastring}/getfile/${this.profileForm.get('field').value}`;
+    this.url = this.urlpri + `/${this.schemastring}/getFile/${this.api.path}/${this.profileForm.get('field').value}`;
   }
 
   ifarray(index: number) {
@@ -435,7 +435,7 @@ export class TestapiComponent implements OnInit {
         {
           if (this.profileForm.get('test').value !== true) {
             const headers = new HttpHeaders({ 'authorization': 'Bearer ' + this.token });
-            this.url = this.urlpri + `/${this.schemastring}/getfile/${this.profileForm.get('field').value}`;
+            this.url = this.urlpri + `/${this.schemastring}/getFile/${this.api.path}/${this.profileForm.get('field').value}`;
             const blob = await this.httpclient.get(this.url, { headers, responseType: 'blob' }).toPromise();
             const reader = new FileReader();
             reader.onloadend = () => this.profileForm.patchValue({ reponse: reader.result as string });
@@ -449,8 +449,8 @@ export class TestapiComponent implements OnInit {
             'authorization': 'Bearer ' + this.token,
           })
         };
-        this.url = this.urlpri + `/${this.schemastring}/${this.api.path}`;
-        this.httpclient.post(this.url, this.form, httpOptions).subscribe(res => this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }));
+        this.url = this.urlpri + `/${this.schemastring}/Upload/${this.api.path}`;
+        this.httpclient.post(this.url, this.form, httpOptions).subscribe(res => this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }),error=> {this.error(error)});
         break;
       case 'uploadfiles':
         httpOptions = {
@@ -458,7 +458,7 @@ export class TestapiComponent implements OnInit {
             'authorization': 'Bearer ' + this.token
           })
         };
-        this.url = this.urlpri + `/${this.schemastring}/${this.api.path}`;
+        this.url = this.urlpri + `/${this.schemastring}/UploadFiles/${this.api.path}`;
         this.httpclient.post(this.url, this.form, httpOptions).subscribe(res => this.profileForm.patchValue({ reponse: JSON.stringify(res, null, 4) }), error=> {this.error(error)});
         break;
       case 'changepassword':

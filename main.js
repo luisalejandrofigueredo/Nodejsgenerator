@@ -737,7 +737,21 @@ ipcMain.on('loadDevelopment', (event, arg) => {
 ipcMain.on('createDirectory', (event, arg) => {
   fs.existsSync(arg.directory) || fs.mkdirSync(arg.directory);
   event.returnValue = 'ready'
-})
+});
+
+ipcMain.on('loadAppModule', (event, arg) => {
+  const file=arg.path + '/src/app.ts'
+  fs.readFile(file, function (err, data) {
+    if (err) throw err;
+    event.returnValue = data.toString();
+  });
+});
+
+ipcMain.on('saveAppModule', (event, arg) => {
+  const filepath=arg.path + '/src/app.ts'
+  writeFile(filepath,arg.file);
+   event.returnValue = 'ready';
+});
 
 ipcMain.on('createAppModule', (event, arg) => {
   console.log('writing files os:', process.platform);

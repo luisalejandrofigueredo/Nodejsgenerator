@@ -161,7 +161,37 @@ export class GenerateControllerService {
           this.textGenerated += `  }\n`;
           this.textGenerated += '}\n';
         }
-        break;
+          break;
+        case 'uploadfile': {
+          const table = item.name;
+          const tableLower = item.name.toLowerCase();
+          this.textGenerated += `public postUpload${element.path} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
+          this.textGenerated += `res.status(200).json({ data: {file:req.file.filename,originalName:req.file.originalname,mimeType:req.file.mimetype, fileSize:req.file.size }, message: 'File uploaded' });`
+          this.textGenerated += '}\n';
+        }
+          break;
+        case 'uploadfiles': {
+          const table = item.name;
+          const tableLower = item.name.toLowerCase();
+          this.textGenerated += `public postUploadFiles${element.path} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
+          this.textGenerated += `let files: {fileName:string;originalName:string;mimeType:string;fileSize:string}[]=[];\n`;
+          this.textGenerated += ` const reqFiles=req.files;\n`;
+          this.textGenerated += ` for (let index = 0, len = reqFiles.length; index < len; ++index) {`;
+          this.textGenerated += `files.push({fileName:reqFiles[index].filename,fileSize:reqFiles[index].size,mimeType:reqFiles[index].mimetype,originalName:reqFiles[index].originalname})`;
+          this.textGenerated += `}`;
+          this.textGenerated += `res.status(200).json({ data:files, message: 'Files uploaded' });`
+          this.textGenerated += '}\n';
+        }
+          break;
+        case 'getfile': {
+          const table = item.name;
+          const tableLower = item.name.toLowerCase();
+          this.textGenerated += `public postGetFile${element.path} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
+          this.textGenerated += `const filename = req.params.filename;\n`;
+          this.textGenerated += `res.sendFile(filename, { root: './public/data/uploads' });\n`;
+          this.textGenerated += '}\n';
+        }
+          break;
         default:
           break;
       }

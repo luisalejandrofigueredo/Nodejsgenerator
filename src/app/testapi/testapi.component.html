@@ -134,7 +134,7 @@
                 <button color="primary" type="button" mat-raised-button (click)="gheader()">Generate Header</button>
             </div>
             <img *ngIf="this.profileForm.get('test').value===true && api.type==='getfile' && this.profileForm.get('field').value!==''"
-                [src]="this.urlpri +'/'+this.schemastring+'/getfile/'+this.profileForm.get('field').value | authpipe | async"
+                [src]="this.urlpri +'/'+this.schemastring+'/getFile/'+api.path+'/'+this.profileForm.get('field').value | authpipe | async"
                 alt="">
             <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
                 <mat-form-field *ngIf="api.type!=='get'" style="width: 100%;">

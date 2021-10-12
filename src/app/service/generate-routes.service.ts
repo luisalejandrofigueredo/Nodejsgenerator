@@ -34,18 +34,41 @@ export class GenerateRoutesService {
     });
   }
 
-  generateBody(api: Api[], schema: Schemahead) {
+  generateBody(apis: Api[], schema: Schemahead) {
     const schemaLower = schema.name.toLowerCase();
     const schemaName = schema.name;
     this.lineGenerating += `class ${schemaName}Route implements Routes {\n`;
     this.lineGenerating += `public path = '/${schemaName}';\n`
     this.lineGenerating += `public router = Router();\n`;
+    if (schema.filesupload === true) {
+      apis.forEach(element => {
+        if (element.type === 'uploadfile') {
+          const extfiles = element.extfiles.trim().replace(/\s/g, '|');
+          this.lineGenerating += `
+       private storage= multer.diskStorage({
+         destination: './public/data/uploads/',
+         filename: function (req, file, cb) {
+           cb(null, '${schemaName}' + '-' + Date.now() + (Math.random()*10000).toString(16) + '.' + file.originalname.split('.').pop())
+         }
+       });
+      private  fileFilter = (req: any,file: any,cb: any) => {
+       if (!file.originalname.match(/.(${extfiles})$/)) {
+         req.fileValidationError="Only files ${element.extfiles}!";
+         return cb(new Error('Only ${element.extfiles} files are allowed!'), false);
+     }
+     cb(null, true);
+     }
+     private upLoad=multer({storage:this.storage,fileFilter:this.fileFilter})
+       `;
+        }
+      });
+    }
     this.lineGenerating += `public ${schemaLower}Controller = new ${schemaName}Controller();\n`;
     this.lineGenerating += `constructor() {\n`;
     this.lineGenerating += ` this.initializeRoutes();\n`
     this.lineGenerating += '}\n\n';
     this.lineGenerating += `private initializeRoutes() {\n`;
-    this.generateRoutes(api, schema);
+    this.generateRoutes(apis, schema);
     this.lineGenerating += '}\n';
     this.lineGenerating += `export default ${schemaName}Route\n`;
   }
@@ -78,6 +101,15 @@ export class GenerateRoutesService {
           break;
         case 'postmanytomany':
           this.lineGenerating += 'this.router.post(`${this.path}/ManyToMany/' + element.path + '/:id`,' + `this.${schemaLower}Controller.post${element.path}manyToMany);\n`;
+          break;
+        case 'uploadfile':
+          this.lineGenerating += 'this.router.post(`${this.path}/Upload/' + element.path + '`,' + `this.upLoad.single('file')` + `,this.${schemaLower}Controller.postUpload${element.path});\n`;
+          break;
+        case 'uploadfiles':
+          this.lineGenerating += 'this.router.post(`${this.path}/UploadFiles/' + element.path + '`,' + `this.upLoad.array('files')` + `,this.${schemaLower}Controller.postUploadFiles${element.path});\n`;
+          break;
+        case 'getfile':
+          this.lineGenerating += 'this.router.get(`${this.path}/getFile/' + element.path + '/:filename`' + `,this.${schemaLower}Controller.postGetFile${element.path});\n`;
           break;
         default:
           break;
@@ -144,6 +176,9 @@ export class GenerateRoutesService {
     this.lineGenerating += `import { Router } from 'express';\n`;
     this.lineGenerating += `import ${schema.name}Controller from '../controllers/${schema.name}.controller';\n`;
     this.lineGenerating += `import { Routes } from '../interfaces/routes.interface';\n`;
+    if (schema.filesupload === true) {
+      this.lineGenerating += `import multer from 'multer';\n`;
+    }
   }
 
   createRoutesInterfaces() {

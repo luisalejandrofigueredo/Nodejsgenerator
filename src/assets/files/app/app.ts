@@ -16,6 +16,8 @@ import { dbConnection } from '@databases';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
+/** adding header */
+/** end adding header*/
 
 class App {
   public app: express.Application;
@@ -32,6 +34,8 @@ class App {
     this.initializeRoutes(routes);
     this.initializeSwagger();
     this.initializeErrorHandling();
+    /** adding initialize constructor*/
+    /** end initialize constructor*/
   }
 
   public listen() {
@@ -60,6 +64,8 @@ class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
+    /** adding initialize middlewares*/
+    /** end initialize middlewares*/
   }
 
   private initializeRoutes(routes: Routes[]) {
