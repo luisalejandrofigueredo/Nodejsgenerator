@@ -1,93 +1,82 @@
 <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
-    <p style="color: whitesmoke;background-color: #3F51B5;">Configuration </p>
-    <mat-expansion-panel>
-        <mat-expansion-panel-header>
-            Principal configuration
-        </mat-expansion-panel-header>
-        <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
-            <p>If you no select a valid NestJS folder the program crash at generated files</p>
-            <button mat-raised-button color="primary" (click)="browse()">
-                <mat-icon>folder</mat-icon> select folder Nodejs backend
-            </button>
-            <p>File Path:{{filePath}}</p>
-            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-                <mat-form-field>
-                    <input matInput placeholder="JWT production secret key" [type]="hide ? 'password' : 'text'"
-                        [(ngModel)]="jwtskProduction">
-                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                        [attr.aria-pressed]="hide">
-                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                    </button>
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput placeholder="JWT developer secret key" [type]="hide ? 'password' : 'text'"
-                        [(ngModel)]="jwtsk">
-                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                        [attr.aria-pressed]="hide">
-                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                    </button>
-                </mat-form-field>
-                <button style="padding-left: 10px;" mat-raised-button (click)="chsecret()" color="primary">Change secret
-                    key</button>
-            </div>
-            <mat-form-field>
-                <input matInput type="number" (change)="changeport()" placeholder="Port" [(ngModel)]="port" >
-            </mat-form-field>
-            <mat-checkbox [(ngModel)]="enableCors" (change)="change()">Enable CORS (recomended)</mat-checkbox>
-            <mat-checkbox [(ngModel)]="enablehttps" (change)="changehttps()">Enable Https</mat-checkbox>
-            <mat-checkbox [(ngModel)]="uploadfiles" (change)="changeuploadfiles()">Enable Upload Files</mat-checkbox>
-        </div>
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-        <mat-expansion-panel-header>
-            Logger
-        </mat-expansion-panel-header>
-        <app-logger></app-logger>
-    </mat-expansion-panel>
-    <div>
-        <mat-expansion-panel>
-            <mat-expansion-panel-header>
-                Database config developer
-            </mat-expansion-panel-header>
-            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="gappx">
-                <button mat-raised-button (click)="applicationConfig()">Application config</button>
-            </div>
-            <form [formGroup]="profileForm">
-                <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
-                    <mat-form-field>
-                        <mat-select placeholder="Select database driver" formControlName="selecteddatabase"
-                            name="itemsdatabase">
-                            <mat-option *ngFor="let item of driverdatabase" [value]="item.value">
-                                {{item.viewValue}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput placeholder="Host" formControlName="host">
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput type="number" placeholder="Port" formControlName="port">
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput placeholder="User name" formControlName="username">
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput [type]="hidep ? 'password' : 'text'" placeholder="Password"
-                            formControlName="password">
-                        <button mat-icon-button matSuffix (click)="hidep = !hidep" [attr.aria-label]="'Hide password'"
-                            [attr.aria-pressed]="hidep">
-                            <mat-icon>{{hidep ? 'visibility_off' : 'visibility'}}</mat-icon>
-                        </button>
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput placeholder="Database" formControlName="database">
-                    </mat-form-field>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="gappx">
-                    <button mat-raised-button [disabled]="!profileForm.valid" (click)="updatedbconf()"
-                        color="primary">Ok</button>
-                </div>
-            </form>
-        </mat-expansion-panel>
+  <p style="color: whitesmoke;background-color: #3F51B5;">Configuration </p>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      Principal configuration
+    </mat-expansion-panel-header>
+    <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
+      <p>If you no select a valid NestJS folder the program crash at generated files</p>
+      <button mat-raised-button color="primary" (click)="browse()">
+        <mat-icon>folder</mat-icon> select folder Nodejs backend
+      </button>
+      <p>File Path:{{filePath}}</p>
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+        <mat-form-field>
+          <input matInput placeholder="JWT production secret key" [type]="hide ? 'password' : 'text'"
+            [(ngModel)]="jwtskProduction">
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="JWT developer secret key" [type]="hide ? 'password' : 'text'"
+            [(ngModel)]="jwtsk">
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+        <button style="padding-left: 10px;" mat-raised-button (click)="chsecret()" color="primary">Change secret
+          key</button>
+      </div>
+      <mat-form-field>
+        <input matInput type="number" (change)="changeport()" placeholder="Port" [(ngModel)]="port">
+      </mat-form-field>
+      <mat-checkbox [(ngModel)]="enableCors" (change)="change()">Enable CORS (recomended)</mat-checkbox>
+      <mat-checkbox [(ngModel)]="enablehttps" (change)="changehttps()">Enable Https</mat-checkbox>
+      <mat-checkbox [(ngModel)]="uploadfiles" (change)="changeuploadfiles()">Enable Upload Files</mat-checkbox>
     </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      Database config developer
+    </mat-expansion-panel-header>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="gappx">
+      <button mat-raised-button (click)="applicationConfig()">Application config</button>
+    </div>
+    <form [formGroup]="profileForm">
+      <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="gappx">
+        <mat-form-field>
+          <mat-select placeholder="Select database driver" formControlName="selecteddatabase" name="itemsdatabase">
+            <mat-option *ngFor="let item of driverdatabase" [value]="item.value">
+              {{item.viewValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Host" formControlName="host">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="number" placeholder="Port" formControlName="port">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="User name" formControlName="username">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [type]="hidep ? 'password' : 'text'" placeholder="Password" formControlName="password">
+          <button mat-icon-button matSuffix (click)="hidep = !hidep" [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hidep">
+            <mat-icon>{{hidep ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Database" formControlName="database">
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="gappx">
+        <button mat-raised-button [disabled]="!profileForm.valid" (click)="updatedbconf()" color="primary">Ok</button>
+      </div>
+    </form>
+  </mat-expansion-panel>
 </div>
