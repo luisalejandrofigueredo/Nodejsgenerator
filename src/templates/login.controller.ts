@@ -33,7 +33,7 @@ export class LoginController {
         const hour= date.toLocaleTimeString();
         let token='';
         if (/*tablelower*/ === undefined || /*tablelower*/ === null) {
-            this.logger.warn(`undefined user unexist user :${date} ${hour}`);
+            this.logger.warn(`undefined user un exist user :${date} ${hour}`);
             return { mensaje:'error'};
         }
         if (header.authorization.startsWith("Bearer ")) {

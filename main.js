@@ -103,7 +103,7 @@ var template = [{
       {
         label: 'Open dev tools',
         click() {
-          opendevtools()
+          openDevTools()
         }
       }
     ]
@@ -452,7 +452,7 @@ function settemplate() {
         {
           label: 'Open dev tools',
           click() {
-            opendevtools()
+            openDevTools()
           }
         }
       ]
@@ -476,7 +476,7 @@ function settemplate() {
   ]
 }
 
-function opendevtools() {
+function openDevTools() {
   mainWindow.webContents.openDevTools();
 }
 
@@ -594,11 +594,11 @@ ipcMain.on('savemain', (event, arg) => {
   event.returnValue = filepath;
 });
 
-ipcMain.on('loadtemplate', (event, arg) => {
+ipcMain.on('loadTemplate', (event, arg) => {
   try {
     const data = fs.readFileSync(arg, {
       encoding: 'utf-8'
-    })
+    });
     event.returnValue = data;
   } catch (error) {
     mainWindow.webContents.send("error", {
@@ -644,16 +644,19 @@ ipcMain.on('installPackages', (event, arg) => {
   }
   try {
     if (process.platform === "win32") {
-      const commandCd = spawnSync('cmd.exe', ["/c", 'cd'],{stdio: 'inherit',shell: true});
+      const commandCd = spawnSync('cmd.exe', ["/c", 'cd'], {
+        stdio: 'inherit',
+        shell: true
+      });
       const command = spawn('cmd.exe', ["/c", 'npm', 'install']);
       command.stdout.on('data', (data) => {
         console.log(data.toString());
       });
-      
+
       command.stderr.on('data', (data) => {
         console.error(data.toString());
       });
-      
+
       command.on('exit', (code) => {
         console.log(`Child exited with code ${code}`);
         mainWindow.webContents.send("endProcess");
@@ -674,7 +677,10 @@ ipcMain.on('createProject', (event, arg) => {
   }
   try {
     if (process.platform === "win32") {
-      const commandCd = spawnSync('cmd.exe', ["/c", 'cd'],{stdio: 'inherit',shell: true});
+      const commandCd = spawnSync('cmd.exe', ["/c", 'cd'], {
+        stdio: 'inherit',
+        shell: true
+      });
       const command = spawnSync('cmd.exe', ["/c", 'npm', 'init', '-f', '-y']);
     } else {
       const command = spawn('npm', ['init', '-f', '-y']);
@@ -740,7 +746,7 @@ ipcMain.on('createDirectory', (event, arg) => {
 });
 
 ipcMain.on('loadAppModule', (event, arg) => {
-  const file=arg.path + '/src/app.ts'
+  const file = arg.path + '/src/app.ts'
   fs.readFile(file, function (err, data) {
     if (err) throw err;
     event.returnValue = data.toString();
@@ -748,9 +754,9 @@ ipcMain.on('loadAppModule', (event, arg) => {
 });
 
 ipcMain.on('saveAppModule', (event, arg) => {
-  const filepath=arg.path + '/src/app.ts'
-  writeFile(filepath,arg.file);
-   event.returnValue = 'ready';
+  const filepath = arg.path + '/src/app.ts'
+  writeFile(filepath, arg.file);
+  event.returnValue = 'ready';
 });
 
 ipcMain.on('createAppModule', (event, arg) => {
@@ -826,55 +832,8 @@ ipcMain.on('createAppModule', (event, arg) => {
   event.returnValue = 'Wrote';
 });
 
-ipcMain.on('saveutilmuter', (event, arg) => {
-  console.log('writing files os:', process.platform);
-  let dir = '';
-  let filepath = '';
-  if (process.platform === "win32") {
-    console.log('writing in windows...');
-    filepath = arg.path + '\\src\\controller\\' + arg.name + '.utils.ts';
-    dir = arg.path + '\\src\\controller'
-  } else {
-    console.log('writing in unix...');
-    filepath = arg.path + '/src/controller/' + arg.name + '.utils.ts';
-    dir = arg.path + '/src/controller'
-  }
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir)
-  }
-  let textprettier = prettier.format(arg.file, {
-    semi: true,
-    singleQuote: true,
-    parser: "typescript"
-  });
-  writeFile(filepath, textprettier);
-  event.returnValue = filepath;
-});
 
-ipcMain.on('savemodule', (event, arg) => {
-  console.log('writing files os:', process.platform);
-  let dir = '';
-  let filepath = '';
-  if (process.platform === "win32") {
-    console.log('writing in windows...');
-    filepath = arg.path + '\\src\\module\\' + arg.name + '.module.ts';
-    dir = arg.path + '\\src\\module'
-  } else {
-    console.log('writing in unix...');
-    filepath = arg.path + '/src/module/' + arg.name + '.module.ts';
-    dir = arg.path + '/src/module'
-  }
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir)
-  }
-  let textprettier = prettier.format(arg.file, {
-    semi: true,
-    singleQuote: true,
-    parser: "typescript"
-  });
-  writeFile(filepath, textprettier);
-  event.returnValue = filepath;
-});
+
 ipcMain.on('saveservice', (event, arg) => {
   console.log('writing files os:', process.platform);
   let dir = '';
@@ -916,6 +875,32 @@ ipcMain.on('saveServe', (event, arg) => {
   }
   if (!fs.existsSync(dirsrc)) {
     fs.mkdirSync(dirsrc)
+  }
+  writeFile(filepath, arg.file);
+  event.returnValue = filepath;
+});
+
+ipcMain.on('saveMiddlewares', (event, arg) => {
+  console.log('writing files os:', process.platform);
+  let dir = '';
+  let filepath = '';
+  let dirsrc = ''
+  if (process.platform === "win32") {
+    console.log('writing in windows...');
+    filepath = arg.path + '\\src\\middlewares\\' + arg.name + '.middleware.ts';
+    dirsrc = arg.path + '\\src';
+    dir = arg.path + '\\src\\middlewares'
+  } else {
+    console.log('writing in unix...');
+    filepath = arg.path + '/src/middlewares/' + arg.name + '.middlewares.ts';
+    dirsrc = arg.path + '/src';
+    dir = arg.path + '/src/middlewares'
+  }
+  if (!fs.existsSync(dirsrc)) {
+    fs.mkdirSync(dirsrc)
+  }
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir)
   }
   writeFile(filepath, arg.file);
   event.returnValue = filepath;
@@ -998,49 +983,27 @@ ipcMain.on('saveentity', (event, arg) => {
   event.returnValue = filepath;
 });
 
-ipcMain.on('saveormconfig', (event, arg) => {
+ipcMain.on('saveTemplate', (event, arg) => {
   console.log('writing files os:', process.platform);
   let dir = '';
   let filepath = '';
   if (process.platform === "win32") {
-    console.log('writing in windows...');
-    filepath = arg.path + '\\' + arg.name;
+    filepath = arg.path +'\\'+ arg.fileName;
+    console.log('writing in windows...', arg.fileName);
   } else {
-    console.log('writing in unix...');
-    filepath = arg.path + '/' + arg.name;
+    filepath = arg.path +'/'+arg.fileName;;
+    console.log('writing in unix...', arg.fileName);
   }
-  writeFile(filepath, arg.file);
-  event.returnValue = filepath;
-});
-
-ipcMain.on('savecanactivate', (event, arg) => {
-  console.log('writing files os:', process.platform);
-  let dir = '';
-  let filepath = '';
-  console.log('arg path', arg.path);
-  if (process.platform === "win32") {
-    console.log('writing in windows...');
-    filepath = arg.path + '\\src\\roles\\' + arg.name + '.guard.ts';
-    dir = arg.path + '\\src\\roles'
+  if (arg.format) {
+    const textPrettier = prettier.format(arg.file, {
+      semi: true,
+      singleQuote: true,
+      parser: "typescript"
+    });
+    writeFile(filepath, textPrettier);
   } else {
-    console.log('writing in unix...');
-    filepath = arg.path + '/src/roles/' + arg.name + '.guard.ts';
-    dir = arg.path + '/src/roles'
+    writeFile(filepath, arg.file);
   }
-  if (!fs.existsSync(dir)) {
-    try {
-      fs.mkdirSync(dir)
-    } catch (e) {
-      console.log('error:', e);
-    }
-  }
-
-  let textprettier = prettier.format(arg.file, {
-    semi: true,
-    singleQuote: true,
-    parser: "typescript"
-  });
-  writeFile(filepath, textprettier);
   event.returnValue = filepath;
 });
 

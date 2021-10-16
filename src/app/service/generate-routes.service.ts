@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Schema } from 'inspector';
 import { ElectronService } from 'ngx-electron';
 import { Api } from '../interfaces/api';
 import { Schemahead } from '../interfaces/schemahead';
@@ -17,6 +16,11 @@ export class GenerateRoutesService {
     this.lineGenerating = '';
     this.createRoutesInterfaces();
     const schema: Schemahead[] = this.config_service.getschema();
+    let security: boolean = false;
+    schema.forEach(element => { if (element.security === true) { security = true } });
+    if (security) {
+      this.generateLogin();
+    }
     schema.forEach(element => {
       this.lineGenerating = '';
       const apis: Api[] = this.config_service.getapis(element.id);
@@ -32,6 +36,33 @@ export class GenerateRoutesService {
         const end = this.electron_service.ipcRenderer.sendSync('saveRoutes', args);
       }
     });
+  }
+
+  generateLogin() {
+    this.lineGenerating = '';
+    this.lineGenerating += `import { Router } from 'express';\n`;
+    this.lineGenerating += `import LoginController from '../controllers/login.controller';\n`;
+    this.lineGenerating += `import { Routes } from '../interfaces/routes.interface';\n`;
+    this.lineGenerating += `class loginRoute implements Routes {\n`;
+    this.lineGenerating += `public path = '/login';\n`;
+    this.lineGenerating += `public router = Router();\n`;
+    this.lineGenerating += `public loginController = new LoginController();\n`;
+    this.lineGenerating += `constructor() {\n`
+    this.lineGenerating += `this.initializeRoutes();\n`;
+    this.lineGenerating += `}\n`
+    this.lineGenerating += `private initializeRoutes() {\n`;
+    this.lineGenerating += "this.router.post(`${this.path}`, this.loginController.login);\n";
+    this.lineGenerating += "this.router.post(`${this.path}`, this.loginController.logout);\n";
+    this.lineGenerating += "}\n";
+    this.lineGenerating += "}\n";
+    this.lineGenerating += "export default loginRoute\n"
+    const args = {
+      path: this.config_service.config.filePath,
+      name: 'login',
+      file: this.lineGenerating,
+      format: false
+    };
+    const end = this.electron_service.ipcRenderer.sendSync('saveRoutes', args);
   }
 
   generateBody(apis: Api[], schema: Schemahead) {
@@ -64,6 +95,9 @@ export class GenerateRoutesService {
       });
     }
     this.lineGenerating += `public ${schemaLower}Controller = new ${schemaName}Controller();\n`;
+    if (schema.security === true) {
+      this.lineGenerating += `public ${schemaLower}Middleware = new ${schemaName}Middleware();\n`;
+    }
     this.lineGenerating += `constructor() {\n`;
     this.lineGenerating += ` this.initializeRoutes();\n`
     this.lineGenerating += '}\n\n';
@@ -71,6 +105,18 @@ export class GenerateRoutesService {
     this.generateRoutes(apis, schema);
     this.lineGenerating += '}\n';
     this.lineGenerating += `export default ${schemaName}Route\n`;
+  }
+
+  generateSecurity(api: Api, schema: Schemahead): string {
+    if (schema.security === true) {
+      if (api.security === true) {
+        return `this.${schema.name.toLowerCase()}Middleware.${api.type + api.path}Middleware,`
+      } else {
+        return '';
+      }
+    } else {
+      return '';
+    }
   }
 
   generateRoutes(api: Api[], schema: Schemahead) {
@@ -82,34 +128,34 @@ export class GenerateRoutesService {
           this.generateRoutesGet(element, schema);
           break;
         case 'post':
-          this.lineGenerating += 'this.router.post(`${this.path}`,' + `this.${schemaLower}Controller.create${schemaName});\n`;
+          this.lineGenerating += 'this.router.post(`${this.path}`,' + this.generateSecurity(element, schema) + `this.${schemaLower}Controller.create${schemaName});\n`;
           break;
         case 'put':
-          this.lineGenerating += 'this.router.put(`${this.path}`,' + `this.${schemaLower}Controller.update${schemaName});\n`;
+          this.lineGenerating += 'this.router.put(`${this.path}`,' + this.generateSecurity(element, schema) + `this.${schemaLower}Controller.update${schemaName});\n`;
           break;
         case 'delete':
-          this.lineGenerating += 'this.router.delete(`${this.path}/:id`,' + `this.${schemaLower}Controller.delete${schemaName});\n`;
+          this.lineGenerating += 'this.router.delete(`${this.path}/:id`,' + this.generateSecurity(element, schema) + `this.${schemaLower}Controller.delete${schemaName});\n`;
           break;
         case 'patch':
-          this.lineGenerating += 'this.router.patch(`${this.path}/:id`,' + `this.${schemaLower}Controller.Patch${schemaName}ById);\n`;
+          this.lineGenerating += 'this.router.patch(`${this.path}/:id`,' + this.generateSecurity(element, schema) + `this.${schemaLower}Controller.Patch${schemaName}ById);\n`;
           break;
         case 'postonetomany':
-          this.lineGenerating += 'this.router.post(`${this.path}/onetomany/' + element.path + '/:id`,' + `this.${schemaLower}Controller.post${element.path}onetomany);\n`;
+          this.lineGenerating += 'this.router.post(`${this.path}/onetomany/' + element.path + '/:id`,' + this.generateSecurity(element, schema) + `this.${schemaLower}Controller.post${element.path}onetomany);\n`;
           break;
         case 'postonetoone':
-          this.lineGenerating += 'this.router.post(`${this.path}/oneToOne/' + element.path + '/:id`,' + `this.${schemaLower}Controller.post${element.path}oneToOne);\n`;
+          this.lineGenerating += 'this.router.post(`${this.path}/oneToOne/' + element.path + '/:id`,' + this.generateSecurity(element, schema) + `this.${schemaLower}Controller.post${element.path}oneToOne);\n`;
           break;
         case 'postmanytomany':
-          this.lineGenerating += 'this.router.post(`${this.path}/ManyToMany/' + element.path + '/:id`,' + `this.${schemaLower}Controller.post${element.path}manyToMany);\n`;
+          this.lineGenerating += 'this.router.post(`${this.path}/ManyToMany/' + element.path + '/:id`,' + this.generateSecurity(element, schema) + `this.${schemaLower}Controller.post${element.path}manyToMany);\n`;
           break;
         case 'uploadfile':
-          this.lineGenerating += 'this.router.post(`${this.path}/Upload/' + element.path + '`,' + `this.upLoad.single('file')` + `,this.${schemaLower}Controller.postUpload${element.path});\n`;
+          this.lineGenerating += 'this.router.post(`${this.path}/Upload/' + element.path + '`,' + this.generateSecurity(element, schema) + `this.upLoad.single('file')` + `,this.${schemaLower}Controller.postUpload${element.path});\n`;
           break;
         case 'uploadfiles':
-          this.lineGenerating += 'this.router.post(`${this.path}/UploadFiles/' + element.path + '`,' + `this.upLoad.array('files')` + `,this.${schemaLower}Controller.postUploadFiles${element.path});\n`;
+          this.lineGenerating += 'this.router.post(`${this.path}/UploadFiles/' + element.path + '`,' + this.generateSecurity(element, schema) + `this.upLoad.array('files')` + `,this.${schemaLower}Controller.postUploadFiles${element.path});\n`;
           break;
         case 'getfile':
-          this.lineGenerating += 'this.router.get(`${this.path}/getFile/' + element.path + '/:filename`' + `,this.${schemaLower}Controller.postGetFile${element.path});\n`;
+          this.lineGenerating += 'this.router.get(`${this.path}/getFile/' + element.path + '/:filename`,' + this.generateSecurity(element, schema) + `this.${schemaLower}Controller.postGetFile${element.path});\n`;
           break;
         default:
           break;
@@ -124,57 +170,59 @@ export class GenerateRoutesService {
     const { path } = api
     switch (api.operation) {
       case 'getall':
-        this.lineGenerating += 'this.router.get(`${this.path\}`,' + `this.${schemaLower}Controller.get${schemaName});\n`;
+        this.lineGenerating += 'this.router.get(`${this.path\}`,' + this.generateSecurity(api, schema) + `this.${schemaLower}Controller.get${schemaName});\n`;
         break;
       case 'getone':
-        this.lineGenerating += 'this.router.get(`${this.path}' + `/${api.path}` + '/:id`,' + `this.${schemaLower}Controller.get${schemaName}ById);\n`;
+        this.lineGenerating += 'this.router.get(`${this.path}' + `/${api.path}` + '/:id`,' + this.generateSecurity(api, schema) + `this.${schemaLower}Controller.get${schemaName}ById);\n`;
         break;
       case 'findandcount':
-        this.lineGenerating += 'this.router.get(`${this.path}' + `/${api.path}` + '`,' + `this.${schemaLower}Controller.findAndCount);\n`;
+        this.lineGenerating += 'this.router.get(`${this.path}' + `/${api.path}` + '`,' + this.generateSecurity(api, schema) + `this.${schemaLower}Controller.findAndCount);\n`;
         break;
       case 'skiplimit':
-        this.lineGenerating += 'this.router.get(`${this.path}' + `/${api.path}` + '/:skip/:limit/:order`,' + `this.${schemaLower}Controller.skipLimit);\n`;
+        this.lineGenerating += 'this.router.get(`${this.path}' + `/${api.path}` + '/:skip/:limit/:order`,' + this.generateSecurity(api, schema) + `this.${schemaLower}Controller.skipLimit);\n`;
         break;
       case 'skiplimitbyfield':
-        this.lineGenerating += 'this.router.get(`${this.path}' + `/skiplimitorder${api.field}` + '/:skip/:limit/:order`,' + `this.${schemaLower}Controller.skipLimit${api.field});\n`;
+        this.lineGenerating += 'this.router.get(`${this.path}' + `/skiplimitorder${api.field}` + '/:skip/:limit/:order`,' + this.generateSecurity(api, schema) + `this.${schemaLower}Controller.skipLimit${api.field});\n`;
         break;
       case 'skiplimitfilter':
-        this.lineGenerating += 'this.router.get(`${this.path}' + `/skiplimitfilter${api.field}` + '/:skip/:limit/:order/:filter`,' + `this.${schemaLower}Controller.skipLimitFilter${api.field});\n`;
+        this.lineGenerating += 'this.router.get(`${this.path}' + `/skiplimitfilter${api.field}` + '/:skip/:limit/:order/:filter`,' + this.generateSecurity(api, schema) + `this.${schemaLower}Controller.skipLimitFilter${api.field});\n`;
         break;
       case 'findwithoptions':
-        this.lineGenerating += 'this.router.get(`${this.path}' + `/findwithoptions${api.path}` + '/:options`,' + `this.${schemaLower}Controller.skipLimitOptions${api.path});\n`;
+        this.lineGenerating += 'this.router.get(`${this.path}' + `/findwithoptions${api.path}` + '/:options`,' + this.generateSecurity(api, schema) + `this.${schemaLower}Controller.skipLimitOptions${api.path});\n`;
         break;
       case 'findandcountwithoptions':
-        this.lineGenerating += 'this.router.get(`${this.path}' + `/findandcountwithoptions${api.path}` + '/:options`,' + `this.${schemaLower}Controller.skipLimitOptions${api.path});\n`;
+        this.lineGenerating += 'this.router.get(`${this.path}' + `/findandcountwithoptions${api.path}` + '/:options`,' + this.generateSecurity(api, schema) + `this.${schemaLower}Controller.skipLimitOptions${api.path});\n`;
         break;
       case 'count':
-        this.lineGenerating += 'this.router.get(`${this.path}/count`,' + `this.${schemaLower}Controller.get${schemaName}Count);\n`;
+        this.lineGenerating += 'this.router.get(`${this.path}/count`,' + this.generateSecurity(api, schema) + `this.${schemaLower}Controller.get${schemaName}Count);\n`;
         break;
       case 'findgenerated':
         this.lineGenerating += 'this.router.get(`${this.path}/findgenerated' + api.path
         api.parameters.forEach((param, index) => {
           this.lineGenerating += '/:' + param.name
         })
-        this.lineGenerating += '`' + ',' + `this.${schemaLower}Controller.get${schemaName}FindGenerated${api.path});\n`;
+        this.lineGenerating += '`' + ',' + this.generateSecurity(api, schema) + `this.${schemaLower}Controller.get${schemaName}FindGenerated${api.path});\n`;
         break;
       case 'findandcountgenerated': {
         this.lineGenerating += 'this.router.get(`${this.path}/findandcountgenerated' + api.path
         api.parameters.forEach((param, index) => {
           this.lineGenerating += '/:' + param.name
         })
-        this.lineGenerating += '`' + ',' + `this.${schemaLower}Controller.get${schemaName}FindAndCountGenerated${api.path});\n`;
+        this.lineGenerating += '`' + ',' + this.generateSecurity(api, schema) + `this.${schemaLower}Controller.get${schemaName}FindAndCountGenerated${api.path});\n`;
         break;
       }
       default:
         break;
     }
-
   }
 
 
   generateHeader(Api: Api[], schema: Schemahead) {
     this.lineGenerating += `import { Router } from 'express';\n`;
     this.lineGenerating += `import ${schema.name}Controller from '../controllers/${schema.name}.controller';\n`;
+    if (schema.security === true) {
+      this.lineGenerating += `import ${schema.name}Middleware from '../middlewares/${schema.name}Middleware.middleware';\n`;
+    }
     this.lineGenerating += `import { Routes } from '../interfaces/routes.interface';\n`;
     if (schema.filesupload === true) {
       this.lineGenerating += `import multer from 'multer';\n`;

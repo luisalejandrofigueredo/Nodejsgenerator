@@ -1,19 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef, NgZone, OnChanges, SimpleChanges } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
-import { Schemaitem } from '../interfaces/schema';
-import { Relations } from '../interfaces/relations';
 import { ConfigService } from '../service/config.service';
-import { Api } from '../interfaces/api';
 import { RelationsService } from '../service/relations.service';
-import { Manytoone } from '../interfaces/manytoone';
-import { Manytomany } from '../interfaces/manytomany';
 import { EntitiesService } from '../service/entities.service';
 import { ServiceGeneratorService } from "../service/service-generator.service";
 import { GenerateControllerService } from '../service/generate-controller.service';
 import { GenerateInterfacesService } from '../service/generate-interfaces.service';
 import { GenerateRoutesService } from '../service/generate-routes.service';
 import { GenerateMainService } from '../service/generate-main.service';
-
+import { GenerateLoginService } from "../service/generate-login.service";
+import { GenerateMiddlewaresService } from '../service/generate-middlewares.service';
 @Component({
   selector: 'app-generator',
   templateUrl: './generator.component.html',
@@ -37,6 +33,8 @@ export class GeneratorComponent implements OnInit, OnChanges {
     private relationservice: RelationsService,
     private ngzone: NgZone,
     private electronservice: ElectronService,
+    private generateLogin:GenerateLoginService,
+    private generateMiddleware:GenerateMiddlewaresService,
     ) { }
   config: any;
   filePath: string;
@@ -79,6 +77,12 @@ export class GeneratorComponent implements OnInit, OnChanges {
     this.addgenrartinline('Begin generate Main...');
     this.generateMain.beginGenerate();
     this.addgenrartinline('End generate main...');
+    this.addgenrartinline('Begin generate Login...');
+    this.generateLogin.beginGenerate();
+    this.addgenrartinline('End generate Login...');
+    this.addgenrartinline('Begin generate middlewares...');
+    this.generateMiddleware.beginGenerate();
+    this.addgenrartinline('End generate middlewares...');
   }
 
 
@@ -99,38 +103,7 @@ export class GeneratorComponent implements OnInit, OnChanges {
     });
   }
 
-  loadtemplate(filetemplate: string, loginfiletemplate: string) {
-    console.log('App path', this.appPath);
-    this.addgenrartinline('load templates for can activate...');
-    let template = this.electronservice.ipcRenderer.sendSync('loadtemplate', `${this.appPath}/templates/${filetemplate}`);
-    template = this.replacetemplate(template);
-    this.addgenrartinline('end generate templates can activate...');
-    this.addgenrartinline('begin save  can activate..');
-    let args = { path: this.configservice.config.filePath, name: 'roles', file: template };
-    let end = this.electronservice.ipcRenderer.sendSync('savecanactivate', args);
-    this.addgenrartinline('end save  can activate...');
-    this.addgenrartinlinefile(end);
-    /*generate login*/
-    this.addgenrartinline('load templates for login..');
-    template = this.electronservice.ipcRenderer.sendSync('loadtemplate', `${this.appPath}/templates/${loginfiletemplate}`);
-    this.addgenrartinline('end load templates for login');
-    template = this.replacetemplate(template);
-    args = { path: this.configservice.config.filePath, name: 'Login', file: template };
-    end = this.electronservice.ipcRenderer.sendSync('saveController', args);
-    this.addgenrartinlinefile(end);
-  }
-
-  replacetemplate(template: string): string {
-    const sec = this.configservice.getsecurity();
-    template = template.replace(/\/\*tablelower\*\//g, `${sec.table.toLowerCase()}`);
-    template = template.replace(/\/\*table\*\//g, `${sec.table}`);
-    template = template.replace(/\/\*roles\*\//g, `${sec.roles}`);
-    template = template.replace(/\/\*login\*\//g, `${sec.login}`);
-    template = template.replace(/\/\*bearertoken\*\//g, `${sec.bearertoken}`);
-    template = template.replace(/\/\*password\*\//g, `${sec.password}`);
-    return (template);
-  }
-
+ 
   generate(event: Event) {
     this.progressbar = true;
     this.generatingline = 'reading json file generator ...\n';

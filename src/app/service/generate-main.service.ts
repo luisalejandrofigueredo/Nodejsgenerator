@@ -18,6 +18,8 @@ export class GenerateMainService {
     this.configDevelopment();
     this.configProduction();
     const schema: Schemahead[] = this.config_service.getschema();
+    let security:boolean=false;
+    schema.forEach(element=> {if (element.security===true){security=true}});
     this.textGenerated = '';
     this.textGenerated += `process.env['NODE_CONFIG_DIR'] = __dirname + '/configs';\n`;
     this.textGenerated += `import 'dotenv/config';\n`;
@@ -26,6 +28,9 @@ export class GenerateMainService {
     schema.forEach(element => {
       this.textGenerated += `import ${element.name}Route from '@routes/${element.name}.route';\n`;
     });
+    if (security) {
+      this.textGenerated += `import loginRoute from '@routes/login.route';\n`;
+    }
     this.textGenerated += `import validateEnv from '@utils/validateEnv';\n`;
     this.textGenerated += '';
     this.textGenerated += `validateEnv();\n`;
@@ -34,7 +39,10 @@ export class GenerateMainService {
     schema.forEach((element, index) => {
         this.textGenerated += `, new ${element.name}Route()`;
     });
-    this.textGenerated += ']);';
+    if (security) {
+      this.textGenerated += `, new loginRoute()`;
+    }
+    this.textGenerated += ']);\n';
     this.textGenerated += `app.listen();`;
     if (this.electron_service.isElectronApp) {
       const args = {
