@@ -33,14 +33,14 @@ export class LoginController {
         const hour= date.toLocaleTimeString();
         let token='';
         if (/*tablelower*/ === undefined || /*tablelower*/ === null) {
-            this.logger.warn(`undefined user un exist user :${date} ${hour}`);
+            this.logger.warn(`undefined user not exist user :${date} ${hour}`);
             return { mensaje:'error'};
         }
         if (header.authorization.startsWith("Bearer ")) {
             token = header.authorization.substring(7, header.authorization.length);
           } else {
             const date = new Date();
-            this.logger.warn(`Bearer error desde la ip ${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);
+            this.logger.warn(`Bearer error from ip ${ip} ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`);
             return false;
           }
         if (/*tablelower*/./*bearertoken*/ !== token) {
