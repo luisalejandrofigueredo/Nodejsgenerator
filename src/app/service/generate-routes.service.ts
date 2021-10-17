@@ -44,15 +44,14 @@ export class GenerateRoutesService {
     this.lineGenerating += `import LoginController from '../controllers/login.controller';\n`;
     this.lineGenerating += `import { Routes } from '../interfaces/routes.interface';\n`;
     this.lineGenerating += `class loginRoute implements Routes {\n`;
-    this.lineGenerating += `public path = '/login';\n`;
     this.lineGenerating += `public router = Router();\n`;
     this.lineGenerating += `public loginController = new LoginController();\n`;
     this.lineGenerating += `constructor() {\n`
     this.lineGenerating += `this.initializeRoutes();\n`;
     this.lineGenerating += `}\n`
     this.lineGenerating += `private initializeRoutes() {\n`;
-    this.lineGenerating += "this.router.post(`${this.path}`, this.loginController.login);\n";
-    this.lineGenerating += "this.router.post(`${this.path}`, this.loginController.logout);\n";
+    this.lineGenerating += "this.router.post(`/login`, this.loginController.login);\n";
+    this.lineGenerating += "this.router.post(`/logout`, this.loginController.logout);\n";
     this.lineGenerating += "}\n";
     this.lineGenerating += "}\n";
     this.lineGenerating += "export default loginRoute\n"

@@ -140,15 +140,13 @@ export class TestapiComponent implements OnInit {
   }
 
   dologout() {
-    this.url = this.urlpri + '/login';
+    this.url = this.urlpri + '/logout';
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'login': this.logout,
-        'authorization': 'Bearer ' + this.rtoken
+        'authorization': `Bearer ${this.token}`,
       })
     };
-    this.httpclient.get(this.url, httpOptions).subscribe(rep => this.reponselogout = JSON.stringify(rep), error=> {this.error(error)});
+    this.httpclient.post(this.url,'',httpOptions).subscribe(rep => this.reponselogout = JSON.stringify(rep), error=> {this.error(error)});
   }
 
   gheader() {
