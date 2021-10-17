@@ -128,9 +128,9 @@ export class TestapiComponent implements OnInit {
       })
     };
     this.loginheader = JSON.stringify({ 'Content-Type': 'application/json', 'login': this.login, 'password': this.password }, null, 4);
-    this.httpclient.post(this.url, '', httpOptions).subscribe((rep: { mensaje: string, token: string }) => {
-      this.rtoken = rep.token;
-      localStorage.setItem('token', rep.token);
+    this.httpclient.post(this.url, '', httpOptions).subscribe((rep: { data: string,mensaje: string  }) => {
+      this.rtoken = rep.data;
+      localStorage.setItem('token', rep.data);
       this.reponse = JSON.stringify(rep);
     }, error=> {this.error(error)})
   }
@@ -277,8 +277,8 @@ export class TestapiComponent implements OnInit {
           }
           body = body.substr(0, body.length - 1);
           body += body = '}';
-          const jsonvar = JSON.parse(body)
-          this.profileForm.patchValue({ body: JSON.stringify(jsonvar, null, 4) });
+          const jsonVar = JSON.parse(body)
+          this.profileForm.patchValue({ body: JSON.stringify(jsonVar, null, 4) });
         }
         break;
       case 'post':
