@@ -37,7 +37,14 @@ export class GenerateMiddlewaresService {
             this.lineGenerating += `return next(new HttpException(401,'Unauthorized'));\n`
             this.lineGenerating += '};\n'
             this.lineGenerating += `const bearer=req.headers.authorization.split(" ").pop();\n`
-            this.lineGenerating += 'const decode = jsonwebtoken.decode(bearer,{json:true});\n'
+            this.lineGenerating += 'let decode=null\n';
+            this.lineGenerating += 'try {\n'
+            this.lineGenerating += 'decode = jsonwebtoken.decode(bearer,{json:true});\n'
+            this.lineGenerating += '}\n'
+            this.lineGenerating += 'catch {\n';
+            this.lineGenerating += ' logger.error(`Error false json web token from IP ${req.ip}`);\n'
+            this.lineGenerating += ` return next(new HttpException(401,'Unauthorized'));\n`;
+            this.lineGenerating += '};\n'
             this.lineGenerating += `if (decode=== null || decode.login=== undefined){\n`
             this.lineGenerating += ' logger.error(`Error hacker attack false bearer from IP ${req.ip}`);\n'
             this.lineGenerating += ` return next(new HttpException(401,'Unauthorized'));\n`;
@@ -45,7 +52,13 @@ export class GenerateMiddlewaresService {
             this.lineGenerating += 'const dateNow = new Date();\n'
             this.lineGenerating += `if(decode.exp < dateNow.getTime()/1000)\n`
             this.lineGenerating += '{\n';
-            this.lineGenerating += '  logger.error(`Error token expired IP ${req.ip}`);\n'
+            this.lineGenerating += `const securityRepository = getRepository(${tableSecurity});\n`;
+            this.lineGenerating += `let User=await securityRepository.findOne({where:{${security.login}:decode.login}});\n`;
+            this.lineGenerating += 'if (User) {\n'
+            this.lineGenerating += `User.${security.bearertoken}=User.${security.bearertoken}.replace(bearer,'');\n`;
+            this.lineGenerating += `await securityRepository.save(User);\n`;
+            this.lineGenerating += `}\n`;
+            this.lineGenerating += 'logger.error(`Error token expired login ${decode.login} IP ${req.ip}`);\n'
             this.lineGenerating += ` return next(new HttpException(401,'Unauthorized'));\n`;
             this.lineGenerating += '}\n';
             this.lineGenerating += `const ${tableSecurity.toLowerCase()}Repository = getRepository(${tableSecurity});\n`
