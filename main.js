@@ -833,10 +833,10 @@ ipcMain.on('createAppModule', (event, arg) => {
     fs.mkdirSync(path.join(arg.path, '/src/templates'))
   }
   if (!fs.existsSync(path.join(arg.path, '/src/templates/login-controller.ts'))) {
-    fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/templates/login-controller.ts`), arg.path + '/src/templates/login-controller.ts');
+    fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/templates/login-controller.ts`), arg.path + '/src/templates/login-controller.ts');
   }
   if (!fs.existsSync(path.join(arg.path, '/src/templates/login-service.ts'))) {
-    fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/template/login-service.ts`), arg.path + '/src/templates/login-service.ts');
+    fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/templates/login-service.ts`), arg.path + '/src/templates/login-service.ts');
   }
   event.returnValue = 'Wrote';
 });
