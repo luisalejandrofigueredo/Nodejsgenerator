@@ -829,6 +829,15 @@ ipcMain.on('createAppModule', (event, arg) => {
     dataString = dataString.replace(/3306/g, arg.portDatabase);
     writeFile(arg.path + '/src/databases/index.ts', dataString);
   });
+  if (!fs.existsSync(path.join(arg.path, '/src/templates'))) {
+    fs.mkdirSync(path.join(arg.path, '/src/templates'))
+  }
+  if (!fs.existsSync(path.join(arg.path, '/src/templates/login-controller.ts'))) {
+    fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/templates/login-controller.ts`), arg.path + '/src/templates/login-controller.ts');
+  }
+  if (!fs.existsSync(path.join(arg.path, '/src/templates/login-service.ts'))) {
+    fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/template/login-service.ts`), arg.path + '/src/templates/login-service.ts');
+  }
   event.returnValue = 'Wrote';
 });
 
@@ -988,10 +997,10 @@ ipcMain.on('saveTemplate', (event, arg) => {
   let dir = '';
   let filepath = '';
   if (process.platform === "win32") {
-    filepath = arg.path +'\\'+ arg.fileName;
+    filepath = arg.path + '\\' + arg.fileName;
     console.log('writing in windows...', arg.fileName);
   } else {
-    filepath = arg.path +'/'+arg.fileName;;
+    filepath = arg.path + '/' + arg.fileName;;
     console.log('writing in unix...', arg.fileName);
   }
   if (arg.format) {
