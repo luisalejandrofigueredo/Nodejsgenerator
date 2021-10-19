@@ -16,7 +16,7 @@ export class ConfigService {
     filePath: '',
     enableCors: false,
     dbconf: { selecteddatabase: 0, host: '', port: 0, username: '', password: '', database: '' },
-    dbconfProduction: { selecteddatabase: 0, host: '', port: 0, username: '', password: '', database: '' },
+    dbconfProduction: { selecteddatabase: 0, host: '', port: 0, username: '', password: '', database: '',corsHost:'' },
     enablehttps: false,
     enableuploadfiles: false,
     port: 3000,
@@ -37,7 +37,7 @@ export class ConfigService {
       projectname: '',
       enableCors: false,
       dbconf: { selecteddatabase: 0, host: '', port: 0, username: '', password: '', database: '' },
-      dbconfProduction: { selecteddatabase: 0, host: '', port: 0, username: '', password: '', database: '' },
+      dbconfProduction: { selecteddatabase: 0, host: '', port: 0, username: '', password: '', database: '',corsHost:'' },
       enablehttps: false,
       enableuploadfiles: false,
       port: 3000,
@@ -190,6 +190,9 @@ export class ConfigService {
   loadfile(file: string) {
     this.config.schemapath = file;
     this.config = this.electron.ipcRenderer.sendSync('load', file);
+    if (this.config.dbconfProduction.corsHost===undefined){
+      this.config.dbconfProduction.corsHost="your.domain.com";
+    }
     this.electron.ipcRenderer.send('setdisable');
   }
 

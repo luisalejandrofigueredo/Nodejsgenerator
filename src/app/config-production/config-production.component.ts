@@ -28,8 +28,8 @@ export class ConfigProductionComponent implements OnInit {
      this.dbconf=this.configservice.config.dbconfProduction;
     }
     else{
-      this.dbconf={ selecteddatabase: 0, host: '', port: 0, username: '', password: '', database: '' };
-      this.configservice.config.dbconfProduction={ selecteddatabase: 0, host: '', port: 0, username: '', password: '', database: '' };
+      this.dbconf={ selecteddatabase: 0, host: '', port: 0, username: '', password: '', database: '',corsHost:'' };
+      this.configservice.config.dbconfProduction={ selecteddatabase: 0, host: '', port: 0, username: '', password: '', database: '', corsHost:'' };
     }
     this.profileForm = new FormGroup({
       selecteddatabase: new FormControl(this.dbconf.selecteddatabase, Validators.required),
@@ -38,7 +38,7 @@ export class ConfigProductionComponent implements OnInit {
       username: new FormControl(this.dbconf.username, Validators.required),
       password: new FormControl(this.dbconf.password, Validators.required),
       database: new FormControl(this.dbconf.database, Validators.required),
-    });
+      corsHost: new FormControl(this.dbconf.corsHost, Validators.required),    });
   }
 
   onYesClick(){
@@ -48,6 +48,7 @@ export class ConfigProductionComponent implements OnInit {
     this.configservice.config.dbconfProduction.username=this.profileForm.get('username').value;
     this.configservice.config.dbconfProduction.password=this.profileForm.get('password').value;
     this.configservice.config.dbconfProduction.database=this.profileForm.get('database').value;
+    this.configservice.config.dbconfProduction.corsHost=this.profileForm.get('corsHost').value;
     this.dialogRef.close('ok');
   }
   onNoClick(){
