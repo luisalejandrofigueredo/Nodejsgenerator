@@ -52,6 +52,7 @@ export class InstallFilesComponent implements OnInit {
       "cross-env": "^7.0.3",
       "dotenv": "^10.0.0",
       "envalid": "^7.1.0",
+      "https": "^1.0.0",
       "express": "^4.17.1",
       "helmet": "^4.6.0",
       "hpp": "^0.2.3",
