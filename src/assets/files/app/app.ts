@@ -16,35 +16,33 @@ import { dbConnection } from '@databases';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
-/** adding header */
-/** end adding header*/
+/*adding header*/
+/*end adding header*/
 
 class App {
   public app: express.Application;
   public port: string | number;
   public env: string;
-
+  /*begin class var*/
+  /*end class var*/
   constructor(routes: Routes[]) {
     this.app = express();
     this.port = process.env.PORT || 3000;
     this.env = process.env.NODE_ENV || 'development';
-
+    /*security https enable*/
+    /*end security*/
     this.env !== 'test' && this.connectToDatabase();
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
     this.initializeSwagger();
     this.initializeErrorHandling();
-    /** adding initialize constructor*/
-    /** end initialize constructor*/
+    /*adding initialize constructor*/
+    /*end initialize constructor*/
   }
 
   public listen() {
-    this.app.listen(this.port, () => {
-      logger.info(`=================================`);
-      logger.info(`======= ENV: ${this.env} =======`);
-      logger.info(`🚀 App listening on the port ${this.port}`);
-      logger.info(`=================================`);
-    });
+    /*adding listen*/
+    /*end listen*/
   }
 
   public getServer() {

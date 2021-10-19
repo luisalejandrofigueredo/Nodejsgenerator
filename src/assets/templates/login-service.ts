@@ -18,5 +18,6 @@ class /*table*/LoginService {
         const /*tableLower*/Repository = getRepository(this./*tableLower*/);
         await /*tableLower*/Repository.createQueryBuilder().update(/*table*/).set({/*count*/: count }).where("id = :id", { id: _id }).execute();
     }
+
 }
 export default /*table*/LoginService;

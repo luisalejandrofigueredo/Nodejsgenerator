@@ -12,19 +12,17 @@ export class GenerateMainService {
 
   beginGenerate() {
     this.generateAppModule();
-    if (this.config_service.config.enableuploadfiles===true){
-      this.enableMulter();
-    }
+    this.generateServer();
     this.configDevelopment();
     this.configProduction();
     const schema: Schemahead[] = this.config_service.getschema();
-    let security:boolean=false;
-    schema.forEach(element=> {if (element.security===true){security=true}});
+    let security: boolean = false;
+    schema.forEach(element => { if (element.security === true) { security = true } });
     this.textGenerated = '';
     this.textGenerated += `process.env['NODE_CONFIG_DIR'] = __dirname + '/configs';\n`;
     this.textGenerated += `import 'dotenv/config';\n`;
     this.textGenerated += `import App from '@/app';\n`;
-    this.textGenerated +=`import IndexRoute from '@routes/index.route';\n`;
+    this.textGenerated += `import IndexRoute from '@routes/index.route';\n`;
     schema.forEach(element => {
       this.textGenerated += `import ${element.name}Route from '@routes/${element.name}.route';\n`;
     });
@@ -37,7 +35,7 @@ export class GenerateMainService {
     this.textGenerated += 'const app = new App([';
     this.textGenerated += `new IndexRoute()`;
     schema.forEach((element, index) => {
-        this.textGenerated += `, new ${element.name}Route()`;
+      this.textGenerated += `, new ${element.name}Route()`;
     });
     if (security) {
       this.textGenerated += `, new loginRoute()`;
@@ -49,20 +47,61 @@ export class GenerateMainService {
         path: this.config_service.config.filePath,
         name: 'server',
         file: this.textGenerated,
-        format: false
+        format: false,
       };
       const end = this.electron_service.ipcRenderer.sendSync('saveServe', args);
     }
   }
 
-  enableMulter(){
-    let text:string=this.electron_service.ipcRenderer.sendSync('loadAppModule',{path:this.config_service.config.filePath});
-    const result=this.electron_service.ipcRenderer.sendSync('saveAppModule',{path:this.config_service.config.filePath,file:text});
+  generateServer() {
+    let importHttps = '';
+    const args={ path:this.config_service.config.filePath};
+    let appFile=this.electron_service.ipcRenderer.sendSync('LoadAppModule', args);
+    console.log('appFile:',appFile);
+    if (this.config_service.config.enablehttps === true) {
+      importHttps+=`import * as https from 'https';\n`;
+      importHttps+=`import * as fs from 'fs';\n`
+      appFile=this.findAndInsertAfter('/*end adding header*/',importHttps,appFile);
+    }
+    if (this.config_service.config.enablehttps === true) {
+      const classVar=`public server:https.Server;\n`;
+      appFile=this.findAndInsertAfter('/*end class var*/',classVar,appFile);
+    }
+    let server = '';
+    if (this.config_service.config.enablehttps === true) {
+      server += `console.log('Dir app',__dirname);\n`;
+      server += 'const key = fs.readFileSync(`${__dirname}/key-rsa.pem`);\n';
+      server += 'const cert = fs.readFileSync(`${__dirname}/cert.pem`);\n'
+      server += 'this.server = https.createServer({ key:key, cert:cert }, this.app);\n';
+      appFile=this.findAndInsertAfter('/*end security*/',server,appFile);
+    }
+    let listen = '';
+    if (this.config_service.config.enablehttps === true) {
+      listen += 'this.server.listen(this.port, () => {\n'
+      listen += 'logger.info(`=================================`);\n';
+      listen += 'logger.info(`======= ENV: ${this.env} =======`);\n'
+      listen += 'logger.info(`🚀 App listening on the port ${this.port}`);\n'
+      listen += 'logger.info(`=================================`);\n'
+      listen += "console.log('Server https is listening on port ' + this.port);\n"
+      listen += '})\n';
+    } else {
+      listen = 'this.app.listen(this.port, () => {\n';
+      listen += 'logger.info(`=================================`);\n';
+      listen += 'logger.info(`======= ENV: ${this.env} =======`);\n';
+      listen += 'logger.info(`🚀 App listening on the port ${this.port}`);\n';
+      listen += 'logger.info(`=================================`);\n';
+      listen += '});\n';
+    }
+    appFile=this.findAndInsertAfter('/*end listen*/',listen,appFile);
+    const argSave={ path:this.config_service.config.filePath,file:appFile};
+    const end=this.electron_service.ipcRenderer.sendSync('SaveAppModule', argSave);
   }
 
-  findAndInsert(find:string,insert:string,text:string):string {
-    const positionInsert=text.indexOf(find)+find.length;
-    return text.substr(0,positionInsert)+'\n'+insert+'\n'+text.substr(positionInsert);
+ 
+
+  findAndInsertAfter(find: string, insert: string, text: string): string {
+    const positionInsert = text.indexOf(find);
+    return text.substr(0, positionInsert) + '\n' + insert + '\n' + text.substr(positionInsert);
   }
 
   configDevelopment() {
@@ -134,7 +173,7 @@ export class GenerateMainService {
         format: false,
         port: this.config_service.config.port,
         portDatabase: this.config_service.config.dbconf.port,
-        driver:driver
+        driver: driver
       };
       console.log('selected database', driver);
       const end = this.electron_service.ipcRenderer.sendSync('createAppModule', args);

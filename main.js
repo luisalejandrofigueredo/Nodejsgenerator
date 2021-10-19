@@ -504,6 +504,7 @@ function saveas() {
 }
 
 function createWindow() {
+  app.commandLine.appendSwitch('ignore-certificate-errors',"true");
   Menu.setApplicationMenu(menu);
   const display = screen.getPrimaryDisplay();
   const maxiSize = display.workAreaSize;
@@ -512,10 +513,16 @@ function createWindow() {
     height: maxiSize.height,
     autoHideMenuBar: false,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      allowRunningInsecureContent:true,
+      allowDisplayingInsecureContent:true,
+      webSecurity:false,
     },
     icon: path.join(__dirname, `/dist/generador/assets/icons/win/icon.ico`)
-  })
+  });
+  mainWindow.webContents.session.setCertificateVerifyProc((request,callback)=>{
+    callback(0);
+  });
 
   mainWindow.loadURL(
     url.format({
@@ -745,20 +752,26 @@ ipcMain.on('createDirectory', (event, arg) => {
   event.returnValue = 'ready'
 });
 
-ipcMain.on('loadAppModule', (event, arg) => {
+ipcMain.on('LoadAppModule', (event, arg) => {
   const file = arg.path + '/src/app.ts'
-  fs.readFile(file, function (err, data) {
-    if (err) throw err;
-    event.returnValue = data.toString();
-  });
+  fs.readFile(file, (err, data) => {
+      if (err)
+        throw err;
+      event.returnValue = data.toString();
+    });
 });
 
-ipcMain.on('saveAppModule', (event, arg) => {
+ipcMain.on('SaveAppModule', (event, arg) => {
   const filepath = arg.path + '/src/app.ts'
   writeFile(filepath, arg.file);
   event.returnValue = 'ready';
 });
 
+
+ipcMain.on('ConfigApp', (event, arg) => {
+  const buffers=fs.readFileSync(arg.path + '/src/app.ts')
+  event.returnValue=buffers.toString();
+});
 ipcMain.on('createAppModule', (event, arg) => {
   console.log('writing files os:', process.platform);
   if (process.platform === "win32") {
@@ -772,7 +785,7 @@ ipcMain.on('createAppModule', (event, arg) => {
   fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/app/app.ts`), arg.path + '/src/app.ts')
   fs.readFile(arg.path + '/src/app.ts', function (err, data) {
     if (err) throw err;
-    const dataString = data.toString().replace(/3000/g, arg.port);
+    let dataString = data.toString().replace(/3000/g, arg.port);
     writeFile(arg.path + '/src/app.ts', dataString);
   });
   fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/files/configs/development.json`), arg.path + '/src/configs/development.json');
@@ -832,11 +845,11 @@ ipcMain.on('createAppModule', (event, arg) => {
   if (!fs.existsSync(path.join(arg.path, '/src/templates'))) {
     fs.mkdirSync(path.join(arg.path, '/src/templates'))
   }
-  if (!fs.existsSync(path.join(arg.path, '/src/templates/login-controller.ts'))) {
-    fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/templates/login-controller.ts`), arg.path + '/src/templates/login-controller.ts');
+  if (!fs.existsSync(path.join(arg.path, '/templates/login-controller.ts'))) {
+    fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/templates/login-controller.ts`), arg.path + '/templates/login-controller.ts');
   }
-  if (!fs.existsSync(path.join(arg.path, '/src/templates/login-service.ts'))) {
-    fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/templates/login-service.ts`), arg.path + '/src/templates/login-service.ts');
+  if (!fs.existsSync(path.join(arg.path, '/templates/login-service.ts'))) {
+    fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/templates/login-service.ts`), arg.path + '/templates/login-service.ts');
   }
   event.returnValue = 'Wrote';
 });
