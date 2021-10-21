@@ -44,10 +44,6 @@ import { RelationdatamodalonetomanyComponent } from './relationdatamodalonetoman
 import { GensecurityComponent } from './gensecurity/gensecurity.component';
 import { LoggerComponent } from './config/logger/logger.component';
 import { HelpComponent } from './help/help.component';
-import { HelpconfigComponent } from './help/helpconfig/helpconfig.component';
-import { ConfigprincipalComponent } from './help/helpconfig/configprincipal/configprincipal.component';
-import { ConfigloggerComponent } from './help/helpconfig/configlogger/configlogger.component';
-import { ConfigdatabaseComponent } from './help/helpconfig/configdatabase/configdatabase.component';
 import { TestapiComponent } from './testapi/testapi.component';
 import { AuthpipePipe } from './authpipe.pipe';
 import { GenoptionsComponent } from './genoptions/genoptions.component';
@@ -88,10 +84,6 @@ import { MatTreeModule } from '@angular/material/tree';
     GensecurityComponent,
     LoggerComponent,
     HelpComponent,
-    HelpconfigComponent,
-    ConfigprincipalComponent,
-    ConfigloggerComponent,
-    ConfigdatabaseComponent,
     TestapiComponent,
     AuthpipePipe,
     GenoptionsComponent,

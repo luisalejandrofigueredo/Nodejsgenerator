@@ -8,10 +8,6 @@ import { GeneratorComponent } from './generator/generator.component';
 import { BrowserelationsComponent } from './browserelations/browserelations.component';
 import { GensecurityComponent } from './gensecurity/gensecurity.component';
 import { HelpComponent } from './help/help.component';
-import { HelpconfigComponent } from './help/helpconfig/helpconfig.component';
-import { ConfigprincipalComponent } from './help/helpconfig/configprincipal/configprincipal.component'
-import { ConfigloggerComponent } from './help/helpconfig/configlogger/configlogger.component';
-import { ConfigdatabaseComponent } from './help/helpconfig/configdatabase/configdatabase.component';
 import { TestapiComponent } from './testapi/testapi.component';
 import { BrowseonetooneComponent } from './browseonetoone/browseonetoone.component';
 import { BrowseonetomanyComponent } from './browseonetomany/browseonetomany.component';
@@ -43,22 +39,6 @@ const routes: Routes = [{
 {
   path: 'help',
   component: HelpComponent
-},
-{
-  path: 'helpconfig',
-  component: HelpconfigComponent
-},
-{
-  path: 'configprincipal',
-  component: ConfigprincipalComponent
-},
-{
-  path: 'configlogger',
-  component: ConfigloggerComponent
-},
-{
-  path: 'configdatabase',
-  component: ConfigdatabaseComponent,
 },
 {
   path: 'testapi',
