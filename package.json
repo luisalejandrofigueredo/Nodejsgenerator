@@ -1,7 +1,7 @@
 {
   "name": "generator",
   "productName": "Nodejs Generator",
-  "version": "0.0.30",
+  "version": "0.0.32",
   "author": "Luis Alejandro Figueredo Casadei",
   "description": "Generator for Node",
   "main": "main.js",
