@@ -11,9 +11,10 @@ class LoginController {
     public /*tableLower*/Service = new /*table*/LoginService();
     public login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const login = req.header('login');
-            const password = req.header('password');
-            if (login === undefined || password === undefined) {
+            const body=req.body;
+            const login = body.login;
+            const password = body.password;
+            if (login === undefined || password === undefined || body===undefined) {
                 logger.warn(`Login bad header from ip: ${req.ip}`);
                 return next(new HttpException(401,'Unauthorized'));
             }
@@ -81,3 +82,4 @@ class LoginController {
     }
 }
 export default LoginController
+

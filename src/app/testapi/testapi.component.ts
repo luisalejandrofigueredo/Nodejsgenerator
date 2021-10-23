@@ -122,13 +122,11 @@ export class TestapiComponent implements OnInit {
     this.url = this.urlpri + '/login';
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'login': this.login,
-        'password': this.password
+        'Content-Type': 'application/json'
       })
     };
-    this.loginheader = JSON.stringify({ 'Content-Type': 'application/json', 'login': this.login, 'password': this.password }, null, 4);
-    this.httpclient.post(this.url, '', httpOptions).subscribe((rep: { data: string, mensaje: string }) => {
+    this.loginheader = JSON.stringify({ 'Content-Type': 'application/json'}, null, 4);
+    this.httpclient.post(this.url, {login:this.login,password:this.password}, httpOptions).subscribe((rep: { data: string, mensaje: string }) => {
       this.rtoken = rep.data;
       localStorage.setItem('token', rep.data);
       this.reponse = JSON.stringify(rep);
