@@ -26,6 +26,7 @@ export class TestapiComponent implements OnInit {
   url: string;
   login: string;
   loginheader: string;
+  bodyLogin:string;
   logout: string;
   password: string;
   token: string;
@@ -126,6 +127,7 @@ export class TestapiComponent implements OnInit {
       })
     };
     this.loginheader = JSON.stringify({ 'Content-Type': 'application/json'}, null, 4);
+    this.bodyLogin=JSON.stringify({ login:this.login,password:this.password},null,4);
     this.httpclient.post(this.url, {login:this.login,password:this.password}, httpOptions).subscribe((rep: { data: string, mensaje: string }) => {
       this.rtoken = rep.data;
       localStorage.setItem('token', rep.data);
