@@ -183,6 +183,20 @@ export class ServiceGeneratorService {
           this.textGenerated += '}\n\n';
           break;
         }
+        case 'changepassword': {
+          const table = item.name;
+          const tableLower = item.name.toLowerCase();
+          this.textGenerated += `async findChangePassword(login:string):Promise<${table}> {\n`;
+          this.textGenerated += `\t const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
+          this.textGenerated += `\t return await ${item.name.toLowerCase()}Repository.findOne({where: { "${this.security.login}": login }});\n`;
+          this.textGenerated += '}\n\n';
+          this.textGenerated += `async putPassword(register:${table},password:string):Promise<${table}> {\n `;
+          this.textGenerated += `\t const ${item.name.toLowerCase()}Repository = getRepository(this.${item.name.toLowerCase()});\n`
+          this.textGenerated += `register.${this.security.password}=bcrypt.hashSync(password,5);\n`;
+          this.textGenerated += `return await ${item.name.toLowerCase()}Repository.save(register);\n`;
+          this.textGenerated += `}\n\n`;
+        }
+
       }
     });
   }

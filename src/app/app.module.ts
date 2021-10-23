@@ -66,6 +66,8 @@ import { ConfigProductionComponent } from './config-production/config-production
 import { WizardModalComponent } from './wizard-modal/wizard-modal.component';
 import { ViewschemasComponent } from './viewschemas/viewschemas.component';
 import { MatTreeModule } from '@angular/material/tree';
+import { NextstepComponent } from './help/nextstep/nextstep.component';
+import { Nextstep2Component } from './help/nextstep2/nextstep2.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -105,6 +107,8 @@ import { MatTreeModule } from '@angular/material/tree';
     ConfigProductionComponent,
     WizardModalComponent,
     ViewschemasComponent,
+    NextstepComponent,
+    Nextstep2Component,
   ],
   imports: [ 
     BrowserModule, 

@@ -88,12 +88,6 @@
                 <mat-form-field *ngIf="(api.type==='get' && api.operation==='skiplimitfilter')">
                     <input matInput placeholder="field" formControlName="field">
                 </mat-form-field>
-                <mat-form-field *ngIf="(api.type==='changepassword')">
-                    <input matInput placeholder="Login" formControlName="login">
-                </mat-form-field>
-                <mat-form-field *ngIf="(api.type==='changepassword')">
-                    <input matInput placeholder="New Password" formControlName="newpassword">
-                </mat-form-field>
                 <input *ngIf="(api.type==='uploadfile')" type="file" (change)="onFileSelected($event)"
                     placeholder="File" formControlName="file">
                 <input *ngIf="(api.type==='uploadfiles')" type="file" (change)="onFilesSelected($event)"

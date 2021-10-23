@@ -13,7 +13,7 @@ export class HelpComponent implements OnInit {
   }
   
   nextpage(){
-   this.router.navigate(['helpconfig']);
+   this.router.navigate(['helpNextStep']);
   }
 
 }

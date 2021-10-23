@@ -192,6 +192,20 @@ export class GenerateControllerService {
           this.textGenerated += '}\n';
         }
           break;
+        case 'changepassword':
+          const table = item.name;
+          const tableLower = item.name.toLowerCase();
+          this.textGenerated += `public changepassword${table} = async (req: Request, res: Response, next: NextFunction): Promise<void> => {\n`;
+          this.textGenerated += `  try {\n`;
+          this.textGenerated += `   const ${tableLower}Data: any = req.body;\n`;
+          this.textGenerated += `   const changepassword${table}Data: ${table} = await this.${tableLower}Service.findChangePassword(${tableLower}Data.login);\n`;
+          this.textGenerated += ` await this.${tableLower}Service.putPassword(changepassword${table}Data,${tableLower}Data.password);\n`;
+          this.textGenerated += `   res.status(200).json({ data: ${tableLower}Data.login, message: 'password changed' });\n`;
+          this.textGenerated += `    } catch (error) {\n`;
+          this.textGenerated += `    next(error);\n`;
+          this.textGenerated += `  }\n`;
+          this.textGenerated += `};\n\n`;
+          break;
         default:
           break;
       }

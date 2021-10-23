@@ -12,6 +12,8 @@ import { TestapiComponent } from './testapi/testapi.component';
 import { BrowseonetooneComponent } from './browseonetoone/browseonetoone.component';
 import { BrowseonetomanyComponent } from './browseonetomany/browseonetomany.component';
 import { BrowsemanytomanyComponent } from './browsemanytomany/browsemanytomany.component';
+import {NextstepComponent} from './help/nextstep/nextstep.component';
+import { Nextstep2Component } from "../app/help/nextstep2/nextstep2.component";
 const routes: Routes = [{
   path: 'schematics/:id',
   component: SchematicsComponent
@@ -28,7 +30,8 @@ const routes: Routes = [{
 {
   path: 'generator',
   component: GeneratorComponent
-}, {
+}, 
+{
   path: 'browserelations/:id',
   component: BrowserelationsComponent
 },
@@ -39,6 +42,12 @@ const routes: Routes = [{
 {
   path: 'help',
   component: HelpComponent
+},
+{ path:'helpNextStep',
+  component:NextstepComponent
+},
+{ path:'helpNextStep2',
+  component:Nextstep2Component
 },
 {
   path: 'testapi',
