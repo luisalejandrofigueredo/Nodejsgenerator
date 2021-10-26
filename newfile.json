@@ -1,8 +1,8 @@
 {
 	"version": 0.3,
 	"schemapath": "C:\\Users\\luisa\\Documents\\github\\generador\\newfile.json",
-	"filePath": "C:\\Users\\luisa\\Documents\\Pruebacinco",
-	"projectname": "Pruebacinco",
+	"filePath": "C:\\Users\\luisa\\Documents\\Crm",
+	"projectname": "Crm",
 	"enableCors": true,
 	"dbconf": {
 		"selecteddatabase": 0,
@@ -10,7 +10,7 @@
 		"port": 3306,
 		"username": "root",
 		"password": "root",
-		"database": "Costumers"
+		"database": "crm"
 	},
 	"dbconfProduction": {
 		"selecteddatabase": 0,
@@ -18,7 +18,8 @@
 		"port": 3306,
 		"username": "root",
 		"password": "root",
-		"database": "Costumers"
+		"database": "crm",
+		"corsHost": ""
 	},
 	"enablehttps": false,
 	"enableuploadfiles": false,
@@ -107,15 +108,6 @@
 				},
 				{
 					"id": 6,
-					"name": "roles",
-					"type": "string",
-					"length": 255,
-					"index": false,
-					"extraparameter": "",
-					"keyautonumber": false
-				},
-				{
-					"id": 7,
 					"name": "count",
 					"type": "number",
 					"length": 10,
@@ -129,65 +121,6 @@
 				"Onetomany": []
 			},
 			"schemasapi": []
-		},
-		{
-			"id": 2,
-			"name": "Costumers",
-			"description": "",
-			"imports": "",
-			"fields": "",
-			"security": true,
-			"classsecurity": "RolesGuard",
-			"filesecurity": "",
-			"mastersecurity": false,
-			"filesupload": true,
-			"schemastable": [
-				{
-					"id": 1,
-					"type": "number",
-					"name": "id",
-					"length": 10,
-					"keyautonumber": true,
-					"extraparameter": "",
-					"index": false
-				},
-				{
-					"id": 2,
-					"type": "string",
-					"name": "name",
-					"length": 255,
-					"keyautonumber": false,
-					"extraparameter": "",
-					"index": false
-				},
-				{
-					"id": 3,
-					"type": "string",
-					"name": "surname",
-					"length": 255,
-					"keyautonumber": false,
-					"extraparameter": "",
-					"index": false
-				}
-			],
-			"schemarelations": {
-				"OnetoOne": [],
-				"Onetomany": []
-			},
-			"schemasapi": [
-				{
-					"id": 1,
-					"type": "get",
-					"operation": "getall",
-					"path": "getall",
-					"field": "",
-					"security": false,
-					"roles": "",
-					"extfiles": "",
-					"options": "",
-					"parameters": []
-				}
-			]
 		}
 	]
 }

@@ -842,8 +842,8 @@ ipcMain.on('createAppModule', (event, arg) => {
     dataString = dataString.replace(/3306/g, arg.portDatabase);
     writeFile(arg.path + '/src/databases/index.ts', dataString);
   });
-  if (!fs.existsSync(path.join(arg.path, '/src/templates'))) {
-    fs.mkdirSync(path.join(arg.path, '/src/templates'))
+  if (!fs.existsSync(path.join(arg.path, '/templates'))) {
+    fs.mkdirSync(path.join(arg.path, '/templates'))
   }
   if (!fs.existsSync(path.join(arg.path, '/templates/login-controller.ts'))) {
     fs.copyFileSync(path.join(__dirname, `/dist/generador/assets/templates/login-controller.ts`), arg.path + '/templates/login-controller.ts');
