@@ -122,7 +122,7 @@ export class ProjectmodalComponent implements OnInit {
     this.configservice.addschemaitem(1,{
       id:1,
       name:'id',
-      type:'string',
+      type:'number',
       length:255,
       index:false,
       extraparameter:'',
