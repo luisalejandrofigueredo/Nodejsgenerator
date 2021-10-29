@@ -27,6 +27,7 @@ export class FormschemamodalComponent implements OnInit {
       filesecurity: new FormControl(this.data.filesecurity),
       mastersecurity:new FormControl(this.data.mastersecurity),
       filesupload:new FormControl(this.data.filesupload),
+      index: new FormControl(this.data.index)
     });
   }
 
@@ -57,6 +58,7 @@ export class FormschemamodalComponent implements OnInit {
     this.data.filesecurity = this.Userdata.get('filesecurity').value;
     this.data.mastersecurity= this.Userdata.get('mastersecurity').value;
     this.data.filesupload= this.Userdata.get('filesupload').value,
+    this.data.index=this.Userdata.get('index').value,
     this.dialogRef.close(this.data);
   }
 }

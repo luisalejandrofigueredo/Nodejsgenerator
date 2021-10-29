@@ -33,7 +33,7 @@ class LoginController {
                 }
                 await this./*tableLower*/Service.patchCount(/*tableLower*/.id, 0);
                 await this./*tableLower*/Service.patchBearer(/*tableLower*/.id, /*tableLower*/./*bearer*/);
-                res.status(200).json({ data: jwt, message: 'Logged' });
+                res.status(201).json({ data: jwt, message: 'Logged' });
             } else {
                 let count = 0
                 if (/*tableLower*/./*count*/ > 5) {
@@ -74,7 +74,7 @@ class LoginController {
                     await this./*tableLower*/Service.patchCount(/*tableLower*/.id, 0);
                     const newBearer =/*tableLower*/./*bearer*/.replace(bearer, '');
                     await this./*tableLower*/Service.patchBearer(/*tableLower*/.id, newBearer);
-                    res.status(200).json({ data: new Date().toString(), message: 'Logout' });
+                    res.status(201).json({ data: new Date().toString(), message: 'Logout' });
                 } else {
                     logger.warn(`Logout error from ip:${req.ip},user:${payload./*login*/}`);
                     return next(new HttpException(401,'Unauthorized'));

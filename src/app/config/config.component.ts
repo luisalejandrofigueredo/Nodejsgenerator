@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { ConfigService } from '../service/config.service';
 import { Selectvalues } from "../selectvalues";
-import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { FormControl, Validators, FormGroup, FormArray, AbstractControl, FormBuilder } from '@angular/forms';
 import { ConfigProductionComponent } from '../config-production/config-production.component';
 import { MatDialog } from '@angular/material/dialog';
 @Component({
@@ -11,14 +11,15 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./config.component.scss']
 })
 export class ConfigComponent implements OnInit {
-  constructor(private dialog: MatDialog, private configservice: ConfigService, private electron: ElectronService) { }
+  constructor(private fb:FormBuilder,private dialog: MatDialog, private configservice: ConfigService, private electron: ElectronService) { }
   filePath: string;
   enableCors = false;
   enablehttps = false;
   uploadfiles = false;
+  corsHosts: string[] = [];
   dbconf: any;
   jwtsk: string;
-  jwtskProduction:string;
+  jwtskProduction: string;
   hide = true;
   hidep = true;
   port = 3000;
@@ -31,9 +32,14 @@ export class ConfigComponent implements OnInit {
   { value: 6, viewValue: "SAP Hana" },
   { value: 7, viewValue: "MongoDB (experimental)" }];
   profileForm: FormGroup;
+  hostForm: FormGroup;
 
   ngOnInit(): void {
     this.enableCors = this.configservice.config.enableCors;
+    this.corsHosts = this.configservice.config.corsHost;
+    if (this.corsHosts.length === 0) {
+      this.corsHosts.push('*');
+    }
     this.filePath = this.configservice.config.filePath;
     this.uploadfiles = this.configservice.config.enableuploadfiles;
     if (this.configservice.config.enableuploadfiles === undefined) { //for compa delete las version
@@ -70,6 +76,22 @@ export class ConfigComponent implements OnInit {
       password: new FormControl(this.dbconf.password, Validators.required),
       database: new FormControl(this.dbconf.database, Validators.required),
     });
+    this.hostForm = this.fb.group({ corsHosts: this.fb.array([])})
+    this.corsHosts.forEach((corsHost, index) => {
+      if (index === 0) {
+        this.hostForm.setControl('corsHosts',this.fb.array([this.addHostControl(corsHost)]));
+      } else {
+        (this.hostForm.get('corsHosts').value as FormArray).push(this.addHostControl(corsHost));
+      }
+    });
+  }
+
+  addHostControl(name):FormGroup{
+    return this.fb.group({host: this.fb.control(name)})
+  }
+
+  get aliasesArrayControl(): AbstractControl[] {
+    return (this.hostForm.get('corsHosts') as FormArray).controls;
   }
 
   applicationConfig() {
@@ -102,6 +124,16 @@ export class ConfigComponent implements OnInit {
     this.configservice.config.enableuploadfiles = this.uploadfiles;
   }
 
+  addHost() { 
+    const hosts:FormArray = this.hostForm.controls.corsHosts as FormArray;
+    hosts.push(this.addHostControl(''));
+  }
+
+  deleteHost(index: number) { 
+    const hosts:FormArray = this.hostForm.controls.corsHosts as FormArray;
+    hosts.removeAt(index);
+  }
+
   changeport() {
     this.configservice.config.port = this.port;
   }
@@ -116,9 +148,15 @@ export class ConfigComponent implements OnInit {
 
   chsecret() {
     this.configservice.config.jwtsk = this.jwtsk;
-    this.configservice.config.jwtskProduction=this.jwtskProduction;
+    this.configservice.config.jwtskProduction = this.jwtskProduction;
   }
   save() {
     this.configservice.save();
+  }
+
+  updateHost(){
+    const hosts:FormArray = this.hostForm.controls.corsHosts as FormArray;
+    hosts.value;
+    console.log('hosts',hosts);
   }
 }

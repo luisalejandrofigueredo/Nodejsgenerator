@@ -59,6 +59,10 @@ export class SchematicsComponent implements OnInit {
 
   updatingdata(data: Schemaitem) {
     // tslint:disable-next-line: max-line-length
+    if (data.indexParameter===undefined)
+    {
+      data.indexParameter='';
+    }
     this.schemaitems[data.id - 1] = { id: data.id,
        name: data.name,
         type: data.type,
@@ -66,6 +70,7 @@ export class SchematicsComponent implements OnInit {
         keyautonumber: data.keyautonumber,
         extraparameter: data.extraparameter,
         index: data.index,
+        indexParameter:data.indexParameter,
          };
     this.configservice.editschemaitem(this.id, data.id - 1, data);
     this.dataSource.data = this.schemaitems;
@@ -82,6 +87,7 @@ export class SchematicsComponent implements OnInit {
           length: data.length,
           keyautonumber: data.keyautonumber,
           extraparameter: data.extraparameter,
+          indexParameter: data.indexParameter,
           index: data.index,
           }];
     }
@@ -94,6 +100,7 @@ export class SchematicsComponent implements OnInit {
           length: data.length,
           keyautonumber: data.keyautonumber,
           extraparameter: data.extraparameter,
+          indexParameter: data.indexParameter,
           index: data.index, });
     }
     // tslint:disable-next-line: max-line-length
@@ -103,6 +110,7 @@ export class SchematicsComponent implements OnInit {
        length: data.length,
        keyautonumber: data.keyautonumber,
        extraparameter: data.extraparameter,
+       indexParameter:data.indexParameter,
        index: data.index,
        });
     this.dataSource.data = this.schemaitems;
@@ -120,12 +128,16 @@ export class SchematicsComponent implements OnInit {
         for (let index = 0; index < this.schemaitems.length; index++) {
           const element = this.schemaitems[index];
           // tslint:disable-next-line: max-line-length
+          if (element.indexParameter===undefined){
+            element.indexParameter='';
+          }
           this.schemaitems[index] = { id: index + 1,
              type: element.type,
               name: element.name,
                length: element.length,
                 keyautonumber: element.keyautonumber,
                 extraparameter: element.extraparameter,
+                indexParameter: element.indexParameter,
                 index: element.index,
                 };
         }
@@ -138,6 +150,9 @@ export class SchematicsComponent implements OnInit {
 
   edit(id: number) {
     const buffer: Schemaitem = { ...this.schemaitems[id - 1] };
+    if (buffer.indexParameter===undefined){
+      buffer.indexParameter='';
+    }
     const dialogRef = this.dialog.open(DatamodalComponent, {
       width: '400px',
       data: buffer,
@@ -160,6 +175,7 @@ export class SchematicsComponent implements OnInit {
        keyautonumber: false,
        index: false,
        extraparameter: '',
+       indexParameter:'',
        security: false,
        roles: '' } as Schemaitem
     });

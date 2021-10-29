@@ -10,6 +10,7 @@ export interface Schemahead {
     filesecurity: string;
     mastersecurity?:boolean;
     filesupload?:boolean;
+    index?:string;
 }
 
 export interface Schemaheaditems extends Schemahead {

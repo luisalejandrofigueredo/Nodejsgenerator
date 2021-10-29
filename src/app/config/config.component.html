@@ -34,6 +34,35 @@
         <input matInput type="number" (change)="changeport()" placeholder="Port" [(ngModel)]="port">
       </mat-form-field>
       <mat-checkbox [(ngModel)]="enableCors" (change)="change()">Enable CORS (recomended)</mat-checkbox>
+      <mat-accordion *ngIf="enableCors">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            Cors Host
+          </mat-expansion-panel-header>
+          <button (click)="addHost()" mat-icon-button>
+            <mat-icon>add</mat-icon>
+          </button>
+          <form [formGroup]="hostForm">
+            <div formArrayName="corsHosts">
+              <div *ngFor="let hostFormAlias of aliasesArrayControl;let i = index">
+                <ng-container [formGroupName]="i">
+                  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+                    <mat-form-field>
+                      <input matInput placeholder="Host" formControlName="host">
+                    </mat-form-field>
+                    <button mat-icon-button (click)="deleteHost(i)">
+                      <mat-icon>remove</mat-icon>
+                    </button>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </form>
+          <div fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="gappx">
+            <button mat-raised-button [disabled]="!hostForm.valid" (click)="updateHost()" color="primary">Ok</button>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
       <mat-checkbox [(ngModel)]="enablehttps" (change)="changehttps()">Enable Https</mat-checkbox>
       <mat-checkbox [(ngModel)]="uploadfiles" (change)="changeuploadfiles()">Enable Upload Files</mat-checkbox>
     </div>

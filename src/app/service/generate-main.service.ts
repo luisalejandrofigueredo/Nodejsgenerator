@@ -134,7 +134,7 @@ export class GenerateMainService {
       configDatabase.dbConfig.user = this.config_service.config.dbconfProduction.username;
       configDatabase.dbConfig.password = this.config_service.config.dbconfProduction.password;
       configDatabase.secretKey = this.config_service.config.jwtskProduction;
-      configDatabase.cors.origin= this.config_service.config.dbconfProduction.corsHost;
+      configDatabase.cors.origin=this.config_service.config.corsHost;
       const argSave = {
         path: this.config_service.config.filePath,
         file: JSON.stringify(configDatabase, null, 4)

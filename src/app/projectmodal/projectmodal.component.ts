@@ -47,7 +47,7 @@ export class ProjectmodalComponent implements OnInit {
     });
     this.profileFormTable = new FormGroup({
       tableWithSecurity: new FormControl(true),
-      tableName: new FormControl('', Validators.compose([Validators.required, Validators.pattern('[A-Z][a-z]*')])),
+      tableName: new FormControl('Security', Validators.compose([Validators.required, Validators.pattern('[A-Z][a-z]*')])),
       login: new FormControl('login', Validators.required),
       password: new FormControl('password', Validators.required),
       roles: new FormControl('roles', Validators.required),
@@ -126,7 +126,8 @@ export class ProjectmodalComponent implements OnInit {
       length:255,
       index:false,
       extraparameter:'',
-      keyautonumber:true
+      keyautonumber:true,
+      indexParameter:''
     });
     this.configservice.addschemaitem(1,{
       id:2,name:this.profileFormTable.get('login').value,
@@ -134,7 +135,8 @@ export class ProjectmodalComponent implements OnInit {
       length:255,
       index:true,
       extraparameter:'',
-      keyautonumber:false
+      keyautonumber:false,
+      indexParameter:'{unique:true}'
     });
     this.configservice.addschemaitem(1,{
       id:3,name:this.profileFormTable.get('password').value,
@@ -142,7 +144,8 @@ export class ProjectmodalComponent implements OnInit {
       length:255,
       index:false,
       extraparameter:'',
-      keyautonumber:false
+      keyautonumber:false,
+      indexParameter:''
     });
     this.configservice.addschemaitem(1,{
       id:4,name:this.profileFormTable.get('roles').value,
@@ -150,7 +153,8 @@ export class ProjectmodalComponent implements OnInit {
       length:255,
       index:false,
       extraparameter:'',
-      keyautonumber:false
+      keyautonumber:false,
+      indexParameter:''
     });
     this.configservice.addschemaitem(1,{
       id:5,name:this.profileFormTable.get('bearer').value,
@@ -158,7 +162,8 @@ export class ProjectmodalComponent implements OnInit {
       length:255,
       index:false,
       extraparameter:'',
-      keyautonumber:false
+      keyautonumber:false,
+      indexParameter:''
     });
     this.configservice.addschemaitem(1,{
       id:6,name:this.profileFormTable.get('count').value,
@@ -166,7 +171,8 @@ export class ProjectmodalComponent implements OnInit {
       length:10,
       index:false,
       extraparameter:'',
-      keyautonumber:false
+      keyautonumber:false,
+      indexParameter:''
     });
     this.configservice.config.enableCors=true;
     this.configservice.config.jwtsk="test";

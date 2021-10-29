@@ -5,5 +5,6 @@ export interface Schemaitem {
     length: number;
     keyautonumber?: boolean;
     index?: boolean;
+    indexParameter?:string;
     extraparameter?: string;
 }

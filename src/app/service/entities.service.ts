@@ -48,6 +48,9 @@ export class EntitiesService {
     this.add_generating_line('\t adding imports ...');
     this.file_generating += this.config.schemas[ind].imports + '\n';
     this.file_generating += '@Entity()\n';
+    if (this.config.schemas[ind].index !==undefined){
+      this.file_generating+=this.config.schemas[ind].index+'\n';
+    }
     this.file_generating += 'export class ' + this.config.schemas[ind].name + ' {\n';
     fields.forEach(element => {
       this.generatecolumn(element);
@@ -106,7 +109,11 @@ export class EntitiesService {
         case 'string':
           if (fieldcolumn.index === true) {
             this.orm_check.Index = true;
+            if (fieldcolumn.indexParameter===undefined){
             this.file_generating += '@Index()\n';
+            } else {
+              this.file_generating+=`@Index(${fieldcolumn.indexParameter})\n`;
+            }
           }
           if (fieldcolumn.extraparameter === '') {
             this.file_generating += '@Column()\n';
@@ -121,6 +128,14 @@ export class EntitiesService {
           this.file_generating += fieldcolumn.name + ':string;\n\n';
           break;
         case 'number':
+          if (fieldcolumn.index === true) {
+            this.orm_check.Index = true;
+            if (fieldcolumn.indexParameter===undefined){
+            this.file_generating += '@Index()\n';
+            } else {
+              this.file_generating+=`@Index(${fieldcolumn.indexParameter})\n`;
+            }
+          }
           if (fieldcolumn.extraparameter === '') {
             this.file_generating += '@Column()\n';
           }
@@ -134,6 +149,14 @@ export class EntitiesService {
           this.file_generating += fieldcolumn.name + ':number;\n\n';
           break;
         case 'date':
+          if (fieldcolumn.index === true) {
+            this.orm_check.Index = true;
+            if (fieldcolumn.indexParameter===undefined){
+            this.file_generating += '@Index()\n';
+            } else {
+              this.file_generating+=`@Index(${fieldcolumn.indexParameter})\n`;
+            }
+          }
           if (fieldcolumn.extraparameter === '') {
             this.file_generating += '@Column()\n';
           }

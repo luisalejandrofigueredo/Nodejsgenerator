@@ -5,7 +5,7 @@
       <input formControlName="name" matInput placeholder="name">
       <mat-error *ngIf="Userdata.get('name').invalid">Error invalid name use string like Costumers</mat-error>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field style="width: 100%;">
       <input matInput formControlName="description" placeholder="description">
     </mat-form-field>
   </div>
@@ -14,14 +14,20 @@
     <mat-expansion-panel-header>
       extra options
     </mat-expansion-panel-header>
-    <mat-form-field>
-      <textarea matInput formControlName="imports" placeholder="imports includes"></textarea>
-      <mat-icon matSuffix>code</mat-icon>
-    </mat-form-field>
-    <mat-form-field>
-      <textarea matInput formControlName="fields" placeholder="extra fields"></textarea>
-      <mat-icon matSuffix>code</mat-icon>
-    </mat-form-field>
+    <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
+      <mat-form-field style="width: 100%;">
+        <textarea matInput formControlName="imports" placeholder="imports includes"></textarea>
+        <mat-icon matSuffix>code</mat-icon>
+      </mat-form-field>
+      <mat-form-field style="width: 100%;">
+        <textarea matInput formControlName="index" placeholder="indexes"></textarea>
+        <mat-icon matSuffix>code</mat-icon>
+      </mat-form-field>
+      <mat-form-field style="width: 100%;">
+        <textarea matInput formControlName="fields" placeholder="extra fields"></textarea>
+        <mat-icon matSuffix>code</mat-icon>
+      </mat-form-field>
+    </div>
   </mat-expansion-panel>
   <mat-expansion-panel>
     <mat-expansion-panel-header>

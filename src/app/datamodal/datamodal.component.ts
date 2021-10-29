@@ -18,6 +18,7 @@ export class DatamodalComponent implements OnInit {
   ];
   autonumber: boolean;
   index: boolean;
+  indexParameter:string=''
   selected: string;
 
   // tslint:disable-next-line: max-line-length
@@ -30,6 +31,7 @@ export class DatamodalComponent implements OnInit {
     this.selected = this.data.type;
     this.autonumber = this.data.keyautonumber;
     this.index = this.data.index;
+    this.indexParameter=this.data.indexParameter;
   }
 
   onNoClick(): void {
@@ -40,6 +42,7 @@ export class DatamodalComponent implements OnInit {
     this.data.keyautonumber = this.autonumber;
     this.data.index = this.index;
     this.data.type = this.selected;
+    this.data.indexParameter=this.indexParameter;
     this.dialogRef.close(this.data);
   }
 }
