@@ -37,8 +37,8 @@ export class ConfigProductionComponent implements OnInit {
       port: new FormControl(this.dbconf.port, Validators.required),
       username: new FormControl(this.dbconf.username, Validators.required),
       password: new FormControl(this.dbconf.password, Validators.required),
-      database: new FormControl(this.dbconf.database, Validators.required),
-      corsHost: new FormControl(this.dbconf.corsHost, Validators.required),    });
+      database: new FormControl(this.dbconf.database, Validators.required)
+    });
   }
 
   onYesClick(){
@@ -48,7 +48,6 @@ export class ConfigProductionComponent implements OnInit {
     this.configservice.config.dbconfProduction.username=this.profileForm.get('username').value;
     this.configservice.config.dbconfProduction.password=this.profileForm.get('password').value;
     this.configservice.config.dbconfProduction.database=this.profileForm.get('database').value;
-    this.configservice.config.dbconfProduction.corsHost=this.profileForm.get('corsHost').value;
     this.dialogRef.close('ok');
   }
   onNoClick(){

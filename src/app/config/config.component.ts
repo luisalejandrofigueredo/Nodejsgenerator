@@ -156,7 +156,11 @@ export class ConfigComponent implements OnInit {
 
   updateHost(){
     const hosts:FormArray = this.hostForm.controls.corsHosts as FormArray;
-    hosts.value;
-    console.log('hosts',hosts);
+    const arrayHosts=hosts.value;
+    let array:string[]=[];
+    arrayHosts.forEach(element => {
+      array.push(element.host);
+    });
+    this.configservice.config.corsHost=array;
   }
 }
