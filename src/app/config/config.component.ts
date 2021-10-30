@@ -81,7 +81,8 @@ export class ConfigComponent implements OnInit {
       if (index === 0) {
         this.hostForm.setControl('corsHosts',this.fb.array([this.addHostControl(corsHost)]));
       } else {
-        (this.hostForm.get('corsHosts').value as FormArray).push(this.addHostControl(corsHost));
+        const hosts:FormArray = this.hostForm.controls.corsHosts as FormArray;
+        hosts.push(this.addHostControl(corsHost));
       }
     });
   }
