@@ -3,15 +3,15 @@
   <input matInput [(ngModel)]="data.name" placeholder="name">
 </mat-form-field>
 <mat-form-field>
-  <input matInput min="0" step="1" type="number" [(ngModel)]="data.length" placeholder="length">
-</mat-form-field>
-<mat-form-field>
   <mat-label>Type data</mat-label>
   <mat-select (selectionChange)="changed()" [(value)]="selected">
     <mat-option *ngFor="let type of types" [value]="type.value">
       {{type.viewValue}}
     </mat-option>
   </mat-select>
+</mat-form-field>
+<mat-form-field *ngIf="selected!=='date'">
+  <input matInput min="0" step="1" type="number" [(ngModel)]="data.length" placeholder="length">
 </mat-form-field>
 <mat-form-field appearance="outline" style="width:100%">
   <input matInput [(ngModel)]="data.extraparameter" placeholder="extra parameters">
