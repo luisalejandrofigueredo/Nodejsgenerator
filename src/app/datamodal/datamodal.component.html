@@ -18,7 +18,7 @@
   <mat-icon matSuffix>code</mat-icon>
 </mat-form-field>
 <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="gappx">
-  <mat-checkbox [(ngModel)]="autonumber" [disabled]="(selected==='number') ? false: true">Autonumber</mat-checkbox>
+  <mat-checkbox *ngIf="selected==='number'" [(ngModel)]="autonumber" [disabled]="(selected==='number') ? false: true">Autonumber</mat-checkbox>
   <mat-checkbox [(ngModel)]="index" [disabled]="autonumber">Index</mat-checkbox>
 </div>
 <mat-form-field *ngIf="index===true" appearance="outline" style="width:100%">
