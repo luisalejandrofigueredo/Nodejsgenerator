@@ -704,9 +704,10 @@ export class TestapiComponent implements OnInit {
   }
 
   error(error: HttpErrorResponse) {
+    console.log('error:',error);
     const dialogRef = this.dialog.open(ErrorComponent, {
       disableClose: false,
-      data: { message: 'Check your server', error: error.message }
+      data: { message: 'Check your server', error: error.error.message }
     });
   }
 
