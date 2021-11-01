@@ -29,7 +29,6 @@ export class WizardModalComponent implements OnInit, OnDestroy, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     // changes.prop contains the old and the new value...
     console.log('changes:', changes);
-    ;
   }
   get installingValue(): boolean {
     return this.installing;

@@ -14,6 +14,9 @@ import { BrowseonetomanyComponent } from './browseonetomany/browseonetomany.comp
 import { BrowsemanytomanyComponent } from './browsemanytomany/browsemanytomany.component';
 import {NextstepComponent} from './help/nextstep/nextstep.component';
 import { Nextstep2Component } from "../app/help/nextstep2/nextstep2.component";
+import {ExtensionComponent} from './extension/extension.component';
+import { BrowseExtensionsComponent  } from "./browse-extensions/browse-extensions.component";
+import { NewExtensionModalComponent } from "./new-extension-modal/new-extension-modal.component";
 const routes: Routes = [{
   path: 'schematics/:id',
   component: SchematicsComponent
@@ -64,6 +67,18 @@ const routes: Routes = [{
 {
   path: 'browsemanytomany/:id',
   component: BrowsemanytomanyComponent
+},
+{
+  path: 'extension',
+  component: ExtensionComponent,
+},
+{
+  path: 'browseExtension',
+  component:BrowseExtensionsComponent
+},
+{
+  path: 'newExtension',
+  component:NewExtensionModalComponent
 }
 ];
 

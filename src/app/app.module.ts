@@ -68,6 +68,9 @@ import { ViewschemasComponent } from './viewschemas/viewschemas.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { NextstepComponent } from './help/nextstep/nextstep.component';
 import { Nextstep2Component } from './help/nextstep2/nextstep2.component';
+import { ExtensionComponent } from './extension/extension.component';
+import { BrowseExtensionsComponent } from './browse-extensions/browse-extensions.component';
+import { NewExtensionModalComponent } from './new-extension-modal/new-extension-modal.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -109,6 +112,9 @@ import { Nextstep2Component } from './help/nextstep2/nextstep2.component';
     ViewschemasComponent,
     NextstepComponent,
     Nextstep2Component,
+    ExtensionComponent,
+    BrowseExtensionsComponent,
+    NewExtensionModalComponent,
   ],
   imports: [ 
     BrowserModule, 

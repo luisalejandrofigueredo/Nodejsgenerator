@@ -1,0 +1,14 @@
+<h4 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>Field</h4>
+<form [formGroup]="profileForm">
+  <mat-form-field>
+    <input matInput placeholder="Name" formControlName="name">
+  </mat-form-field>
+  <mat-form-field>
+      <input matInput placeholder="Description" formControlName="description">
+  </mat-form-field>
+</form>
+<div mat-dialog-actions style="justify-content: flex-end;">
+  <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>
+  <button mat-raised-button [disabled]="!profileForm.valid" color="primary" mat-button
+    (click)="onYesClick()">Yes</button>
+</div>

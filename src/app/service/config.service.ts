@@ -5,6 +5,7 @@ import { Schemaitem } from '../interfaces/schema';
 import { Relations } from '../interfaces/relations';
 import { Api } from '../interfaces/api';
 import { Security } from '../interfaces/security'
+import { Extension } from "../interfaces/extension";
 @Injectable({
   providedIn: 'root'
 })
@@ -26,6 +27,7 @@ export class ConfigService {
     logger: { type: 0, file: 'info.log', maxsize: 50000, typewarn: 0, filewarn: 'warn.log', maxsizewarn: 10000, typeerror: 0, fileerror: 'error.log', maxsizeerror: 10000 },
     security: { bearertoken: "", login: "", password: "", roles: "", table: "", logger: false, path: "", rolesclass: "", count:""} as Security,
     schemas: [],
+    extension:[] as Extension[],
   };
   /* schemas[id:number,name:string,description:string,schemastable[schemas],
   schemasrelations[],schemasapi[]] */
@@ -48,6 +50,7 @@ export class ConfigService {
       logger: { type: 0, file: 'info.log', maxsize: 50000, typewarn: 0, filewarn: 'warn.log', maxsizewarn: 10000, typeerror: 0, fileerror: 'error.log', maxsizeerror: 10000 },
       security: { bearertoken: "", login: "", password: "", roles: "", table: "", logger: false, path: "", rolesclass: "" } as Security,
       schemas: [],
+      extension:[] as Extension[],
     };
   }
   getschemawithid(id: number): Schemahead {
@@ -195,8 +198,8 @@ export class ConfigService {
     if(this.config.corsHost===undefined){
       this.config.corsHost=[];
     }
-    if (this.config.dbconfProduction.corsHost===undefined){
-      this.config.dbconfProduction.corsHost="your.domain.com";
+    if (this.config.extension===undefined){
+      this.config.extension=[];
     }
     this.electron.ipcRenderer.send('setdisable');
   }

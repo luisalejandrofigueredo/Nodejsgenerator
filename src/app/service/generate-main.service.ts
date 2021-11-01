@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
+import { element } from 'protractor';
+import { Extension } from '../interfaces/extension';
 import { Schemahead } from '../interfaces/schemahead';
 import { ConfigService } from './config.service';
 
@@ -16,6 +18,7 @@ export class GenerateMainService {
     this.configDevelopment();
     this.configProduction();
     const schema: Schemahead[] = this.config_service.getschema();
+    const extensions:Extension[]= this.config_service.config.extension;
     let security: boolean = false;
     schema.forEach(element => { if (element.security === true) { security = true } });
     this.textGenerated = '';
@@ -36,6 +39,9 @@ export class GenerateMainService {
     this.textGenerated += `new IndexRoute()`;
     schema.forEach((element, index) => {
       this.textGenerated += `, new ${element.name}Route()`;
+    });
+    extensions.forEach((extension,index)=>{
+      this.textGenerated += `, new ${extension.name}Extension()`;
     });
     if (security) {
       this.textGenerated += `, new loginRoute()`;

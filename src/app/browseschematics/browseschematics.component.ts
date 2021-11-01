@@ -10,6 +10,8 @@ import { FormschemamodalComponent } from '../formschemamodal/formschemamodal.com
 import {YesnoComponent} from '../yesno/yesno.component';
 import { Schemahead } from '../interfaces/schemahead';
 import {MatSort, Sort} from '@angular/material/sort';
+import { NewExtensionModalComponent } from '../new-extension-modal/new-extension-modal.component';
+import { Extension } from '../interfaces/extension';
 
 @Component({
   selector: 'app-browseschematics',
@@ -39,11 +41,11 @@ export class BrowseschematicsComponent implements OnInit {
 
 
   add() {
-    const dialogRef = this.dialog.open(FormschemamodalComponent, {
+    const dialogRef = this.dialog.open(NewExtensionModalComponent, {
       width: '500px',
       disableClose: false,
       panelClass:'my-outlined-dialog',
-      data: { id: 0, name: '', description: '', imports: '', fields: '' , security: true, classsecurity: 'RolesGuard', filesecurity: '', filesupload:false,mastersecurity: false,index:''} as Schemahead
+      data: { id: 0, name: '', description: ''} as Extension
     });
     dialogRef.afterClosed().subscribe(data => {
       if (data !== undefined) {
