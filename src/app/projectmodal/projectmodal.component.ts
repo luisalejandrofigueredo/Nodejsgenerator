@@ -33,7 +33,7 @@ export class ProjectmodalComponent implements OnInit {
   { value: 7, viewValue: "MongoDB (experimental)" }];
   ngOnInit(): void {
     this.profileForm = new FormGroup({
-      projectname: new FormControl('', Validators.compose([Validators.required, Validators.pattern('[A-Z][a-z]*')])),
+      projectname: new FormControl('', Validators.compose([Validators.required, Validators.pattern('[A-Z][A-Za-z0-9_-]*')])),
       description: new FormControl(''),
       workDirectory: new FormControl('', Validators.required)
     });
@@ -47,7 +47,7 @@ export class ProjectmodalComponent implements OnInit {
     });
     this.profileFormTable = new FormGroup({
       tableWithSecurity: new FormControl(true),
-      tableName: new FormControl('Security', Validators.compose([Validators.required, Validators.pattern('[A-Z][a-z]*')])),
+      tableName: new FormControl('Security', Validators.compose([Validators.required, Validators.pattern('[A-Z][A-Za-z0-9_-]*')])),
       login: new FormControl('login', Validators.required),
       password: new FormControl('password', Validators.required),
       roles: new FormControl('roles', Validators.required),

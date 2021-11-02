@@ -14,7 +14,7 @@ export class NewExtensionModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.profileForm = new FormGroup({
-      name: new FormControl(this.data.name, Validators.compose([Validators.required, Validators.pattern('[A-Z][a-z]*')])),
+      name: new FormControl(this.data.name, Validators.compose([Validators.required, Validators.pattern('[A-Z][A-Za-z0-9_-]*')])),
       description: new FormControl(this.data.description),
     });
   }

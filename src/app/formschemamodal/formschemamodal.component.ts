@@ -18,7 +18,7 @@ export class FormschemamodalComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<FormschemamodalComponent>, @Inject(MAT_DIALOG_DATA) public data: Schemahead, private electronservice: ElectronService, private configservice: ConfigService) { }
   ngOnInit(): void {
     this.Userdata = new FormGroup({
-      name: new FormControl(this.data.name, Validators.compose([Validators.required, Validators.pattern('[A-Z][a-z]*')])),
+      name: new FormControl(this.data.name, Validators.compose([Validators.required, Validators.pattern('[A-Z][A-Za-z0-9_-]*')])),
       description: new FormControl(this.data.description),
       imports: new FormControl(this.data.imports),
       fields: new FormControl(this.data.fields),
