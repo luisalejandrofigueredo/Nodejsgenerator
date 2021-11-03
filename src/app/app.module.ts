@@ -71,6 +71,7 @@ import { Nextstep2Component } from './help/nextstep2/nextstep2.component';
 import { ExtensionComponent } from './extension/extension.component';
 import { BrowseExtensionsComponent } from './browse-extensions/browse-extensions.component';
 import { NewExtensionModalComponent } from './new-extension-modal/new-extension-modal.component';
+import { BrowseExtensionRoutesComponent } from './browse-extension-routes/browse-extension-routes.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -115,6 +116,7 @@ import { NewExtensionModalComponent } from './new-extension-modal/new-extension-
     ExtensionComponent,
     BrowseExtensionsComponent,
     NewExtensionModalComponent,
+    BrowseExtensionRoutesComponent,
   ],
   imports: [ 
     BrowserModule, 

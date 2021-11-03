@@ -157,7 +157,7 @@ export class GenerateRoutesService {
           this.lineGenerating += 'this.router.get(`${this.path}/getFile/' + element.path + '/:filename`,' + this.generateSecurity(element, schema) + `this.${schemaLower}Controller.postGetFile${element.path});\n`;
           break;
         case 'changepassword':
-          this.lineGenerating += 'this.router.put(`${this.path}/changepassword/' + element.path +'`' + this.generateSecurity(element, schema) + `,this.${schemaLower}Controller.changepassword${schemaName});\n`;
+          this.lineGenerating += 'this.router.put(`${this.path}/changepassword/' + element.path + '`' + this.generateSecurity(element, schema) + `,this.${schemaLower}Controller.changepassword${schemaName});\n`;
           break;
         default:
           break;

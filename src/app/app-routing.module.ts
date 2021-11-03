@@ -17,6 +17,7 @@ import { Nextstep2Component } from "../app/help/nextstep2/nextstep2.component";
 import {ExtensionComponent} from './extension/extension.component';
 import { BrowseExtensionsComponent  } from "./browse-extensions/browse-extensions.component";
 import { NewExtensionModalComponent } from "./new-extension-modal/new-extension-modal.component";
+import { BrowseExtensionRoutesComponent } from "./browse-extension-routes/browse-extension-routes.component";
 const routes: Routes = [{
   path: 'schematics/:id',
   component: SchematicsComponent
@@ -79,6 +80,10 @@ const routes: Routes = [{
 {
   path: 'newExtension',
   component:NewExtensionModalComponent
+},
+{
+  path: 'browseExtensionRoutes/:id',
+  component:BrowseExtensionRoutesComponent
 }
 ];
 

@@ -185,6 +185,14 @@ function processinstall(state) {
   }
 }
 
+ipcMain.on('ifFile', (event, arg) => {
+  if (fs.existsSync(arg.paths)) {
+    event.returnValue = 'found';
+  } else {
+    event.returnValue = 'notfound'
+  }
+})
+
 function copy_files() {
   mainWindow.webContents.send("copy_files");
 }
@@ -504,7 +512,7 @@ function saveas() {
 }
 
 function createWindow() {
-  app.commandLine.appendSwitch('ignore-certificate-errors',"true");
+  app.commandLine.appendSwitch('ignore-certificate-errors', "true");
   Menu.setApplicationMenu(menu);
   const display = screen.getPrimaryDisplay();
   const maxiSize = display.workAreaSize;
@@ -514,13 +522,13 @@ function createWindow() {
     autoHideMenuBar: false,
     webPreferences: {
       nodeIntegration: true,
-      allowRunningInsecureContent:true,
-      allowDisplayingInsecureContent:true,
-      webSecurity:false,
+      allowRunningInsecureContent: true,
+      allowDisplayingInsecureContent: true,
+      webSecurity: false,
     },
     icon: path.join(__dirname, `/dist/generador/assets/icons/win/icon.ico`)
   });
-  mainWindow.webContents.session.setCertificateVerifyProc((request,callback)=>{
+  mainWindow.webContents.session.setCertificateVerifyProc((request, callback) => {
     callback(0);
   });
 
@@ -755,10 +763,10 @@ ipcMain.on('createDirectory', (event, arg) => {
 ipcMain.on('LoadAppModule', (event, arg) => {
   const file = arg.path + '/src/app.ts'
   fs.readFile(file, (err, data) => {
-      if (err)
-        throw err;
-      event.returnValue = data.toString();
-    });
+    if (err)
+      throw err;
+    event.returnValue = data.toString();
+  });
 });
 
 ipcMain.on('SaveAppModule', (event, arg) => {
@@ -769,8 +777,8 @@ ipcMain.on('SaveAppModule', (event, arg) => {
 
 
 ipcMain.on('ConfigApp', (event, arg) => {
-  const buffers=fs.readFileSync(arg.path + '/src/app.ts')
-  event.returnValue=buffers.toString();
+  const buffers = fs.readFileSync(arg.path + '/src/app.ts')
+  event.returnValue = buffers.toString();
 });
 ipcMain.on('createAppModule', (event, arg) => {
   console.log('writing files os:', process.platform);

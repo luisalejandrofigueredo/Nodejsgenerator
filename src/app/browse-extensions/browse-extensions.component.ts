@@ -8,6 +8,7 @@ import { ConfigService } from '../service/config.service';
 import { NewExtensionModalComponent } from "../new-extension-modal/new-extension-modal.component";
 import { ExtensionsService } from "../service/extensions.service";
 import { YesnoComponent } from '../yesno/yesno.component';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-browse-extensions',
   templateUrl: './browse-extensions.component.html',
@@ -21,12 +22,16 @@ export class BrowseExtensionsComponent implements OnInit {
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  constructor(private extensionService: ExtensionsService, private configService: ConfigService, public dialog: MatDialog) { }
+  constructor(private router:Router,private extensionService: ExtensionsService, private configService: ConfigService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.projectname = this.configService.config.projectname
     this.extensions = JSON.parse(JSON.stringify(this.configService.config.extension));
     this.dataSource.data = this.extensions;
+  }
+
+  gotoRoutes(index:number){
+    this.router.navigate(['browseExtensionRoutes',index])
   }
 
   add() {
