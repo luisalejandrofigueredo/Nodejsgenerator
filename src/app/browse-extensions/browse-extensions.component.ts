@@ -39,7 +39,7 @@ export class BrowseExtensionsComponent implements OnInit {
       width: '500px',
       disableClose: false,
       panelClass: 'my-outlined-dialog',
-      data: { id: 0, name: '', description: '' } as Extension
+      data: { id: 0, name: '', description: '',routes:[] } as Extension
     });
     dialogRef.afterClosed().subscribe(data => {
       if (data !== undefined) {

@@ -1,4 +1,6 @@
-<p>Project:{{projectname}}, Extension: {{extensionName}}</p>
+<button mat-icon-button (click)="home()">
+  <mat-icon>home</mat-icon>
+</button><p>Project:{{projectname}}, routes in extension: {{extensionName}}</p>
 <button (click)="add()" mat-icon-button>
   <mat-icon>add</mat-icon>
 </button>
@@ -11,9 +13,9 @@
     <th mat-header-cell mat-sort-header class="head" *matHeaderCellDef> Name </th>
     <td mat-cell *matCellDef="let row"> {{row.name}} </td>
   </ng-container>
-  <ng-container matColumnDef="description">
-    <th mat-header-cell mat-sort-header class="head" *matHeaderCellDef> Description </th>
-    <td mat-cell *matCellDef="let row"> {{row.description}} </td>
+  <ng-container matColumnDef="path">
+    <th mat-header-cell mat-sort-header class="head" *matHeaderCellDef> Path </th>
+    <td mat-cell *matCellDef="let row"> {{row.path}} </td>
   </ng-container>
   <ng-container matColumnDef="delete">
     <th mat-header-cell class="head" *matHeaderCellDef> Delete </th>
@@ -28,7 +30,14 @@
         <mat-icon>edit</mat-icon>
       </button></td>
   </ng-container>
-  <tr mat-header-row *matHeaderRowDef="['id','name','description','delete','edit']"></tr>
-  <tr mat-row *matRowDef="let row; columns: ['id','name','description','delete','edit'];"></tr>
+  <ng-container matColumnDef="controllers">
+    <th mat-header-cell class="head" *matHeaderCellDef> Controllers </th>
+    <th mat-header-cell *matHeaderCellDef> controllers </th>
+    <td mat-cell *matCellDef="let row"><button (click)="controllers(row.id)" mat-icon-button>
+        <mat-icon>settings</mat-icon>
+      </button></td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="['id','name','path','delete','edit','controllers']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['id','name','path','delete','edit','controllers'];"></tr>
 </table>
 <mat-paginator [pageSizeOptions]="[10,20,30]" showFirstLastButtons></mat-paginator>

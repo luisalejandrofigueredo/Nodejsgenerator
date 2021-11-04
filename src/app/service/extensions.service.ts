@@ -18,7 +18,7 @@ export class ExtensionsService {
 
   delete(id:number){
     let ids=1;
-    this.configService.config.extension.splice(id,1);
+    this.configService.config.extension.splice(id-1,1);
     this.configService.config.extension.forEach((extension)=>{
       extension.id=ids;
       ids++;

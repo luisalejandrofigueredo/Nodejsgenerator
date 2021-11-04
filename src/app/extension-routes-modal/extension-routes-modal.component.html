@@ -1,0 +1,12 @@
+<form [formGroup]="profileForm">
+    <mat-form-field>
+        <input matInput placeholder="Name" formControlName="name">
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Path" formControlName="path">
+    </mat-form-field>
+</form>
+<div mat-dialog-actions style="justify-content: flex-end;">
+    <button mat-raised-button (click)="onNoClick()" cdkFocusInitial>No</button>
+    <button mat-raised-button color="primary" [disabled]="!profileForm.valid" mat-button (click)="onYesClick()">Yes</button>
+</div>
