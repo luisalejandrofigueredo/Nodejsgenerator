@@ -1,0 +1,33 @@
+<button mat-icon-button (click)="home()">
+    <mat-icon>home</mat-icon>
+  </button><p>Project:{{projectname}}, extension: {{extensionName}}, routes {{routeName}}</p>
+  <button (click)="add()" mat-icon-button>
+    <mat-icon>add</mat-icon>
+  </button>
+  <table mat-table #table matSort [dataSource]="dataSource">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell mat-sort-header class="head" *matHeaderCellDef> Id </th>
+      <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell mat-sort-header class="head" *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+    </ng-container>
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell class="head" *matHeaderCellDef> Delete </th>
+      <td mat-cell *matCellDef="let row"><button (click)="delete(row.id)" mat-icon-button>
+          <mat-icon>delete</mat-icon>
+        </button></td>
+    </ng-container>
+    <ng-container matColumnDef="edit">
+      <th mat-header-cell class="head" *matHeaderCellDef> Edit </th>
+      <th mat-header-cell *matHeaderCellDef> edit </th>
+      <td mat-cell *matCellDef="let row"><button (click)="edit(row.id)" mat-icon-button>
+          <mat-icon>edit</mat-icon>
+        </button></td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="['id','name','delete','edit']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['id','name','delete','edit'];"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[10,20,30]" showFirstLastButtons></mat-paginator>
+  

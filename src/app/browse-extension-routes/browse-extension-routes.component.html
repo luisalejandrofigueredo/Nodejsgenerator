@@ -37,7 +37,14 @@
         <mat-icon>settings</mat-icon>
       </button></td>
   </ng-container>
-  <tr mat-header-row *matHeaderRowDef="['id','name','path','delete','edit','controllers']"></tr>
-  <tr mat-row *matRowDef="let row; columns: ['id','name','path','delete','edit','controllers'];"></tr>
+  <ng-container matColumnDef="services">
+    <th mat-header-cell class="head" *matHeaderCellDef> Services </th>
+    <th mat-header-cell *matHeaderCellDef> services </th>
+    <td mat-cell *matCellDef="let row"><button (click)="service(row.id)" mat-icon-button>
+        <mat-icon>launch</mat-icon>
+      </button></td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="['id','name','path','delete','edit','controllers','services']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['id','name','path','delete','edit','controllers','services'];"></tr>
 </table>
 <mat-paginator [pageSizeOptions]="[10,20,30]" showFirstLastButtons></mat-paginator>

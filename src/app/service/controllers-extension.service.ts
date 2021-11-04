@@ -21,4 +21,13 @@ export class ControllersExtensionService {
   edit(id:number,indexRouter:number,indexController:number,data:ControllersExtension){
     this.configService.config.extension[id-1].routes[indexRouter-1].controllers[indexController-1]=data;
   }
+
+  delete(id:number,indexRouter:number,indexController:number){
+    this.configService.config.extension[id-1].routes[indexRouter-1].controllers.splice(indexController-1,1);
+    let idController=1;
+    this.configService.config.extension[id-1].routes[indexRouter-1].controllers.forEach(controller => {
+     controller.id=idController;  
+     idController++;
+    });
+  }
 }

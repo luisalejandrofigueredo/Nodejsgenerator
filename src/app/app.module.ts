@@ -75,6 +75,7 @@ import { BrowseExtensionRoutesComponent } from './browse-extension-routes/browse
 import { ExtensionRoutesModalComponent } from './extension-routes-modal/extension-routes-modal.component';
 import { BrowseControllersComponent } from './browse-controllers/browse-controllers.component';
 import { ControllerModalComponent } from './controller-modal/controller-modal.component';
+import { BrowseServicesExtensionComponent } from './browse-services-extension/browse-services-extension.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -123,6 +124,7 @@ import { ControllerModalComponent } from './controller-modal/controller-modal.co
     ExtensionRoutesModalComponent,
     BrowseControllersComponent,
     ControllerModalComponent,
+    BrowseServicesExtensionComponent,
   ],
   imports: [ 
     BrowserModule, 

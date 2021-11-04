@@ -11,6 +11,7 @@ import { ControllersExtensionService } from '../service/controllers-extension.se
 import { ExtensionsService } from '../service/extensions.service';
 import { RoutesExtensionService } from '../service/routes-extension.service';
 import { ControllerModalComponent } from "../controller-modal/controller-modal.component";
+import { YesnoComponent } from '../yesno/yesno.component';
 
 @Component({
   selector: 'app-browse-controllers',
@@ -48,7 +49,7 @@ export class BrowseControllersComponent implements OnInit {
       this.dataSource.data = this.routeExtension.controllers;
     });
   }
-  
+
   home() {
     this.router.navigate(['browseExtensionRoutes', this.id])
   }
@@ -62,20 +63,20 @@ export class BrowseControllersComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(data => {
       if (data !== undefined) {
-        if (this.controllerService.getControllers(this.id,this.routeId).length === undefined || this.controllerService.getControllers(this.id,this.routeId).length === 0) {
+        if (this.controllerService.getControllers(this.id, this.routeId).length === undefined || this.controllerService.getControllers(this.id, this.routeId).length === 0) {
           data.id = 1;
         } else {
-          data.id = this.controllerService.getControllers(this.id,this.routeId).length + 1;
+          data.id = this.controllerService.getControllers(this.id, this.routeId).length + 1;
         }
-        this.controllerService.add(this.id,this.routeId,data);
-        this.dataSource.data = this.controllerService.getControllers(this.id,this.routeId);
+        this.controllerService.add(this.id, this.routeId, data);
+        this.dataSource.data = this.controllerService.getControllers(this.id, this.routeId);
         this.table.renderRows();
       }
     });
   }
 
   edit(index: number) {
-    const data:ControllersExtension=this.controllerService.getController(this.id,this.routeId,index);
+    const data: ControllersExtension = this.controllerService.getController(this.id, this.routeId, index);
     const dialogRef = this.dialog.open(ControllerModalComponent, {
       width: '500px',
       disableClose: false,
@@ -84,11 +85,23 @@ export class BrowseControllersComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(data => {
       if (data !== undefined) {
-        this.controllerService.edit(this.id,this.routeId,index,data);
+        this.controllerService.edit(this.id, this.routeId, index, data);
+        this.dataSource.data = this.controllerService.getControllers(this.id, this.routeId);
+        this.table.renderRows();
+      }
+    });
+  }
+
+  delete(index: number) {
+    const dialogRef = this.dialog.open(YesnoComponent, {
+      panelClass: 'my-outlined-dialog'
+    });
+    dialogRef.afterClosed().subscribe(data => {
+      if (data !== undefined) {
+        this.controllerService.delete(this.id,this.routeId,index);
         this.dataSource.data = this.controllerService.getControllers(this.id,this.routeId);
         this.table.renderRows();
       }
     });
   }
-  delete(index: number) { }
 }

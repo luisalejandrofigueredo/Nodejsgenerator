@@ -54,7 +54,7 @@ export class BrowseExtensionRoutesComponent implements OnInit {
     } else {
       id = routes.length++;
     }
-    const extensionRoutes: RoutesExtension = { id: id, name: '', path: '', controllers: [] };
+    const extensionRoutes: RoutesExtension = { id: id, name: '', path: '', controllers: [],service:[] };
     const dialogRef = this.dialog.open(ExtensionRoutesModalComponent, { data: extensionRoutes });
     dialogRef.afterClosed().subscribe((data: RoutesExtension) => {
       if (data !== undefined) {
@@ -95,4 +95,9 @@ export class BrowseExtensionRoutesComponent implements OnInit {
   controllers(index:number){
     this.router.navigate(['browseControllers',this.id,index]);    
   }
+  
+  service(index:number){
+    this.router.navigate(['browseServiceExtension',this.id,index]);    
+  }
+
 }

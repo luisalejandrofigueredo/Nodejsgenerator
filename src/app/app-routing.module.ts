@@ -19,6 +19,7 @@ import { BrowseExtensionsComponent  } from "./browse-extensions/browse-extension
 import { NewExtensionModalComponent } from "./new-extension-modal/new-extension-modal.component";
 import { BrowseExtensionRoutesComponent } from "./browse-extension-routes/browse-extension-routes.component";
 import { BrowseControllersComponent } from "./browse-controllers/browse-controllers.component";
+import { BrowseServicesExtensionComponent } from "./browse-services-extension/browse-services-extension.component";
 const routes: Routes = [{
   path: 'schematics/:id',
   component: SchematicsComponent
@@ -89,6 +90,10 @@ const routes: Routes = [{
 {
   path: 'browseControllers/:id/:routesId',
   component:BrowseControllersComponent
+},
+{
+  path: 'browseServiceExtension/:id/:routesId',
+  component:BrowseServicesExtensionComponent
 }
 ];
 
