@@ -51,7 +51,7 @@ export class BrowseControllersComponent implements OnInit {
   }
 
   home() {
-    this.router.navigate(['browseExtensionRoutes', this.id])
+    this.router.navigate(['browseExtensionRoutes', this.id]);
   }
 
   add() {
