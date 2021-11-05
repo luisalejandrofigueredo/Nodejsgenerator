@@ -51,7 +51,9 @@ export class BrowseServicesExtensionComponent implements OnInit {
     });
   }
 
-  home(){}
+  home(){
+    this.router.navigate(['browseExtensionRoutes', this.id]);
+  }
 
   add(){
     const dialogRef = this.dialog.open(ExtensionServiceModalComponent, {
