@@ -18,7 +18,7 @@ export class AppComponent {
   title = 'Generator';
   recent: { name: string; path: string }[] = [];
   constructor(
-    private menuService:MenuserviceService,
+    private menuService: MenuserviceService,
     private ngzone: NgZone,
     public dialog: MatDialog,
     private router: Router,
@@ -65,6 +65,9 @@ export class AppComponent {
         break;
       case 'testapi':
         this.ngzone.run(() => { this.router.navigate(['testapi']); });
+        break;
+      case 'extensions':
+        this.ngzone.run(() => { this.router.navigate(['browseExtension']); });
         break;
       default:
         break;
@@ -114,7 +117,7 @@ export class AppComponent {
   }
   clearrecent() {
     localStorage.removeItem("recent");
-    this.recent=[];
+    this.recent = [];
   }
 
   new() {
@@ -232,9 +235,9 @@ export class AppComponent {
       if (result.canceled === false) {
         file = result.filePath;
         this.ngzone.run(() => {
-              this.configservice.config.schemapath=file;
-              this.savelocalstrorage(this.configservice.config.projectname, this.configservice.config.schemapath);
-              this.configservice.saveas(file);
+          this.configservice.config.schemapath = file;
+          this.savelocalstrorage(this.configservice.config.projectname, this.configservice.config.schemapath);
+          this.configservice.saveas(file);
         });
       }
     }

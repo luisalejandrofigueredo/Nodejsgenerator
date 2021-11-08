@@ -4,6 +4,7 @@ export interface RoutesExtension {
     id:number,
     name:string,
     path:string,
+    type:string,
     controllers:ControllersExtension[],
     service:ServicesExtension[]
 }

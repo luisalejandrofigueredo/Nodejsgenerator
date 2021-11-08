@@ -86,6 +86,12 @@ var template = [{
         }
       },
       {
+        label: 'Extensions',
+        click() {
+          navigate('extensions')
+        }
+      },
+      {
         label: 'Test Api',
         click() {
           navigate('testapi')
@@ -148,8 +154,8 @@ function navigate(moveto) {
     case 'testapi':
       mainWindow.webContents.send("navigate", 'testapi');
       break;
-    case 'testapi':
-      mainWindow.webContents.send("navigate", 'testapi');
+    case 'extensions':
+      mainWindow.webContents.send("navigate", 'extensions');
       break;
     default:
       break;
@@ -184,6 +190,14 @@ function processinstall(state) {
       break;
   }
 }
+ipcMain.on('saveExtensionController', (event, arg) => {
+  writeFile(arg.path,arg.file);
+  event.returnValue='saved';
+});
+ipcMain.on('saveExtensionRouter', (event, arg) => {
+  writeFile(arg.path,arg.file);
+  event.returnValue='saved';
+});
 
 ipcMain.on('ifFile', (event, arg) => {
   if (fs.existsSync(arg.paths)) {
@@ -191,7 +205,7 @@ ipcMain.on('ifFile', (event, arg) => {
   } else {
     event.returnValue = 'notfound'
   }
-})
+});
 
 function copy_files() {
   mainWindow.webContents.send("copy_files");
@@ -446,6 +460,11 @@ function settemplate() {
           label: 'Test Api',
           click() {
             navigate('testapi')
+          }
+        }, {
+          label: 'Extensions',
+          click() {
+            navigate('extensions')
           }
         }
       ]

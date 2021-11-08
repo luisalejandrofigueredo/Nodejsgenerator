@@ -17,6 +17,10 @@
     <th mat-header-cell mat-sort-header class="head" *matHeaderCellDef> Path </th>
     <td mat-cell *matCellDef="let row"> {{row.path}} </td>
   </ng-container>
+  <ng-container matColumnDef="type">
+    <th mat-header-cell mat-sort-header class="head" *matHeaderCellDef> Type </th>
+    <td mat-cell *matCellDef="let row"> {{row.type}} </td>
+  </ng-container>
   <ng-container matColumnDef="delete">
     <th mat-header-cell class="head" *matHeaderCellDef> Delete </th>
     <td mat-cell *matCellDef="let row"><button (click)="delete(row.id)" mat-icon-button>
@@ -44,7 +48,7 @@
         <mat-icon>launch</mat-icon>
       </button></td>
   </ng-container>
-  <tr mat-header-row *matHeaderRowDef="['id','name','path','delete','edit','controllers','services']"></tr>
-  <tr mat-row *matRowDef="let row; columns: ['id','name','path','delete','edit','controllers','services'];"></tr>
+  <tr mat-header-row *matHeaderRowDef="['id','name','path','delete','edit','type','controllers','services']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['id','name','path','delete','edit','type','controllers','services'];"></tr>
 </table>
 <mat-paginator [pageSizeOptions]="[10,20,30]" showFirstLastButtons></mat-paginator>

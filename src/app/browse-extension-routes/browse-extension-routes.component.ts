@@ -54,7 +54,7 @@ export class BrowseExtensionRoutesComponent implements OnInit {
     } else {
       id = routes.length++;
     }
-    const extensionRoutes: RoutesExtension = { id: id, name: '', path: '', controllers: [],service:[] };
+    const extensionRoutes: RoutesExtension = { id: id, name: '', path: '',type:'' ,controllers: [],service:[] };
     const dialogRef = this.dialog.open(ExtensionRoutesModalComponent, { data: extensionRoutes });
     dialogRef.afterClosed().subscribe((data: RoutesExtension) => {
       if (data !== undefined) {

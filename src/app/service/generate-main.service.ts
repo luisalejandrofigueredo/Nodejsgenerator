@@ -4,14 +4,14 @@ import { element } from 'protractor';
 import { Extension } from '../interfaces/extension';
 import { Schemahead } from '../interfaces/schemahead';
 import { ConfigService } from './config.service';
-
+import { ExtensionService } from "../service/extension/extension.service";
+import { ExtensionsService } from './extensions.service';
 @Injectable({
   providedIn: 'root'
 })
 export class GenerateMainService {
   textGenerated = '';
-  constructor(private config_service: ConfigService, private electron_service: ElectronService,) { }
-
+  constructor(private config_service: ConfigService, private electron_service: ElectronService,private extensionService:ExtensionService) { }
   beginGenerate() {
     this.generateAppModule();
     this.generateServer();
@@ -42,6 +42,7 @@ export class GenerateMainService {
     });
     extensions.forEach((extension,index)=>{
       this.textGenerated += `, new ${extension.name}Extension()`;
+      this.extensionService.begin_generate(extension);
     });
     if (security) {
       this.textGenerated += `, new loginRoute()`;

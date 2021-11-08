@@ -3,6 +3,11 @@
     <mat-form-field>
         <input matInput placeholder="Name" formControlName="name">
     </mat-form-field>
+    <mat-select placeholder="Type" formControlName="type">
+        <mat-option *ngFor="let type of types" [value]="type.value">
+            {{type.viewValue}}
+        </mat-option>
+    </mat-select>
     <mat-form-field>
         <input matInput placeholder="Path" formControlName="path">
     </mat-form-field>
