@@ -29,6 +29,9 @@ export class GenerateMainService {
     schema.forEach(element => {
       this.textGenerated += `import ${element.name}Route from '@routes/${element.name}.route';\n`;
     });
+    extensions.forEach(extension=>{
+      this.textGenerated += `import ${extension.name} from "@routes/${extension.name}.route";\n`;
+    });
     if (security) {
       this.textGenerated += `import loginRoute from '@routes/login.route';\n`;
     }
@@ -41,7 +44,7 @@ export class GenerateMainService {
       this.textGenerated += `, new ${element.name}Route()`;
     });
     extensions.forEach((extension,index)=>{
-      this.textGenerated += `, new ${extension.name}Extension()`;
+      this.textGenerated += `, new ${extension.name}()`;
       this.extensionService.begin_generate(extension);
     });
     if (security) {

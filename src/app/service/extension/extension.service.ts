@@ -30,7 +30,7 @@ export class ExtensionService {
       this.lineGenerating += `import ${controller.name} from '../controllers/${controller.name}.controller'\n`
     });
     this.lineGenerating += `import { Routes } from '../interfaces/routes.interface';\n`;
-    this.lineGenerating += `class ${routeName} implements Routes {\n`;
+    this.lineGenerating += `class ${extension.name} implements Routes {\n`;
     this.lineGenerating += `public path = '/${routePath}';\n`
     this.lineGenerating += `public router = Router();\n`;
     controllers.forEach(controller => {
@@ -53,6 +53,7 @@ export class ExtensionService {
     });
     this.lineGenerating += '}\n';
     this.lineGenerating += `}\n`;
+    this.lineGenerating+=`export default ${extension.name};`;
     const saveExtension = this.electronService.ipcRenderer.sendSync('saveExtensionRouter', { path: pathFile, file: this.lineGenerating });
   }
 
