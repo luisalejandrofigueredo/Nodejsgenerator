@@ -68,6 +68,7 @@ export class ApiComponent implements OnInit {
       this.id = params.id;
       this.schemaname = this.configservice.getschemaname(this.id);
       this.fields = this.configservice.getfields(this.id);
+      console.log('Apis',this.configservice.getapis(this.id));
       this.apis = JSON.parse(JSON.stringify(this.configservice.getapis(this.id)));
       this.apis.forEach((api: Api) => {
         api.type = this.changeVisibleTypes(api.type);

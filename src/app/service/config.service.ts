@@ -142,9 +142,12 @@ export class ConfigService {
 
   // tslint:disable-next-line: variable-name
   addapi(_id: number, api: Api) {
-    console.log('add api api',api);
-    this.config.schemas[_id - 1].schemasapi.push(api);
-    console.log('add api',this.config.schemas[_id - 1].schemasapi);
+    if (this.config.schemas[_id - 1].schemasapi!==undefined)
+     this.config.schemas[_id - 1].schemasapi.push(api);
+    else {
+      this.config.schemas[_id - 1].schemasapi=[];
+      this.config.schemas[_id - 1].schemasapi.push(api);
+    } 
   }
   // tslint:disable-next-line: variable-name
   addrelation(_id: number, relation: Relations) {
@@ -164,9 +167,14 @@ export class ConfigService {
     // tslint:disable-next-line: prefer-const
     this.getapis(schemaid)[apiid - 1] = reg;
   }
+
   getapis(id: number): Api[] {
     // tslint:disable-next-line: prefer-const
-    return this.config.schemas[id - 1].schemasapi;
+    if (this.config.schemas[id - 1].schemasapi!==undefined){
+      return this.config.schemas[id - 1].schemasapi;
+    } else{
+      return [] as Api[];
+    }
   }
 
 
