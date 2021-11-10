@@ -95,7 +95,7 @@ export class GenerateMainService {
       listen += "console.log('Server https is listening on port ' + this.port);\n"
       listen += '})\n';
     } else {
-      listen = 'this.app.listen(this.port, () => {\n';
+      listen += 'this.app.listen(this.port, () => {\n';
       listen += 'logger.info(`=================================`);\n';
       listen += 'logger.info(`======= ENV: ${this.env} =======`);\n';
       listen += 'logger.info(`🚀 App listening on the port ${this.port}`);\n';
